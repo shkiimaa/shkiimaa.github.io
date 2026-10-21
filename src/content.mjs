@@ -65,7 +65,7 @@ export const projects = [
     ]
   },
   {
-    id: 'gobit', name: 'gobit', category: 'work', company: '다온소프트랩', companyId: 'daon', period: '2024.10 – 현재', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
+    id: 'gobit', name: 'gobit', category: 'work', company: '다온소프트랩', companyId: 'daon', period: '2024.10 – 2025', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 RSM 모의투자 연계를 제공하는 서비스입니다. 2인 팀에서 웹 클라이언트를 신규 구축하고 백엔드 API를 함께 개발했습니다.',
     summary: ['시세·차트·뉴스·커뮤니티 화면 구현 및 TradingView 차트 연동', 'Binance WebSocket·Redis·Socket.IO 기반 실시간 시세 처리', '커뮤니티 기능과 회원 인증·데이터 API 개발'],
     tasks: [
@@ -74,7 +74,7 @@ export const projects = [
       ['서비스 기능', '회원 인증·출석·레퍼럴·게시글·댓글·북마크 등 서비스 기능과 API 개발'],
       ['운영 개선', 'SSR·이미지·폰트·SEO·LCP·심볼 페이지 렌더링 개선. coinlns → gobit 리브랜딩, 점검 모드·회원 탈퇴 구현']
     ],
-    result: '웹 클라이언트 전 페이지를 구축해 서비스에 적용하고, 리브랜딩과 운영 기능을 포함한 개발 후 유지보수를 이어갔습니다.',
+    result: '웹 클라이언트 전 페이지를 구축하고 리브랜딩·운영 기능을 개발해 2025년에 주요 기능 개발을 마쳤습니다. 이후 유지보수와 2026년 플랫폼 이전 작업은 별도 이력으로 구분했습니다.',
     tech: ['TypeScript', 'Next.js 15', 'React 19', 'SWR', 'Zustand', 'Radix UI', 'TradingView', 'tiptap', 'Node.js', 'Express', 'Prisma', 'Redis', 'Socket.IO'],
     cases: [{ id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
       'gobit·RSM·시그널이 Windows·Linux 서버 5대에 분산돼 있었고, 핵심 시세 수집기는 소스가 유실된 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스들을 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'

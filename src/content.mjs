@@ -8,7 +8,7 @@ export const profile = {
 export const experiences = [
   { id: 'daon', name: '(주)다온소프트랩', role: 'Web Developer', period: '2024.08 – 현재', items: [
     '여러 암호화폐 거래소를 연동한 현물·선물·마진 거래 플랫폼 Bitria의 프론트엔드·백엔드 API 개발·운영',
-    '암호화폐 시세·차트·뉴스와 커뮤니티를 제공하는 gobit의 프론트엔드·백엔드 개발',
+    '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자를 제공하는 Gobit의 프론트엔드·백엔드 개발',
     'k3s 기반 프로덕션 배포·운영 참여 및 레거시 플랫폼의 Kubernetes 이전'
   ] },
   { id: 'doit', name: '(주)두잇', role: 'Web Developer', period: '2023.08 – 2024.07', items: [
@@ -65,19 +65,20 @@ export const projects = [
     ]
   },
   {
-    id: 'gobit', name: 'gobit', category: 'work', company: '다온소프트랩', companyId: 'daon', period: '2024.10 – 2025', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
-    description: '암호화폐 시세·차트·뉴스·커뮤니티와 RSM 모의투자 연계를 제공하는 서비스입니다. 2인 팀에서 웹 클라이언트를 신규 구축하고 백엔드 API를 함께 개발했습니다.',
+    id: 'gobit', name: 'Gobit', category: 'work', company: '다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
+    description: '암호화폐 시세·차트와 뉴스, 커뮤니티, 모의투자를 한곳에서 제공하는 코인 정보 플랫폼입니다. 2인 팀에서 Next.js 웹 클라이언트를 신규 구축하고 Node.js·Express API를 함께 개발했습니다. Binance 시세를 수집해 Redis에 캐시하고 Socket.IO로 전달했으며, 회원·게시글 기능과 서비스 운영 기능을 구현했습니다.',
     summary: ['시세·차트·뉴스·커뮤니티 화면 구현 및 TradingView 차트 연동', 'Binance WebSocket·Redis·Socket.IO 기반 실시간 시세 처리', '커뮤니티 기능과 회원 인증·데이터 API 개발'],
     tasks: [
       ['웹 클라이언트', 'Next.js 15·React 19 기반 마켓·심볼 상세·뉴스·커뮤니티·랭킹·마이페이지 구현. TradingView 차트와 tiptap 에디터 연동'],
       ['실시간 데이터', '시세는 Socket.IO, 그 외 조회는 SWR로 관리. Binance 데이터 수집·Redis 캐시·소켓 재연결·헬스체크 개선'],
       ['서비스 기능', '회원 인증·출석·레퍼럴·게시글·댓글·북마크 등 서비스 기능과 API 개발'],
-      ['운영 개선', 'SSR·이미지·폰트·SEO·LCP·심볼 페이지 렌더링 개선. coinlns → gobit 리브랜딩, 점검 모드·회원 탈퇴 구현']
+      ['운영 개선', 'SSR·이미지·폰트·SEO·LCP·심볼 페이지 렌더링 개선. coinlns → Gobit 리브랜딩, 점검 모드·회원 탈퇴 구현']
     ],
-    result: '웹 클라이언트 전 페이지를 구축하고 리브랜딩·운영 기능을 개발해 2025년에 주요 기능 개발을 마쳤습니다. 이후 유지보수와 2026년 플랫폼 이전 작업은 별도 이력으로 구분했습니다.',
+    result: '웹 클라이언트 전 페이지와 API 기능을 구축하고 coinlns에서 Gobit으로 리브랜딩했습니다. 2025년 12월 주요 기능 개발을 마쳤고, 이후 유지보수와 2026년 플랫폼 이전 작업은 별도 이력으로 구분했습니다.',
     tech: ['TypeScript', 'Next.js 15', 'React 19', 'SWR', 'Zustand', 'Radix UI', 'TradingView', 'tiptap', 'Node.js', 'Express', 'Prisma', 'Redis', 'Socket.IO'],
+    links: [{ label: '웹 클라이언트 코드', url: 'https://github.com/shkiimaa/junco_client' }, { label: '백엔드 코드', url: 'https://github.com/shkiimaa/junco_server' }],
     cases: [{ id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
-      'gobit·RSM·시그널이 Windows·Linux 서버 5대에 분산돼 있었고, 핵심 시세 수집기는 소스가 유실된 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스들을 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
+      'Gobit·모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 분산돼 있었고, 핵심 시세 수집기는 소스가 유실된 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스들을 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
     ], items: [
       '기존 바이너리의 동작과 데이터 형식을 분석해 수집기를 Node.js로 재작성. 실시간·캔들·백필 모드 구현, 연결 샤딩·스로틀로 WebSocket 끊김 대응',
       '중계 계층을 정리해 수집기 → Redis → 서버 구조로 단순화',

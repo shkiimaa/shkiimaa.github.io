@@ -48,9 +48,9 @@ export const projects = [
       ['서비스 운영', '가격 조건별 알림·클라이언트 오류 수집·앱 버전 정책·고객 문의(CS) API 개발, k3s 프로덕션 배포·운영 및 장애 대응']
     ],
     tech: ['TypeScript', 'Next.js 16', 'React 19', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron', 'Node.js', 'Express', 'Prisma', 'MariaDB', 'Redis', 'Docker', 'k3s'],
-    outcomes: [{ label: '모바일 홈 TBT(총 차단 시간)', value: '49%', detail: '443 → 226ms · 로컬 비교 측정' }, { label: '앱 누적 렌더 시간', value: '60%', detail: '1,028 → 416ms · 12초 측정' }],
+    outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '49%', detail: '443 → 226ms · 로컬 비교 측정' }, { label: '앱 트레이딩 화면 누적 렌더 시간', value: '60%', detail: '1,028 → 416ms · 12초 측정' }],
     cases: [
-      { id: 'order-calculation', title: '주문 가능액 계산 불일치 개선', paragraphs: [
+      { id: 'order-calculation', title: '교차 마진 주문 가능액 계산 오류 수정', paragraphs: [
         '레버리지 모달과 주문 폼이 최대 주문 가능액을 따로 계산해 같은 조건에서도 표시 금액이 최대 56배 차이 났습니다. 거래소 문서와 API 응답을 비교해 두 원인을 찾았습니다. 교차 마진 계산에 격리 마진용 리스크 한도를 적용했고, 잔고에 레버리지를 단순 곱하는 계산도 문제였습니다.',
         '표시값만 고치지 않고 계산 로직을 공통 모듈로 통합했습니다. 수수료·안전 여유분·리스크 한도·레버리지 상한·최소 주문 단위를 반영했습니다. 주문 수량의 부동소수점 오차는 BigNumber로 처리했습니다.'
       ], result: '두 화면의 계산값을 거래 단위까지 일치시켰습니다. 경계 사례 20건을 검증하고, 운영 환경에서 발견한 양방향 포지션의 조건부 주문 누락도 수정했습니다.' },

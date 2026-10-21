@@ -16,6 +16,11 @@
 @media screen and (max-width:767px){.row-body{font-size:13px}.intro-description{font-size:14px}.task-list dd,.case-study,.project-description,.index-description{font-size:13px}.skills-list dd{font-size:12px}.download-link{min-height:40px}.project-filters button{min-height:40px}.dialog-close{min-height:40px;min-width:56px}}
 
 .implementation-section{margin-top:28px;font-size:14px;color:var(--secondary);line-height:1.95}
+
+/* The outcome strip already supplies the divider before the work section. */
+.outcome-strip+.detail-section{margin-top:0;padding-top:32px;border-top:0}
+@media screen and (max-width:767px){.outcome-strip+.detail-section{padding-top:26px}}
+@media print{.outcome-strip+.detail-section{padding-top:18pt}}
 .implementation-section h3{font-size:18px;color:var(--ink);margin-bottom:14px}
 .implementation-section>p+p{margin-top:12px}
 .architecture-diagram{margin-top:20px;break-inside:avoid}

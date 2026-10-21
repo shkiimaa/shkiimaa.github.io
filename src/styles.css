@@ -15,6 +15,18 @@
 @media screen and (min-width:768px){.row-body{font-size:14px}.intro-description{font-size:15px}.task-list dd{font-size:14px}.project-description{font-size:15px}.case-study{font-size:14px}.index-description{font-size:13px}.skills-list dd{font-size:13px}.implementation-note{font-size:14px}}
 @media screen and (max-width:767px){.row-body{font-size:13px}.intro-description{font-size:14px}.task-list dd,.case-study,.project-description,.index-description{font-size:13px}.skills-list dd{font-size:12px}.download-link{min-height:40px}.project-filters button{min-height:40px}.dialog-close{min-height:40px;min-width:56px}}
 
+.implementation-section{margin-top:28px;font-size:14px;color:var(--secondary);line-height:1.95}
+.implementation-section h3{font-size:18px;color:var(--ink);margin-bottom:14px}
+.implementation-section>p+p{margin-top:12px}
+.architecture-diagram{margin-top:20px;break-inside:avoid}
+.diagram-scroll{padding:20px 12px;border:1px solid var(--line);overflow-x:auto;background:#fff}
+.diagram-scroll svg{display:block;width:100%;height:auto;min-width:580px;margin:auto}
+.implementation-section .project-gallery{margin-top:20px}
+.portfolio-project{margin-top:48px}
+.portfolio-company{font-size:12px;color:var(--muted);padding-top:20px;border-top:2px solid var(--ink)}
+.portfolio-links{display:flex;flex-wrap:wrap;gap:20px;font-size:12px;color:var(--accent);margin-top:18px}
+@media screen and (max-width:767px){.implementation-section{font-size:13px}.implementation-section h3{font-size:17px}.diagram-scroll{padding:15px 8px}}
+
 /* Print uses the document's two-column task rows, independent of screen width. */
 @media print{
  .mobile-break{display:none}
@@ -50,4 +62,24 @@
  .company-section+.company-section .project-meta{margin-bottom:6pt}
  .company-section+.company-section .project-description{line-height:1.6}
  .company-section+.company-section .tech-line{margin-top:7pt}
+ .implementation-section{font-size:9pt;line-height:1.7;margin-top:14pt;break-inside:avoid-page}
+ .implementation-section h3{font-size:12pt;margin-bottom:7pt;break-after:avoid-page}
+ .implementation-section>p+p{margin-top:7pt}
+ .architecture-diagram{margin-top:10pt}
+ .diagram-scroll{padding:9pt;overflow:visible}
+ .diagram-scroll svg{min-width:0;max-height:230pt}
+ .architecture-diagram figcaption,figcaption{font-size:7.5pt;line-height:1.5}
+ .implementation-section .project-gallery{margin-top:10pt}
+ .portfolio-project{margin-top:16pt;break-before:auto}
+ .portfolio-document>.page-intro+.portfolio-project{break-before:auto}
+ .portfolio-company{font-size:8pt;padding-top:8pt;margin-bottom:0;break-after:avoid-page}
+ .portfolio-document .project-overview{break-inside:avoid-page}
+ .portfolio-document .detail-section{margin-top:16pt;padding-top:13pt}
+ .portfolio-document .detail-section>h2{font-size:13pt;margin-bottom:10pt;break-after:avoid-page}
+ .portfolio-document .project-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12pt;break-inside:avoid-page}
+ .portfolio-document .project-gallery figure{margin-top:0;min-width:0}
+ .portfolio-document .image-expand{padding:5pt}
+ .portfolio-document .image-expand img{max-height:170pt}
+ .portfolio-document .implementation-section .project-gallery{grid-template-columns:1fr}
+ .portfolio-links{font-size:8pt;line-height:1.6;margin-top:10pt;gap:12pt;break-inside:avoid-page}
 }

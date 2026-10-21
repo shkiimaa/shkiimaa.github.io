@@ -1,0 +1,10 @@
+graph TD
+    CODE["단일 코드베이스<br>Next.js + TypeScript"]
+    CODE --> WEB["Web<br>SSR"]
+    CODE --> CAP["Capacitor"]
+    CODE --> EL["Electron"]
+    CAP --> IOS["iOS 앱"]
+    CAP --> AOS["Android 앱"]
+    EL --> DESK["데스크톱 앱"]
+    IOS --> NATIVE["네이티브 플러그인<br>푸시 · 소셜 로그인 · 기기 ID"]
+    AOS --> NATIVE

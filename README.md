@@ -31,6 +31,10 @@ npm run check
 
 `/`은 이력서, `/career/`는 경력기술서, `/projects/`는 프로젝트 목록입니다. 모든 프로젝트는 `/projects/<id>/` 상세 페이지가 있습니다.
 
-PDF는 실제 페이지에 인쇄 스타일을 적용해 만든 파일입니다. 문서를 수정하면 PDF도 갱신해야 합니다. 브라우저의 인쇄 기능으로 새 PDF를 저장해 `public/resume.pdf`, `public/career.pdf`를 교체한 뒤 다시 빌드합니다.
+PDF는 실제 페이지에 인쇄 스타일을 적용해 만든 파일입니다. `/portfolio/`는 구현 구조·문제 해결 사례·화면 자료를 모아 인쇄하는 전체 포트폴리오입니다. 프로젝트 목록의 PDF 다운로드로 `public/portfolio.pdf`를 받을 수 있습니다.
+
+문서 수정 후에는 로컬 서버를 실행한 상태에서 `node scripts/export-pdfs.mjs`로 세 문서를 갱신합니다. Playwright가 외부에 설치돼 있다면 `PLAYWRIGHT_MODULE`에 해당 모듈 경로를 지정합니다. 모든 이미지의 로드가 끝난 뒤 PDF를 생성하고, 다이어그램 포함 여부와 인쇄 배치를 검증합니다.
+
+`src/diagrams/*.mmd`는 원본 Notion 포트폴리오의 Mermaid 소스입니다. `node scripts/render-diagrams.mjs`로 `public/assets/diagrams/*.svg`를 생성합니다. `MERMAID_SCRIPT`에 Mermaid 11의 `dist/mermaid.min.js` 경로를 지정합니다. SVG는 빌드 시 HTML에 포함되므로 방문자와 PDF에서는 Mermaid 실행이나 외부 CDN이 필요하지 않습니다. `src/portfolio-content.mjs`는 원본 자료의 출처와 포트폴리오용 상세 설명을 관리합니다.
 
 Pretendard의 라이선스는 `public/fonts/LICENSE.txt`에 포함되어 있습니다. 프로젝트 화면은 본인의 기존 포트폴리오 자료를 사용합니다.

@@ -11,9 +11,15 @@ await mkdir(path.join(root, 'artifacts'), { recursive: true });
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  for (const [name, route] of [['resume', '/'], ['career', '/career/']]) {
+  for (const [name, route] of [['resume', '/'], ['career', '/career/'], ['portfolio', '/portfolio/']]) {
     await page.goto(base + route);
     await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => {
+      await Promise.all([...document.images].filter(image => image.getAttribute('src')).map(async image => {
+        image.loading = 'eager';
+        await image.decode();
+      }));
+    });
     await page.emulateMedia({ media: 'print' });
     // Narrow screen rules must never stack task labels or project metadata in print.
     for (const width of [390, 794]) {
@@ -23,6 +29,12 @@ try {
           elements.map(el => [...el.children].map(child => child.getBoundingClientRect().top)));
         assert(rows.every(tops => Math.abs(tops[0] - tops[1]) < 2), 'Print rows must stay in two columns');
       }
+    }
+    if (name === 'portfolio') {
+      assert.equal(await page.locator('.portfolio-project').count(), 8);
+      assert.equal(await page.locator('.architecture-diagram svg').count(), 4);
+      assert.equal(await page.locator('.architecture-diagram foreignObject').count(), 0);
+      assert.equal(await page.locator('img[src$="dax-architecture.png"]').count(), 1);
     }
     await page.evaluate(() => {
       for (const anchor of document.querySelectorAll('a[href^="/"]')) {

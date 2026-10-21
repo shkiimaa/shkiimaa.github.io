@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant U as 사용자
+    participant R as 라우트
+    participant W1 as 이전 차트 위젯
+    participant W2 as 새 차트 위젯
+    U->>R: 심볼 A → B 빠른 연속 전환
+    R->>W1: 언마운트 (iframe 해제)
+    R->>W2: 마운트 시작
+    W1--xW2: 잔여 콜백이 해제된 iframe 접근
+    Note over W2: onChartReady 미도달 → 로딩 실패

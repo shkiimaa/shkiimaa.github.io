@@ -1,7 +1,9 @@
 import { mkdir, writeFile, cp, rm } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { profile, experiences, projects, skills } from '../src/content.mjs';
+import { portfolioMaterial } from '../src/portfolio-content.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 const out = path.join(root, 'dist');
@@ -24,7 +26,7 @@ function layout({ title, description, route, active, body, toc = [], pageLabel, 
   return `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(title)} | 김수환</title><meta name="description" content="${e(description)}"><meta name="theme-color" content="#ffffff"><meta name="color-scheme" content="light"><link rel="canonical" href="${origin}${route}"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:site_name" content="김수환 · 웹 개발자"><meta property="og:title" content="${e(title)} | 김수환"><meta property="og:description" content="${e(description)}"><meta property="og:url" content="${origin}${route}"><meta property="og:image" content="${origin}/assets/og.png"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preload" href="/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
 <body><a class="skip-link" href="#main">본문으로 이동</a>
-<header class="site-header"><div class="header-inner"><a class="wordmark" href="/" aria-label="김수환 이력서">김수환<span>Web Developer</span></a><nav class="primary-nav" aria-label="주 메뉴">${nav.map(([href,label,key])=>`<a href="${href}"${active===key?' aria-current="page"':''}>${label}</a>`).join('')}</nav>${pdf ? `<a class="download-link" href="/${pdf}.pdf" download="김수환_${pdf==='resume'?'이력서':'경력기술서'}.pdf">PDF 다운로드 <span aria-hidden="true">↓</span></a>` : '<button class="download-link" type="button" data-print>인쇄 <span aria-hidden="true">↗</span></button>'}</div></header>
+<header class="site-header"><div class="header-inner"><a class="wordmark" href="/" aria-label="김수환 이력서">김수환<span>Web Developer</span></a><nav class="primary-nav" aria-label="주 메뉴">${nav.map(([href,label,key])=>`<a href="${href}"${active===key?' aria-current="page"':''}>${label}</a>`).join('')}</nav>${pdf ? `<a class="download-link" href="/${pdf}.pdf" download="김수환_${pdf==='resume'?'이력서':pdf==='career'?'경력기술서':'포트폴리오'}.pdf">${pdf==='portfolio'?'포트폴리오 PDF':'PDF 다운로드'} <span aria-hidden="true">↓</span></a>` : '<button class="download-link" type="button" data-print>인쇄 <span aria-hidden="true">↗</span></button>'}</div></header>
 <div class="page-shell">${sidebar(toc,pageLabel)}<main id="main" class="document" tabindex="-1">${body}</main></div>
 <footer class="site-footer"><span>© ${new Date().getUTCFullYear()} Suhwan Kim</span><a href="mailto:${profile.email}">${profile.email}</a><a href="#main" class="back-top">맨 위로 <span aria-hidden="true">↑</span></a></footer>
 <dialog class="image-dialog" aria-label="프로젝트 화면 확대"><button type="button" class="dialog-close" aria-label="확대 화면 닫기">닫기 ×</button><img src="" alt=""><p></p></dialog></body></html>`;
@@ -52,8 +54,8 @@ function caseStudy(study, prefix = '') {
   return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${e(copy)}</p>`).join('')}${study.items?list(study.items):''}<div class="result"><strong>결과</strong><p>${e(study.result)}</p></div>${study.note?`<p class="measurement-note">${e(study.note)}</p>`:''}</section>`;
 }
 
-function careerProject(project) {
-  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${e(project.description)}</p><h3 class="subsection-heading">주요 업무</h3>${taskList(project)}${project.insight?`<p class="implementation-note">${e(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${e(project.result)}</p></div>`:''}${tech(project.tech)}</div>${project.cases?.length?`<div class="case-group"><p class="case-group-label">대표 문제 해결</p>${project.cases.map(study=>caseStudy(study,project.id+'-')).join('')}</div>`:''}<a class="text-link" href="${projectHref(project)}">프로젝트 상세 보기 <span aria-hidden="true">↗</span></a></article>`;
+function careerProject(project, { portfolio = false } = {}) {
+  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${e(project.description)}</p><h3 class="subsection-heading">주요 업무</h3>${taskList(project)}${project.insight?`<p class="implementation-note">${e(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${e(project.result)}</p></div>`:''}${tech(project.tech)}</div>${project.cases?.length?`<div class="case-group"><p class="case-group-label">대표 문제 해결</p>${project.cases.map(study=>caseStudy(study,project.id+'-')).join('')}</div>`:''}${portfolio?implementation(project,project.id+'-')+projectGallery(project):''}<a class="text-link" href="${projectHref(project)}">프로젝트 상세 보기 <span aria-hidden="true">↗</span></a></article>`;
 }
 
 function career() {
@@ -66,19 +68,36 @@ function gallery(images) {
   return `<div class="project-gallery">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
 }
 
+function implementation(project, prefix = '') {
+  const material = portfolioMaterial[project.id];
+  if (!material?.sections?.length) return '';
+  return `<section class="detail-section implementation" id="${prefix}implementation"><h2>구현 구조와 설계</h2>${material.sections.map(section=>`<section class="implementation-section" id="${prefix}design-${section.id}"><h3>${e(section.title)}</h3>${section.paragraphs.map(p=>`<p>${e(p)}</p>`).join('')}${section.diagram?`<figure class="architecture-diagram"><div class="diagram-scroll" role="region" aria-label="${e(section.caption)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',section.diagram+'.svg'),'utf8')}</div><figcaption>${e(section.caption)}</figcaption></figure>`:''}${section.images?gallery(section.images):''}</section>`).join('')}</section>`;
+}
+
+function projectGallery(project, id = '') {
+  const images = [...(project.images || []), ...(portfolioMaterial[project.id]?.images || [])];
+  return images.length ? `<section class="detail-section"${id?` id="${id}"`:''}><h2>${id?'':e(project.name)+' · '}프로젝트 화면</h2>${gallery(images)}</section>` : '';
+}
+
+function portfolio() {
+  const body = `<div class="portfolio-document"><div class="page-intro"><p class="page-kicker">김수환 · 웹 개발자 · ${external('GitHub',profile.github)}</p><h1>포트폴리오</h1><p>프로젝트별 담당 업무, 문제 해결 과정과 구현 자료입니다.</p></div>${projects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${careerProject(project,{portfolio:true})}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
+  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:projects.map(p=>[p.id,p.name])});
+}
+
 function projectIndex() {
   const body = `<div class="page-intro"><p class="page-kicker">프론트엔드 · 백엔드 · 서비스 운영</p><h1>프로젝트</h1><p>직접 개발하고 운영한 서비스와<br class="mobile-break"> 팀에서 함께 만든 프로젝트입니다.</p></div><div class="project-toolbar"><div class="project-filters" role="group" aria-label="프로젝트 분류"><button type="button" data-filter="all" aria-pressed="true">전체 <span>8</span></button><button type="button" data-filter="work" aria-pressed="false">업무 <span>6</span></button><button type="button" data-filter="team" aria-pressed="false">팀 <span>2</span></button></div><p class="project-count" aria-live="polite">8개 프로젝트</p></div><div class="project-index">${projects.map(p=>`<article class="project-index-row${p.images?' has-image':''}" data-category="${p.category}"><div class="project-index-content"><p class="index-meta">${e(p.company)} <span aria-hidden="true">/</span> <span class="numeric">${e(p.period)}</span></p><h2><a href="${projectHref(p)}">${e(p.name)}<span aria-hidden="true">↗</span></a></h2><p class="index-kind">${e(p.kind)}</p><p class="index-description">${e(p.description)}</p><p class="compact-tech">${p.tech.slice(0,6).map(e).join(' · ')}</p></div>${p.images?`<a class="project-thumbnail" href="${projectHref(p)}" tabindex="-1" aria-hidden="true"><img src="/assets/${p.images[0].src}" alt="" loading="lazy" decoding="async"></a>`:''}</article>`).join('')}</div>`;
-  return layout({title:'프로젝트',description:'Bitria, gobit, doit-uikit, D.A.X 등 김수환이 개발한 8개 프로젝트입니다.',route:'/projects/',active:'projects',body,pageLabel:'프로젝트',toc:[['main','전체 프로젝트']]});
+  return layout({title:'프로젝트',description:'Bitria, gobit, doit-uikit, D.A.X 등 김수환이 개발한 8개 프로젝트입니다.',route:'/projects/',active:'projects',body,pageLabel:'프로젝트',pdf:'portfolio',toc:[['main','전체 프로젝트']]});
 }
 
 function projectDetail(project, index) {
   const toc=[['overview','프로젝트 소개'],['work','담당 업무']];
   if(project.cases?.length)toc.push(...project.cases.map(study=>[study.id,study.title]));
-  if(project.images?.length)toc.push(['screens','프로젝트 화면']);
+  if(portfolioMaterial[project.id]?.sections?.length)toc.push(['implementation','구현 구조와 설계']);
+  if(project.images?.length||portfolioMaterial[project.id]?.images?.length)toc.push(['screens','프로젝트 화면']);
   toc.push(['technology','사용 기술']);
   const previous=projects[index-1],next=projects[index+1];
-  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${e(project.company)} · ${project.category==='work'?'업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${e(project.description)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${project.outcomes?`<dl class="outcome-strip">${project.outcomes.map(outcome=>`<div><dt>${e(outcome.label)}</dt><dd>${outcome.value}<span>감소</span></dd><p>${e(outcome.detail)}</p></div>`).join('')}</dl>`:''}<section class="detail-section" id="work"><h2>담당 업무</h2>${taskList(project)}${project.insight?`<p class="implementation-note">${e(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${e(project.result)}</p></div>`:''}</section>${project.cases?.map(study=>caseStudy(study)).join('')||''}${project.images?.length?`<section class="detail-section" id="screens"><h2>프로젝트 화면</h2>${gallery(project.images)}</section>`:''}<section class="detail-section" id="technology"><h2>사용 기술</h2><p class="technology-text">${project.tech.map(e).join(' · ')}</p></section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
-  return layout({title:project.name,description:project.description,route:projectHref(project),active:'projects',body,pageLabel:project.name,toc});
+  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${e(project.description)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${project.outcomes?`<dl class="outcome-strip">${project.outcomes.map(outcome=>`<div><dt>${e(outcome.label)}</dt><dd>${outcome.value}<span>감소</span></dd><p>${e(outcome.detail)}</p></div>`).join('')}</dl>`:''}<section class="detail-section" id="work"><h2>담당 업무</h2>${taskList(project)}${project.insight?`<p class="implementation-note">${e(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${e(project.result)}</p></div>`:''}</section>${project.cases?.map(study=>caseStudy(study)).join('')||''}${implementation(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>사용 기술</h2><p class="technology-text">${project.tech.map(e).join(' · ')}</p></section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
+  return layout({title:project.name,description:project.description,route:projectHref(project),active:'projects',body,pageLabel:project.name,pdf:'portfolio',toc});
 }
 
 export async function build() {
@@ -87,7 +106,7 @@ export async function build() {
   await cp(path.join(root,'public'),out,{recursive:true});
   await cp(path.join(root,'src/styles.css'),path.join(out,'styles.css'));
   await cp(path.join(root,'src/app.js'),path.join(out,'app.js'));
-  const pages=[['/',resume()],['/career/',career()],['/projects/',projectIndex()],...projects.map((p,i)=>[projectHref(p),projectDetail(p,i)])];
+  const pages=[['/',resume()],['/career/',career()],['/projects/',projectIndex()],['/portfolio/',portfolio()],...projects.map((p,i)=>[projectHref(p),projectDetail(p,i)])];
   for(const [route,html] of pages){const directory=path.join(out,route);await mkdir(directory,{recursive:true});await writeFile(path.join(directory,'index.html'),html);}
   await writeFile(path.join(out,'404.html'),layout({title:'페이지를 찾을 수 없습니다',description:'김수환의 이력서로 돌아갑니다.',route:'/404.html',active:'',pageLabel:'페이지 안내',body:'<div class="page-intro"><p class="page-kicker">404</p><h1>페이지를 찾을 수 없습니다.</h1><p>주소를 확인하거나 이력서로 돌아가 주세요.</p><a class="text-link" href="/">이력서로 돌아가기 →</a></div>'}));
   await writeFile(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([route])=>`<url><loc>${origin}${route}</loc></url>`).join('')}</urlset>`);

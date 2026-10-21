@@ -1,0 +1,5 @@
+graph LR
+    EX["거래소<br>WebSocket"] --> COL["수집 서비스<br>심볼 정규화"]
+    COL --> REDIS["Redis<br>Pub/Sub"]
+    REDIS --> BE["Backend<br>인메모리 캐시"]
+    BE -->|"REST 스냅샷<br>WS 스트림"| FE["프론트엔드<br>차트 · 오더북 · 시세"]

@@ -129,7 +129,7 @@ export const projects = [
   },
   {
     id: 'xrgis', name: 'XRGIS BackOffice', category: 'work', company: '두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 시스템 백오피스',
-    description: 'XR(가상·증강·혼합현실)과 GIS(지도·공간정보)를 결합해 원격 협업하는 서비스입니다. 이 서비스의 관리자 백오피스에서 사용자·팀과 OBJ 3D 모델·영상 파일을 관리하도록 React 화면, Express API, MongoDB GridFS·MariaDB 연동을 혼자 개발했습니다.',
+    description: 'XR(가상·증강·혼합현실)과 GIS(지도·공간정보)를 결합해 원격 협업하는 서비스입니다. React·Express 기반 관리자 백오피스를 혼자 개발했습니다. 사용자·팀과 OBJ 3D 모델·영상 관리 기능을 구현했습니다. 파일 저장에 MongoDB GridFS를, 인증에 MariaDB를 연동했습니다.',
     summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
     tasks: [
       ['풀스택 개발', 'React 기반 사용자·팀·데이터 관리 화면과 Express API 개발'],

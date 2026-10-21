@@ -22,9 +22,9 @@ export const experiences = [
 ];
 
 export const skills = [
-  { label: 'Front-End', items: ['TypeScript / JavaScript', 'Next.js / React', 'Tailwind CSS / Radix UI', 'Zustand / TanStack Query / SWR', 'WebSocket', 'next-intl / react-hook-form', 'Capacitor / Electron', 'Recoil / Redux Toolkit'] },
-  { label: 'Back-End · Infra', items: ['Node.js / Express', 'Prisma', 'MariaDB / MySQL', 'MongoDB / Redis', 'Docker / Kubernetes / k3s'] },
-  { label: 'Tools', items: ['Git / GitHub Actions', 'Lighthouse / bundle-analyzer', 'React DevTools Profiler', 'Storybook / Chromatic', 'Figma', 'Photoshop / Illustrator'] }
+  { label: 'Front-End', items: ['TypeScript', 'JavaScript', 'Next.js', 'React', 'Tailwind CSS', 'Radix UI', 'Zustand', 'TanStack Query', 'SWR', 'WebSocket', 'next-intl', 'react-hook-form', 'Capacitor', 'Electron', 'Recoil', 'Redux Toolkit'] },
+  { label: 'Back-End · Infra', items: ['Node.js', 'Express', 'Prisma', 'MariaDB', 'MySQL', 'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'k3s'] },
+  { label: 'Tools', items: ['Git', 'GitHub Actions', 'Lighthouse', 'bundle-analyzer', 'React DevTools Profiler', 'Storybook', 'Chromatic', 'Figma', 'Photoshop', 'Illustrator'] }
 ];
 
 export const projects = [

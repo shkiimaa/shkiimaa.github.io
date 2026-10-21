@@ -139,26 +139,4 @@ export const projects = [
     insight: 'MongoDB에 파일을 저장해야 하는 요구사항에 맞춰, 일반 문서의 16MB 제한에 걸리는 OBJ·영상 등을 GridFS의 청크 분할 저장으로 처리했습니다. 같은 관리자 계정을 사용하는 사내 서비스와는 MySQL 기반 세션 저장소를 통해 인증 체계를 맞췄습니다.',
     tech: ['TypeScript', 'React 18', 'React Query', 'Recoil', 'styled-components', 'Express', 'MongoDB(GridFS)', 'MariaDB']
   },
-  {
-    id: 'my-little-coin-manager', name: 'My Little Coin Manager', category: 'team', company: '팀 프로젝트', period: '2023.02 – 2023.03', role: '풀스택 참여 · 2인 팀', kind: '암호화폐 자산 관리',
-    description: '실시간 코인 시세를 조회하고 매수·매도 기록으로 손익을 확인하는 웹 애플리케이션입니다.',
-    summary: ['Upbit API·WebSocket 기반 시세 조회 및 거래 기록·손익 계산 화면 구현', 'Express·MongoDB API와 데이터 스키마 설계, JWT 인증 구현'],
-    tasks: [
-      ['시세·화면', 'Upbit API·WebSocket 기반 실시간 시세 조회, 캔들 차트와 거래 기록·손익 계산 화면 구현'],
-      ['API·인증', 'Express API 및 MongoDB·Mongoose 데이터 스키마 설계, JWT 사용자 인증 구현'],
-      ['성능·협업', '컴포넌트 분리와 memo·useMemo로 렌더링 최적화. 기획·디자인·온보딩·문서 작업 참여']
-    ], tech: ['TypeScript', 'React', 'React Query', 'Recoil', 'styled-components', 'Express', 'MongoDB', 'JWT'],
-    links: [{ label: 'GitHub', url: 'https://github.com/orgs/my-little-coin-manager/repositories' }]
-  },
-  {
-    id: 'rankple', name: 'Rankple', category: 'team', company: '팀 프로젝트', period: '2022.08 – 2022.10', role: '프론트엔드 참여 · 프론트엔드 3명 / 백엔드 2명 / 디자인 1명', kind: '스터디 플래너',
-    description: '공부 시간과 할 일을 기록하고 학습 현황을 확인하는 스터디 플래너입니다.',
-    summary: ['월간 스터디 로그·날짜별 투두 리스트 연동, 캘린더·D-day 구현', 'Redux Toolkit 기반 상태 관리 및 투두 리스트·모달 UI 개발'],
-    tasks: [
-      ['학습 기록', '월간 스터디 로그와 날짜별 투두 리스트 조회를 연동'],
-      ['일정 관리', '캘린더 날짜 선택과 D-day 설정·표시 기능 구현'],
-      ['상태·UI', 'Redux Toolkit 기반 데이터·UI 상태 관리, 투두 리스트·모달 컴포넌트 개발']
-    ], tech: ['JavaScript', 'React', 'Redux Toolkit', 'styled-components', 'Axios'],
-    links: [{ label: 'GitHub', url: 'https://github.com/shkiimaa/RANKPLE-front-end' }]
-  }
 ];

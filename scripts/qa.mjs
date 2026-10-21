@@ -38,12 +38,9 @@ try {
     }
   }
   await ready('/projects/');
-  await page.getByRole('button',{name:/팀 2/}).click();
-  if(await page.locator('.project-index-row:visible').count()!==2)failures.push('Team filter did not show two projects');
-  await page.getByRole('button',{name:/업무 6/}).click();
-  if(await page.locator('.project-index-row:visible').count()!==6)failures.push('Work filter did not show six projects');
-  await page.getByRole('button',{name:/전체 8/}).click();
-  if(await page.locator('.project-index-row:visible').count()!==8)failures.push('All filter did not restore projects');
+  await ready('/projects/');
+  if(await page.locator('.project-index-row:visible').count()!==6)failures.push('Project list should show six work projects');
+  if(await page.getByText('Rankple',{exact:true}).count()||await page.getByText('My Little Coin Manager',{exact:true}).count())failures.push('Removed team projects remain in portfolio');
   await ready('/projects/dax/');await page.locator('[data-image]').first().click();
   if(!await page.locator('dialog').evaluate(dialog=>dialog.open))failures.push('Image dialog did not open');
   await page.keyboard.press('Escape');

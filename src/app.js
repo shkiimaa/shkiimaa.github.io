@@ -60,19 +60,6 @@ if (sections.length) {
   document.fonts.ready.then(sync);
 }
 
-const filterButtons = [...document.querySelectorAll('[data-filter]')];
-const projectRows = [...document.querySelectorAll('[data-category]')];
-filterButtons.forEach(button => button.addEventListener('click', () => {
-  const selected = button.dataset.filter;
-  filterButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-  let count = 0;
-  projectRows.forEach(row => {
-    row.hidden = selected !== 'all' && row.dataset.category !== selected;
-    if (!row.hidden) count++;
-  });
-  document.querySelector('.project-count').textContent = `${count}개 프로젝트`;
-}));
-
 const dialog = document.querySelector('.image-dialog');
 if (dialog) {
   const image = dialog.querySelector('img');

@@ -31,7 +31,7 @@ try {
       }
     }
     if (name === 'portfolio') {
-      assert.equal(await page.locator('.portfolio-project').count(), 8);
+      assert.equal(await page.locator('.portfolio-project').count(), 6);
       assert.equal(await page.locator('.architecture-diagram svg').count(), 4);
       assert.equal(await page.locator('.architecture-diagram foreignObject').count(), 0);
       assert.equal(await page.locator('img[src$="dax-architecture.png"]').count(), 1);

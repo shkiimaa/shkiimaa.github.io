@@ -23,6 +23,6 @@ for(const file of pages){
   for(const match of html.matchAll(/href="#([^"]+)"/g))if(!ids.includes(match[1]))failures.push(`${file}: missing #${match[1]}`);
 }
 for(const name of ['resume','career','portfolio']){const pdf=await readFile(path.join(dist,`${name}.pdf`));if(pdf.subarray(0,4).toString()!=='%PDF')failures.push(`Invalid ${name}.pdf`);}
-if(projects.length!==8||projects.filter(p=>p.category==='work').length!==6)failures.push('Project count changed');
-if(pages.length!==13)failures.push('Expected 12 pages and a 404 page');
-if(failures.length){console.error(failures.join('\n'));process.exitCode=1;}else console.log(`Checked ${pages.length} HTML pages, internal links, metadata, 8 projects and three PDFs.`);
+if(projects.length!==6||projects.filter(p=>p.category==='work').length!==6)failures.push('Project count changed');
+if(pages.length!==11)failures.push('Expected 10 pages and a 404 page');
+if(failures.length){console.error(failures.join('\n'));process.exitCode=1;}else console.log(`Checked ${pages.length} HTML pages, internal links, metadata, 6 projects and three PDFs.`);

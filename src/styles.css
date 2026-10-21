@@ -46,7 +46,7 @@
  .task-list{display:block}
  .task-list>div{display:grid;grid-template-columns:65pt minmax(0,1fr);gap:12pt;margin-top:4pt;break-inside:avoid-page}
  .task-list>div:first-child{margin-top:0}
- .task-list dt{margin:0;padding:0}
+ .task-list dt{font-size:8.7pt;line-height:1.6;margin:0;padding:0;align-self:start}
  .task-list dd{line-height:1.6}
  .subsection-heading{margin-top:10pt;margin-bottom:6pt}
  .tech-line{line-height:1.65;margin-top:10pt}

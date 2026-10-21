@@ -61,21 +61,5 @@ export const portfolioMaterial = {
       { src: 'xrgis-data.png', alt: 'XRGIS 팀별 데이터·파일 관리 화면' }
     ]
   },
-  'my-little-coin-manager': {
-    source: 'https://www.notion.so/49d55c7e49ef4f99974562e3a56bfbe5',
-    images: [
-      { src: 'coin-manager-market.png', alt: 'My Little Coin Manager 실시간 시세·차트 화면' },
-      { src: 'coin-manager-assets.png', alt: 'My Little Coin Manager 매수·매도 기록과 자산 관리 화면' }
-    ]
-  },
-  rankple: {
-    source: 'https://www.notion.so/c4239168dfb143b28736e2e56b5b3d1c',
-    sections: [{ id: 'feedback', title: '사용자 피드백을 반영한 날짜 연동', paragraphs: [
-      '62건의 피드백 중 3건에서 월간 스터디 로그의 오늘 날짜 테두리를 투두리스트의 선택 날짜로 오해하는 문제가 확인됐습니다. 투두리스트와 월간 스터디 로그의 날짜를 연동해 선택한 날짜를 일관되게 확인하도록 수정했습니다.'
-    ] }],
-    images: [
-      { src: 'rankple-todos.png', alt: 'Rankple 날짜별 투두리스트 화면' },
-      { src: 'rankple-study-log.png', alt: 'Rankple 월간·주간 스터디 로그 화면' }
-    ]
-  }
+
 };

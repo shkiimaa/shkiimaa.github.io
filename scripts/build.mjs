@@ -14,10 +14,9 @@ const external = (label, href, cls = '') => `<a class="${cls}" href="${e(href)}"
 const list = items => `<ul class="bullets">${items.map(item => `<li>${e(item)}</li>`).join('')}</ul>`;
 const tech = items => `<p class="tech-line"><span class="tech-label">기술</span>${items.map(e).join('<span aria-hidden="true"> · </span>')}</p>`;
 const projectHref = project => `/projects/${project.id}/`;
-const workProjects = projects.filter(project => project.category === 'work').sort((a, b) => {
-  const startDate = project => project.period.match(/\d{4}\.\d{2}/)?.[0] ?? '';
-  return startDate(a).localeCompare(startDate(b));
-});
+const projectStartDate = project => Number((project.period.match(/\d{4}\.\d{2}/)?.[0] ?? '0000.00').replace('.', ''));
+const orderedProjects = [...projects].sort((a, b) => projectStartDate(b) - projectStartDate(a));
+const workProjects = orderedProjects.filter(project => project.category === 'work');
 const projectNames = { daon: '다온소프트랩', doit: '두잇' };
 
 function sidebar(items, pageTitle) {
@@ -83,12 +82,12 @@ function projectGallery(project, id = '') {
 }
 
 function portfolio() {
-  const body = `<div class="portfolio-document"><div class="page-intro"><p class="page-kicker">김수환 · 웹 개발자 · ${external('GitHub',profile.github)}</p><h1>포트폴리오</h1><p>프로젝트별 담당 업무, 문제 해결 과정과 구현 자료입니다.</p></div>${projects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${careerProject(project,{portfolio:true})}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
-  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:projects.map(p=>[p.id,p.name])});
+  const body = `<div class="portfolio-document"><div class="page-intro"><p class="page-kicker">김수환 · 웹 개발자 · ${external('GitHub',profile.github)}</p><h1>포트폴리오</h1><p>프로젝트별 담당 업무, 문제 해결 과정과 구현 자료입니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${careerProject(project,{portfolio:true})}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
+  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:orderedProjects.map(p=>[p.id,p.name])});
 }
 
 function projectIndex() {
-  const body = `<div class="page-intro"><p class="page-kicker">프론트엔드 · 백엔드 · 서비스 운영</p><h1>프로젝트</h1><p>직접 개발하고 운영한 6개 프로젝트의<br class="mobile-break"> 담당 업무와 구현 사례입니다.</p></div><div class="project-toolbar"><p class="project-count" aria-live="polite">6개 프로젝트</p></div><div class="project-index">${projects.map(p=>`<article class="project-index-row${p.images?' has-image':''}" data-category="${p.category}"><div class="project-index-content"><p class="index-meta">${e(p.company)} <span aria-hidden="true">/</span> <span class="numeric">${e(p.period)}</span></p><h2><a href="${projectHref(p)}">${e(p.name)}<span aria-hidden="true">↗</span></a></h2><p class="index-kind">${e(p.kind)}</p><p class="index-description">${e(p.description)}</p><p class="compact-tech">${p.tech.slice(0,6).map(e).join(' · ')}</p></div>${p.images?`<a class="project-thumbnail" href="${projectHref(p)}" tabindex="-1" aria-hidden="true"><img src="/assets/${p.images[0].src}" alt="" loading="lazy" decoding="async"></a>`:''}</article>`).join('')}</div>`;
+  const body = `<div class="page-intro"><p class="page-kicker">프론트엔드 · 백엔드 · 서비스 운영</p><h1>프로젝트</h1><p>직접 개발하고 운영한 6개 프로젝트의<br class="mobile-break"> 담당 업무와 구현 사례입니다.</p></div><div class="project-toolbar"><p class="project-count" aria-live="polite">6개 프로젝트</p></div><div class="project-index">${orderedProjects.map(p=>`<article class="project-index-row${p.images?' has-image':''}" data-category="${p.category}"><div class="project-index-content"><p class="index-meta">${e(p.company)} <span aria-hidden="true">/</span> <span class="numeric">${e(p.period)}</span></p><h2><a href="${projectHref(p)}">${e(p.name)}<span aria-hidden="true">↗</span></a></h2><p class="index-kind">${e(p.kind)}</p><p class="index-description">${e(p.description)}</p><p class="compact-tech">${p.tech.slice(0,6).map(e).join(' · ')}</p></div>${p.images?`<a class="project-thumbnail" href="${projectHref(p)}" tabindex="-1" aria-hidden="true"><img src="/assets/${p.images[0].src}" alt="" loading="lazy" decoding="async"></a>`:''}</article>`).join('')}</div>`;
   return layout({title:'프로젝트',description:'Bitria, Gobit, doit-uikit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다.',route:'/projects/',active:'projects',body,pageLabel:'프로젝트',pdf:'portfolio',toc:[['main','전체 프로젝트']]});
 }
 
@@ -109,7 +108,7 @@ export async function build() {
   await cp(path.join(root,'public'),out,{recursive:true});
   await cp(path.join(root,'src/styles.css'),path.join(out,'styles.css'));
   await cp(path.join(root,'src/app.js'),path.join(out,'app.js'));
-  const pages=[['/',resume()],['/career/',career()],['/projects/',projectIndex()],['/portfolio/',portfolio()],...projects.map((p,i)=>[projectHref(p),projectDetail(p,i)])];
+  const pages=[['/',resume()],['/career/',career()],['/projects/',projectIndex()],['/portfolio/',portfolio()],...orderedProjects.map((p,i)=>[projectHref(p),projectDetail(p,i)])];
   for(const [route,html] of pages){const directory=path.join(out,route);await mkdir(directory,{recursive:true});await writeFile(path.join(directory,'index.html'),html);}
   await writeFile(path.join(out,'404.html'),layout({title:'페이지를 찾을 수 없습니다',description:'김수환의 이력서로 돌아갑니다.',route:'/404.html',active:'',pageLabel:'페이지 안내',body:'<div class="page-intro"><p class="page-kicker">404</p><h1>페이지를 찾을 수 없습니다.</h1><p>주소를 확인하거나 이력서로 돌아가 주세요.</p><a class="text-link" href="/">이력서로 돌아가기 →</a></div>'}));
   await writeFile(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([route])=>`<url><loc>${origin}${route}</loc></url>`).join('')}</urlset>`);

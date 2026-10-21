@@ -14,7 +14,7 @@ export const experiences = [
   { id: 'doit', name: '(주)두잇', role: 'Web Developer', period: '2023.08 – 2024.07', items: [
     '데이터 라벨링·AI 모델 학습·추론을 지원하는 D.A.X의 프론트엔드 개발',
     '사내 공통 UI 라이브러리 doit-uikit 개발·배포, React 개발 표준 수립 및 팀 온보딩 교육',
-    'XR·GIS 관리자 백오피스의 프론트엔드·백엔드 개발',
+    'XR·GIS 원격 협업 시스템의 사용자·팀·대용량 파일 관리 백오피스 풀스택 개발',
     '회사 홈페이지 React 마이그레이션 및 한국어·영어 다국어·반응형 대응'
   ] },
   { id: 'founder', name: '개인 사업', role: 'Founder', period: '2019.09 – 2022.06', items: ['온라인 커머스·유통 사업. 국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개.'] },
@@ -128,8 +128,8 @@ export const projects = [
     tech: ['TypeScript', 'React 18', 'Vite', 'styled-components', 'doit-uikit', 'i18next', 'react-responsive', 'Zustand', 'React Router 6', 'Kakao Maps SDK']
   },
   {
-    id: 'xrgis', name: 'XRGIS BackOffice', category: 'work', company: '두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 관리자 도구',
-    description: 'XR·GIS 서비스의 사용자·팀·대용량 파일을 관리하는 사내 백오피스입니다. 프론트엔드·백엔드와 데이터베이스 연동을 개발했습니다.',
+    id: 'xrgis', name: 'XRGIS BackOffice', category: 'work', company: '두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 시스템 백오피스',
+    description: 'XR(가상·증강·혼합현실)과 GIS(지도·공간정보)를 결합해 원격 협업하는 서비스입니다. 이 서비스의 관리자 백오피스에서 사용자·팀과 OBJ 3D 모델·영상 파일을 관리하도록 React 화면, Express API, MongoDB GridFS·MariaDB 연동을 혼자 개발했습니다.',
     summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
     tasks: [
       ['풀스택 개발', 'React 기반 사용자·팀·데이터 관리 화면과 Express API 개발'],

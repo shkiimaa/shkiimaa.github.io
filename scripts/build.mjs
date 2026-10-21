@@ -15,7 +15,8 @@ const e = escape;
 const prose = value => e(value).replace(/([.!?])\s+(?=[\p{L}\d(])/gu, '$1<br class="sentence-break">');
 const external = (label, href, cls = '') => `<a class="${cls}" href="${e(href)}" target="_blank" rel="noopener noreferrer">${e(label)}<span aria-hidden="true"> ↗</span></a>`;
 const list = items => `<ul class="bullets">${items.map(item => `<li>${prose(item)}</li>`).join('')}</ul>`;
-const tech = items => `<p class="tech-line"><span class="tech-label">기술</span>${items.map(e).join('<span aria-hidden="true"> · </span>')}</p>`;
+const techTokens = items => items.map((item,index)=>`<span class="tech-token">${e(item)}${index<items.length-1?' <span aria-hidden="true">·</span>':''}</span>`).join(' ');
+const tech = items => `<p class="tech-line"><span class="tech-label">기술</span>${techTokens(items)}</p>`;
 const projectHref = project => `/projects/${project.id}/`;
 const projectStartDate = project => Number((project.period.match(/\d{4}\.\d{2}/)?.[0] ?? '0000.00').replace('.', ''));
 const orderedProjects = [...projects].sort((a, b) => projectStartDate(b) - projectStartDate(a));
@@ -45,7 +46,7 @@ function resume() {
   const body = `<section class="resume-intro" id="about"><div class="intro-heading"><h1>김수환</h1><span class="role-badge">웹 개발자</span></div><p class="intro-lead">프론트엔드와 백엔드 API를 개발하고,<br class="desktop-break"> 서비스를 운영하며 개선합니다.</p><p class="intro-description">${prose(profile.introduction)}</p><div class="contact-links"><a href="mailto:${profile.email}">${profile.email}</a><a href="tel:+821099313175">${profile.phone}</a>${external('GitHub',profile.github)}</div></section>
 <section class="resume-section" id="experience"><div class="section-heading"><h2>경력</h2><span>Experience</span></div>${experiences.filter(job=>['daon','doit'].includes(job.id)).map(job=>`<article class="experience-row"><div class="row-meta"><h3>${e(job.name)}</h3><p class="numeric">${e(job.period)}</p></div><div class="row-body"><p class="job-role">${e(job.role)}</p>${job.items.length===1?`<p>${prose(job.items[0])}</p>`:list(job.items)}</div></article>`).join('')}</section>
 <section class="resume-section" id="projects"><div class="section-heading"><h2>프로젝트</h2><span>Projects</span></div>${workProjects.map(resumeProject).join('')}</section>
-<section class="resume-section" id="skills"><div class="section-heading"><h2>기술</h2><span>Skills</span></div><dl class="skills-list">${skills.map(group=>`<div><dt>${e(group.label)}</dt><dd>${group.items.map(e).join('<span aria-hidden="true"> · </span>')}</dd></div>`).join('')}</dl></section>
+<section class="resume-section" id="skills"><div class="section-heading"><h2>기술</h2><span>Skills</span></div><dl class="skills-list">${skills.map(group=>`<div><dt>${e(group.label)}</dt><dd>${techTokens(group.items)}</dd></div>`).join('')}</dl></section>
 <section class="resume-section" id="education"><div class="section-heading"><h2>학력</h2><span>Education</span></div><div class="education-row"><div><h3>${profile.education.school}</h3><p>${profile.education.department}</p></div><p class="numeric">${profile.education.period}<br><span class="muted">${profile.education.status}</span></p></div></section>
 <div class="document-next"><span>담당 업무와 문제 해결 과정을 더 자세히</span><a href="/career/">경력기술서 읽기 <span aria-hidden="true">→</span></a></div>`;
   return layout({title:'이력서',description:profile.introduction,route:'/',active:'resume',body,pageLabel:'이력서',pdf:'resume',toc:[['about','소개'],['experience','경력'],['projects','프로젝트'],['skills','기술'],['education','학력']]});

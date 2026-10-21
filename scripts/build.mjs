@@ -14,7 +14,10 @@ const external = (label, href, cls = '') => `<a class="${cls}" href="${e(href)}"
 const list = items => `<ul class="bullets">${items.map(item => `<li>${e(item)}</li>`).join('')}</ul>`;
 const tech = items => `<p class="tech-line"><span class="tech-label">기술</span>${items.map(e).join('<span aria-hidden="true"> · </span>')}</p>`;
 const projectHref = project => `/projects/${project.id}/`;
-const workProjects = projects.filter(project => project.category === 'work');
+const workProjects = projects.filter(project => project.category === 'work').sort((a, b) => {
+  const startDate = project => project.period.match(/\d{4}\.\d{2}/)?.[0] ?? '';
+  return startDate(a).localeCompare(startDate(b));
+});
 const projectNames = { daon: '다온소프트랩', doit: '두잇' };
 
 function sidebar(items, pageTitle) {

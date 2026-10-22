@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: '웹 개발자',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa',
-  introduction: '웹 서비스의 프론트엔드와 백엔드 API를 개발·운영합니다. 암호화폐 거래·정보 서비스, 사내 UI 라이브러리와 AI 모델 학습·운영 플랫폼을 개발했습니다. 디자인 실무 경험을 바탕으로 기획·디자인·백엔드 담당자와 구현 범위를 조율합니다.',
+  introduction: '암호화폐 거래·정보 플랫폼의 웹·모바일·데스크톱 화면과 주문·인증·자산 관리 기능을 개발했습니다. 성능 병목과 주문 계산 오류를 해결하고, 사내 UI 라이브러리와 AI 모델 학습·운영 플랫폼도 만들었습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 

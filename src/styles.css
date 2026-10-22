@@ -84,9 +84,27 @@
  .portfolio-document .project-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12pt;break-inside:avoid-page}
  .portfolio-document .project-gallery figure{margin-top:0;min-width:0}
  .portfolio-document .image-expand{padding:5pt}
- .portfolio-document .image-expand img{max-height:170pt}
+ .portfolio-document .image-expand img{max-height:90pt}
+ .portfolio-document .career-project{padding:8pt 0}
+ .portfolio-document .detail-section{margin-top:9pt;padding-top:7pt}
+ .portfolio-document .project-gallery{gap:8pt}
  .portfolio-document .implementation-section .project-gallery{grid-template-columns:1fr}
  .portfolio-links{font-size:8pt;line-height:1.6;margin-top:10pt;gap:12pt;break-inside:avoid-page}
 }
 /* Keep technology names and their trailing separators together when lines wrap. */
 .tech-token{display:inline-block;white-space:nowrap}
+.portfolio-cover{display:grid;grid-template-columns:max-content minmax(0,1fr);grid-template-areas:"kicker kicker" "title summary";align-items:end;column-gap:30px}
+.portfolio-cover .page-kicker{grid-area:kicker}
+.portfolio-cover h1{grid-area:title;white-space:nowrap;margin-bottom:0}
+.portfolio-cover>p:last-child{grid-area:summary;justify-self:end;max-width:480px;text-align:right;margin:0 0 8px}
+@media screen and (max-width:767px){.portfolio-cover{display:block}.portfolio-cover h1{white-space:normal;margin-bottom:14px}.portfolio-cover>p:last-child{text-align:left;margin:0}}
+@media print{.portfolio-cover{display:grid;grid-template-columns:max-content minmax(0,1fr);grid-template-areas:"kicker kicker" "title summary";align-items:end;column-gap:20pt}.portfolio-cover h1{font-size:26pt;margin-bottom:0}.portfolio-cover>p:last-child{font-size:9pt!important;text-align:right;max-width:310pt;margin:0 0 5pt}}
+.tech-groups{display:grid;gap:2px;margin:22px 0 0;font-size:11px;line-height:1.8;color:var(--muted)}
+.tech-groups>p{display:grid;grid-template-columns:125px minmax(0,1fr);gap:15px;align-items:baseline}
+.tech-groups .tech-label{margin:0;white-space:nowrap}
+.tech-groups>p>span:last-child{color:#a7afbc}
+.case-group{margin-top:24px;padding-top:16px;border-top:1px solid var(--line)}
+.case-group-label{margin-bottom:7px}
+.case-group-label+.case-study{margin-top:0;padding-top:0;border-top:0;break-before:avoid-page}
+.case-study+.case-study{margin-top:20px;padding-top:18px}
+@media print{.tech-groups{gap:1pt;margin-top:8pt;font-size:7.5pt;line-height:1.6}.tech-groups>p{grid-template-columns:82pt minmax(0,1fr);gap:12pt}.case-group{margin-top:12pt;padding-top:10pt}.case-group-label{font-size:8pt;margin-bottom:4pt}.case-group-label+.case-study{margin-top:0;padding-top:0;border-top:0}.case-study+.case-study{margin-top:10pt;padding-top:10pt}}

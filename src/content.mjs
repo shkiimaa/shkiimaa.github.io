@@ -1,17 +1,17 @@
 export const profile = {
-  name: '김수환', englishName: 'Suhwan Kim', role: '웹 개발자',
+  name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa',
-  introduction: '암호화폐 거래·정보 플랫폼의 웹·모바일·데스크톱 화면과 주문·인증·자산 관리 기능을 개발했습니다. 성능 병목과 주문 계산 오류를 해결하고, 사내 UI 라이브러리와 AI 모델 학습·운영 플랫폼도 만들었습니다.',
+  introduction: '암호화폐 거래·정보 서비스를 개발하며 웹과 모바일 화면부터 주문·인증·자산 관리 기능까지 맡았습니다. 실제 서비스에서 발견한 성능 저하와 계산 오류를 개선했고, 여러 플랫폼에서 일관된 경험을 제공하기 위한 기능과 개발 환경도 구축했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
 export const experiences = [
-  { id: 'daon', name: '(주)다온소프트랩', role: 'Web Developer', period: '2024.08 – 현재', items: [
+  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 현재', items: [
     '여러 암호화폐 거래소를 연동한 현물·선물·마진 거래 플랫폼 Bitria의 프론트엔드·백엔드 API 개발·운영',
     '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 Gobit의 프론트엔드·백엔드 개발',
     'k3s 기반 프로덕션 환경을 배포·운영하고 레거시 플랫폼을 Kubernetes로 이전'
   ] },
-  { id: 'doit', name: '(주)두잇', role: 'Web Developer', period: '2023.08 – 2024.07', items: [
+  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
     '데이터 라벨링·AI 모델 학습·추론을 지원하는 D.A.X의 프론트엔드 개발',
     '사내 공통 UI 라이브러리 doit-uikit 개발·배포, React 개발 표준 수립 및 팀 온보딩 교육',
     'XR·GIS 원격 협업 서비스의 사용자·팀·대용량 파일 관리 백오피스를 풀스택으로 개발',
@@ -29,7 +29,7 @@ export const skills = [
 
 export const projects = [
   {
-    id: 'bitria', name: 'Bitria', category: 'work', company: '다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
+    id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
     kind: '멀티 거래소 연동 암호화폐 거래 플랫폼', role: '프론트엔드·백엔드 API 개발 담당',
     description: '여러 암호화폐 거래소를 연동해 현물·선물·마진 거래를 제공하는 플랫폼입니다. 웹·모바일 앱의 프론트엔드와 백엔드 API 개발을 담당하고, 인프라 운영에 참여했습니다.',
     summary: [
@@ -48,6 +48,7 @@ export const projects = [
       ['서비스 운영', '가격 조건별 알림·클라이언트 오류 수집·앱 버전 정책·고객 문의(CS) API 개발, k3s 프로덕션 배포·운영 및 장애 대응']
     ],
     tech: ['TypeScript', 'Next.js 16', 'React 19', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron', 'Node.js', 'Express', 'Prisma', 'MariaDB', 'Redis', 'Docker', 'k3s'],
+    techGroups: [['프론트엔드·앱', ['TypeScript', 'Next.js 16', 'React 19', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드·인프라', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'Redis', 'Docker', 'k3s']]],
     outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '49%', detail: '443 → 226ms · 로컬 비교 측정' }, { label: '앱 트레이딩 화면 누적 렌더 시간', value: '60%', detail: '1,028 → 416ms · 12초 측정' }],
     cases: [
       { id: 'order-calculation', title: '교차 마진 주문 가능액 계산 오류 수정', paragraphs: [
@@ -65,7 +66,7 @@ export const projects = [
     ]
   },
   {
-    id: 'gobit', name: 'Gobit', category: 'work', company: '다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
+    id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. 2인 팀에서 Next.js 웹 클라이언트를 새로 구축하고 Node.js·Express API를 개발했습니다. Binance 시세를 수집해 Redis에 캐시하고 Socket.IO로 전달했으며, 회원·게시글 기능과 운영 도구를 구현했습니다.',
     summary: ['시세·차트·뉴스·커뮤니티 화면 구현 및 TradingView 차트 연동', 'Binance WebSocket·Redis·Socket.IO 기반 실시간 시세 처리', '커뮤니티 기능과 회원 인증·데이터 API 개발'],
     tasks: [
@@ -76,7 +77,6 @@ export const projects = [
     ],
     result: '웹 클라이언트 전 페이지와 API를 구축하고 coinlns에서 Gobit으로 리브랜딩했습니다. 2025년 12월 주요 기능 개발을 마친 뒤 유지보수했습니다.',
     tech: ['TypeScript', 'Next.js 15', 'React 19', 'SWR', 'Zustand', 'Radix UI', 'TradingView', 'tiptap', 'Node.js', 'Express', 'Prisma', 'Redis', 'Socket.IO'],
-    links: [{ label: '웹 클라이언트 코드', url: 'https://github.com/shkiimaa/junco_client' }, { label: '백엔드 코드', url: 'https://github.com/shkiimaa/junco_server' }],
     cases: [{ id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
       'Gobit·모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 분산돼 있었습니다. 핵심 시세 수집기는 소스 코드 없이 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스를 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
     ], items: [
@@ -98,8 +98,7 @@ export const projects = [
     ],
     result: 'D.A.X와 회사 홈페이지에서 사용하며 요구사항에 맞춰 라이브러리를 개선하고 배포했습니다. 컴포넌트·사용 문서·린터 설정을 함께 제공해 공통 UI와 개발 규칙을 적용했습니다.',
     tech: ['TypeScript', 'React 18', 'Vite', 'styled-components', 'Storybook 8', 'Chromatic', 'vite-plugin-dts'],
-    images: [{ src: 'uikit-storybook.png', alt: 'doit-uikit 컴포넌트의 Storybook 문서와 Props 설정 화면' }],
-    links: [{ label: 'npm 패키지', url: 'https://www.npmjs.com/package/doit-uikit' }]
+    images: [{ src: 'uikit-storybook.png', alt: 'doit-uikit 컴포넌트의 Storybook 문서와 Props 설정 화면' }]
   },
   {
     id: 'dax', name: 'D.A.X', category: 'work', company: '두잇', companyId: 'doit', period: '2024.01 – 2024.06', role: '프론트엔드 개발 담당 · 백엔드 1명과 협업', kind: 'AI 모델 학습·운영 플랫폼',

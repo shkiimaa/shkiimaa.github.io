@@ -108,3 +108,75 @@
 .case-group-label+.case-study{margin-top:0;padding-top:0;border-top:0;break-before:avoid-page}
 .case-study+.case-study{margin-top:20px;padding-top:18px}
 @media print{.tech-groups{gap:1pt;margin-top:8pt;font-size:7.5pt;line-height:1.6}.tech-groups>p{grid-template-columns:82pt minmax(0,1fr);gap:12pt}.case-group{margin-top:12pt;padding-top:10pt}.case-group-label{font-size:8pt;margin-bottom:4pt}.case-group-label+.case-study{margin-top:0;padding-top:0;border-top:0}.case-study+.case-study{margin-top:10pt;padding-top:10pt}}
+
+/* Recruiting documents: keep evidence readable on screen and on A4. */
+.skills-list dd .tech-token,.tech-line>.tech-token,.tech-groups>p>span:last-child{color:var(--secondary)}
+.skills-list dd .tech-token span{color:var(--muted)}
+.period-note{font-size:11px;line-height:1.7;color:var(--secondary);margin:0 0 12px}
+.row-meta .period-note{font-size:10px;margin:4px 0 0}
+.portfolio-scope{margin-top:20px;font-size:14px;color:var(--secondary)}
+.portfolio-scope h3{font-size:13px;color:var(--ink);margin-bottom:8px}
+.evidence-section{margin-top:28px;padding-top:22px;border-top:1px solid var(--line);font-size:14px;color:var(--secondary);line-height:1.85;break-inside:avoid-page}
+.evidence-section h3{font-size:19px;color:var(--ink);margin-bottom:12px}
+.evidence-section>p+p{margin-top:10px}
+.evidence-section>p>strong{color:var(--ink);margin-right:6px}
+.metric-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:18px;font-variant-numeric:tabular-nums}
+.metric-table caption{text-align:left;font-size:11px;color:var(--muted);padding-bottom:8px}
+.metric-table th,.metric-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+.metric-table thead{background:var(--wash);color:var(--secondary)}
+.metric-table tbody td:last-child{font-weight:650;color:var(--accent)}
+.portfolio-detail-link{font-size:12px;color:var(--accent);margin-top:20px}
+.implementation-section .project-gallery .image-expand img{max-height:540px}
+@media screen and (max-width:767px){.portfolio-scope,.evidence-section{font-size:13px}.metric-table{font-size:12px}.metric-table th,.metric-table td{padding:8px}.metric-table caption{font-size:10px}}
+@media print{
+ .intro-lead{font-size:14pt;max-width:none}
+ .intro-description{font-size:9pt}
+ .row-meta .period-note{font-size:7.5pt}
+ .compact-tech{font-size:7.5pt!important;color:#4d5663}
+ .skills-list dd{font-size:8.5pt;color:#4d5663}
+ .tech-line,.tech-groups{font-size:8pt;color:#4d5663}
+ .measurement-note{font-size:8pt!important;color:#4d5663!important}
+ .period-note{font-size:8pt;margin-bottom:7pt}
+ .portfolio-scope{margin-top:9pt;font-size:9pt;line-height:1.7}
+ .portfolio-scope h3{font-size:9pt;margin-bottom:4pt}
+ .evidence-section{margin-top:12pt;padding-top:10pt;font-size:9pt;line-height:1.7}
+ .evidence-section h3{font-size:12pt;margin-bottom:7pt}
+ .evidence-section>p+p{margin-top:6pt}
+ .metric-table{font-size:9pt;margin-top:9pt;break-inside:avoid}
+ .metric-table caption{font-size:8pt;padding-bottom:5pt}
+ .metric-table th,.metric-table td{padding:5pt 7pt}
+ .metric-table thead{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .portfolio-detail-link{font-size:8pt;margin-top:10pt}
+ .portfolio-document .project-gallery{grid-template-columns:1fr;break-inside:auto}
+ .portfolio-document .image-expand img{max-height:180pt}
+ .portfolio-document .implementation-section .project-gallery .image-expand img{max-height:155pt}
+ .portfolio-document .project-gallery figure{break-inside:avoid-page}
+ .portfolio-document .implementation-section{break-inside:auto}
+ .portfolio-document .implementation-section>p:last-of-type{break-after:avoid-page}
+ .portfolio-document .project-heading{break-inside:avoid-page;break-after:avoid-page}
+ .portfolio-document .project-description{break-after:avoid-page}
+ .company-section+.company-section .project-overview{break-inside:auto}
+}
+.after-flow{border-left:2px solid var(--accent);padding:12px 18px;margin-top:20px;background:var(--wash)}
+.after-flow h4{font-size:14px}.after-flow ol{padding-left:20px;margin:8px 0 0}
+@media print{.after-flow{padding:8pt 10pt;margin-top:10pt;break-inside:avoid}.after-flow h4{font-size:10pt}.after-flow ol{font-size:9pt;padding-left:14pt}}
+
+@media print{.portfolio-overview,.portfolio-scope{break-inside:avoid-page}}
+
+/* Original Lighthouse reports, shown together for comparison. */
+@media screen and (min-width: 800px) { .project-gallery.measurement-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; } }
+.measurement-gallery .image-expand img { width: 100%; height: auto; max-height: none; object-fit: contain; }
+
+@media print { .portfolio-document .project-gallery.measurement-gallery { grid-template-columns: repeat(2,minmax(0,1fr)); break-inside: avoid-page; } .portfolio-document .measurement-gallery .image-expand img { max-height: none; width: 100%; height: auto; } }
+
+.measurement-reports { margin-top: 20px; }
+.measurement-reports h4 { font-size: 14px; margin-bottom: 12px; }
+@media print { .measurement-reports { margin-top: 8pt; break-inside: avoid-page; } .measurement-reports h4 { font-size: 9pt; margin-bottom: 5pt; } }
+
+.measurement-data-link { margin-top: 12px; font-size: 12px; color: var(--accent); text-decoration: underline; }
+@media print { .measurement-data-link { font-size: 8pt; margin-top: 6pt; } }
+@media print {
+ .portfolio-document .evidence-section { break-inside: auto; }
+ .portfolio-document .evidence-section h3 { break-after: avoid-page; }
+ .portfolio-document .evidence-section > p { orphans: 3; widows: 3; }
+}

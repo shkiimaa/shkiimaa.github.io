@@ -22,8 +22,7 @@ const tech = project => project.techGroups?.length
 const projectHref = project => `/projects/${project.id}/`;
 const projectStartDate = project => Number((project.period.match(/\d{4}\.\d{2}/)?.[0] ?? '0000.00').replace('.', ''));
 const orderedProjects = [...projects].sort((a, b) => projectStartDate(b) - projectStartDate(a));
-const featuredOrder = ['bitria', 'gobit', 'doit-uikit', 'dax', 'doit-homepage', 'xrgis'];
-const workProjects = featuredOrder.map(id => projects.find(project => project.id === id)).filter(Boolean);
+const workProjects = orderedProjects.filter(project => project.category === 'work');
 const projectNames = { daon: '다온소프트랩', doit: '두잇' };
 
 function sidebar(items, pageTitle) {
@@ -42,12 +41,12 @@ function layout({ title, description, route, active, body, toc = [], pageLabel, 
 }
 
 function resumeProject(project) {
-  return `<article class="resume-project" id="resume-${project.id}"><div class="row-meta"><h3><a href="${projectHref(project)}">${e(project.name)}</a></h3><p>${e(project.company)}</p><p class="numeric">${e(project.period)}</p>${project.periodNote?`<p class="period-note">${e(project.periodNote)}</p>`:''}</div><div class="row-body"><h4>${e(project.kind)}</h4><p class="role-line">${e(project.role)}</p>${list(project.summary)}<p class="compact-tech">${project.tech.slice(0, project.id==='bitria'?13:9).map(e).join(' · ')}</p><a class="text-link" href="${projectHref(project)}">프로젝트 자세히 보기 <span aria-hidden="true">↗</span></a></div></article>`;
+  return `<article class="resume-project" id="resume-${project.id}"><div class="row-meta"><h3><a href="${projectHref(project)}">${e(project.name)}</a></h3><p>${e(project.company)}</p><p class="numeric">${e(project.period)}</p></div><div class="row-body"><h4>${e(project.kind)}</h4><p class="role-line">${e(project.role)}</p>${list(project.summary)}<p class="compact-tech">${project.tech.slice(0, project.id==='bitria'?13:9).map(e).join(' · ')}</p><a class="text-link" href="${projectHref(project)}">프로젝트 자세히 보기 <span aria-hidden="true">↗</span></a></div></article>`;
 }
 
 function resume() {
   const [introLead, ...introDetails] = profile.introduction.split('\n\n');
-  const body = `<section class="resume-intro" id="about"><div class="intro-heading"><h1>김수환</h1><span class="role-badge">Frontend Developer</span></div><p class="intro-lead">${prose(introLead)}</p><div class="intro-description">${introDetails.map(copy=>`<p>${prose(copy)}</p>`).join('')}</div><div class="contact-links"><a href="mailto:${profile.email}">${profile.email}</a><a href="tel:+821099313175">${profile.phone}</a>${external('GitHub',profile.github)}</div></section>
+  const body = `<section class="resume-intro" id="about"><div class="intro-heading"><h1>김수환</h1><span class="role-badge">Frontend Developer</span></div><p class="intro-lead">중복되는 코드는 공통화하고, 플랫폼별 차이는 분리해<br class="desktop-break"> 유지보수하기 좋은 프론트엔드를 만듭니다.</p><div class="intro-description">${introDetails.map(copy=>`<p>${prose(copy)}</p>`).join('')}</div><div class="contact-links"><a href="mailto:${profile.email}">${profile.email}</a><a href="tel:+821099313175">${profile.phone}</a>${external('GitHub',profile.github)}</div></section>
 <section class="resume-section" id="experience"><div class="section-heading"><h2>경력</h2><span>Experience</span></div>${experiences.filter(job=>['daon','doit'].includes(job.id)).map(job=>`<article class="experience-row"><div class="row-meta"><h3>${e(job.name)}</h3><p class="numeric">${e(job.period)}</p></div><div class="row-body"><p class="job-role">${e(job.role)}</p>${job.items.length===1?`<p>${prose(job.items[0])}</p>`:list(job.items)}</div></article>`).join('')}</section>
 <section class="resume-section" id="projects"><div class="section-heading"><h2>프로젝트</h2><span>Projects</span></div>${workProjects.map(resumeProject).join('')}</section>
 <section class="resume-section" id="skills"><div class="section-heading"><h2>기술</h2><span>Skills</span></div><dl class="skills-list">${skills.map(group=>`<div><dt>${e(group.label)}</dt><dd>${techTokens(group.items)}</dd></div>`).join('')}</dl></section>
@@ -60,12 +59,12 @@ function taskList(project) {
   return `<dl class="task-list">${project.tasks.map(([label,copy])=>`<div><dt>${e(label)}</dt><dd>${prose(copy)}</dd></div>`).join('')}</dl>`;
 }
 
-function caseStudy(study, prefix = '', showReports = false) {
-  return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${study.items?list(study.items):''}<div class="result"><strong>결과</strong><p>${prose(study.result)}</p></div>${study.note?`<p class="measurement-note">${prose(study.note)}</p>`:''}${showReports ? measurementReports(portfolioMaterial.bitria.evidence.find(item=>item.caseId===study.id)) : ''}</section>`;
+function caseStudy(study, prefix = '') {
+  return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${study.items?list(study.items):''}<div class="result"><strong>결과</strong><p>${prose(study.result)}</p></div>${study.note?`<p class="measurement-note">${prose(study.note)}</p>`:''}</section>`;
 }
 
 function careerProject(project, { portfolio = false } = {}) {
-  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div>${project.periodNote?`<p class="period-note">${e(project.periodNote)}</p>`:''}</header><p class="project-description">${prose(project.description)}</p><h3 class="subsection-heading">주요 업무</h3>${taskList(project)}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${prose(project.result)}</p></div>`:''}${tech(project)}</div>${project.cases?.length?`<div class="case-group"><p class="case-group-label">대표 문제 해결</p>${project.cases.map(study=>caseStudy(study,project.id+'-')).join('')}</div>`:''}${portfolio?implementation(project,project.id+'-')+projectGallery(project):''}<a class="text-link" href="${projectHref(project)}">프로젝트 상세 보기 <span aria-hidden="true">↗</span></a></article>`;
+  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${prose(project.description)}</p><h3 class="subsection-heading">주요 업무</h3>${taskList(project)}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${prose(project.result)}</p></div>`:''}${tech(project)}</div>${project.cases?.length?`<div class="case-group"><p class="case-group-label">대표 문제 해결</p>${project.cases.map(study=>caseStudy(study,project.id+'-')).join('')}</div>`:''}${portfolio?implementation(project,project.id+'-')+projectGallery(project):''}<a class="text-link" href="${projectHref(project)}">프로젝트 상세 보기 <span aria-hidden="true">↗</span></a></article>`;
 }
 
 function career() {
@@ -73,34 +72,25 @@ function career() {
   return layout({title:'경력기술서',description:'김수환의 프론트엔드·백엔드 개발 경험과 대표 문제 해결 사례입니다.',route:'/career/',active:'career',body,pageLabel:'경력기술서',pdf:'career',toc:workProjects.map(p=>[p.id,p.name])});
 }
 
-function gallery(images, comparison = false) {
+function gallery(images) {
   if (!images?.length) return '';
-  return `<div class="project-gallery${comparison ? ' measurement-gallery' : ''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
-}
-
-function measurementReports(item) {
-  return item?.images?.length ? `<div class="measurement-reports"><h4>${e(item.reportTitle || "Lighthouse 원본 보고서 전후 비교")}</h4>${gallery(item.images, true)}${item.reportNote ? `<p class="measurement-note">${prose(item.reportNote)}</p>` : ''}</div>` : '';
+  return `<div class="project-gallery">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
 }
 
 function implementation(project, prefix = '') {
   const material = portfolioMaterial[project.id];
   if (!material?.sections?.length) return '';
-  return `<section class="detail-section implementation" id="${prefix}implementation"><h2>구현 구조와 설계</h2>${material.sections.map(section=>`<section class="implementation-section" id="${prefix}design-${section.id}"><h3>${e(section.title)}</h3>${section.paragraphs.map(p=>`<p>${prose(p)}</p>`).join('')}${section.diagram?`<figure class="architecture-diagram"><div class="diagram-scroll" role="region" aria-label="${e(section.caption)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',section.diagram+'.svg'),'utf8')}</div><figcaption>${e(section.caption)}</figcaption></figure>`:''}${section.afterFlow?`<div class="after-flow"><h4>수정 후</h4><ol>${section.afterFlow.map(step=>`<li>${e(step)}</li>`).join('')}</ol></div>`:''}${section.images?gallery(section.images):''}</section>`).join('')}</section>`;
+  return `<section class="detail-section implementation" id="${prefix}implementation"><h2>구현 구조와 설계</h2>${material.sections.map(section=>`<section class="implementation-section" id="${prefix}design-${section.id}"><h3>${e(section.title)}</h3>${section.paragraphs.map(p=>`<p>${prose(p)}</p>`).join('')}${section.diagram?`<figure class="architecture-diagram"><div class="diagram-scroll" role="region" aria-label="${e(section.caption)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',section.diagram+'.svg'),'utf8')}</div><figcaption>${e(section.caption)}</figcaption></figure>`:''}${section.images?gallery(section.images):''}</section>`).join('')}</section>`;
 }
 
 function projectGallery(project, id = '') {
   const images = [...(project.images || []), ...(portfolioMaterial[project.id]?.images || [])];
-  return images.length ? `<section class="detail-section"${id?` id="${id}"`:''}><h2>${project.id === 'bitria' ? 'Lighthouse 원본 보고서 전후 비교' : (id ? '' : e(project.name)+' · ')+'프로젝트 화면'}</h2>${gallery(images, project.id === 'bitria')}</section>` : '';
-}
-
-function portfolioProject(project) {
-  const evidence = portfolioMaterial[project.id]?.evidence || [];
-  return `<article class="career-project" id="${project.id}"><div class="portfolio-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div>${project.periodNote?`<p class="period-note">${e(project.periodNote)}</p>`:''}</header><p class="project-description">${prose(project.description)}</p><div class="portfolio-scope"><h3>담당 범위</h3>${list(project.summary.slice(0, project.id==='bitria'?4:3))}</div></div>${evidence.map(item=>`<section class="evidence-section"><h3>${e(item.title)}</h3><p><strong>문제</strong> ${prose(item.problem)}</p><p><strong>판단·수정</strong> ${prose(item.decision)}</p>${item.metrics?`<table class="metric-table"><caption>${e(item.caption)}</caption><thead><tr><th scope="col">지표</th><th scope="col">개선 전</th><th scope="col">개선 후</th></tr></thead><tbody>${item.metrics.map(row=>`<tr>${row.map((cell,i)=>i===0?`<th scope="row">${e(cell)}</th>`:`<td>${e(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`:''}<p class="measurement-note">${prose(item.note)}</p>${measurementReports(item)}</section>`).join('')}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${implementation(project,project.id+'-')}${projectGallery(project)}<p class="portfolio-detail-link"><a href="${origin}${projectHref(project)}">${e(project.name)} 상세 설명 ↗</a></p></article>`;
+  return images.length ? `<section class="detail-section"${id?` id="${id}"`:''}><h2>${id?'':e(project.name)+' · '}프로젝트 화면</h2>${gallery(images)}</section>` : '';
 }
 
 function portfolio() {
-  const body = `<div class="portfolio-document"><div class="page-intro portfolio-cover"><p class="page-kicker">Frontend Developer · ${external('GitHub',profile.github)}</p><h1>김수환 포트폴리오</h1><p>실시간 UI 성능·공통 컴포넌트·멀티 플랫폼 구현 사례</p></div>${workProjects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${e(project.company)} · 업무 프로젝트</p>${portfolioProject(project)}</div>`).join('')}</div>`;
-  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:workProjects.map(p=>[p.id,p.name])});
+  const body = `<div class="portfolio-document"><div class="page-intro portfolio-cover"><p class="page-kicker">Frontend Developer · ${external('GitHub',profile.github)}</p><h1>김수환 포트폴리오</h1><p>프로젝트별 담당 업무, 문제 해결 과정과 구현 자료입니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${careerProject(project,{portfolio:true})}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
+  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:orderedProjects.map(p=>[p.id,p.name])});
 }
 
 function projectIndex() {
@@ -114,8 +104,8 @@ function projectDetail(project, index) {
   if(portfolioMaterial[project.id]?.sections?.length)toc.push(['implementation','구현 구조와 설계']);
   if(project.images?.length||portfolioMaterial[project.id]?.images?.length)toc.push(['screens','프로젝트 화면']);
   toc.push(['technology','사용 기술']);
-  const previous=orderedProjects[index-1],next=orderedProjects[index+1];
-  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div>${project.periodNote?`<p class="period-note">${e(project.periodNote)}</p>`:''}<p class="detail-description">${prose(project.description)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${project.outcomes?`<dl class="outcome-strip">${project.outcomes.map(outcome=>`<div><dt>${e(outcome.label)}</dt><dd>${outcome.value}<span>감소</span></dd><p>${e(outcome.detail)}</p></div>`).join('')}</dl>`:''}<section class="detail-section" id="work"><h2>담당 업무</h2>${taskList(project)}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${prose(project.result)}</p></div>`:''}</section>${project.cases?.map(study=>caseStudy(study, '', true)).join('')||''}${implementation(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>사용 기술</h2><p class="technology-text">${project.tech.map(e).join(' · ')}</p></section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
+  const previous=projects[index-1],next=projects[index+1];
+  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(project.description)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${project.outcomes?`<dl class="outcome-strip">${project.outcomes.map(outcome=>`<div><dt>${e(outcome.label)}</dt><dd>${outcome.value}<span>감소</span></dd><p>${e(outcome.detail)}</p></div>`).join('')}</dl>`:''}<section class="detail-section" id="work"><h2>담당 업무</h2>${taskList(project)}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${prose(project.result)}</p></div>`:''}</section>${project.cases?.map(study=>caseStudy(study)).join('')||''}${implementation(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>사용 기술</h2><p class="technology-text">${project.tech.map(e).join(' · ')}</p></section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
   return layout({title:project.name,description:project.description,route:projectHref(project),active:'projects',body,pageLabel:project.name,pdf:'portfolio',toc});
 }
 

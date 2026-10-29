@@ -7,9 +7,8 @@ import { root, build } from './build.mjs';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE
   ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
 const base = process.env.SITE_URL || 'http://127.0.0.1:4173';
-await build();
 await mkdir(path.join(root, 'artifacts'), { recursive: true });
-const browser = await chromium.launch({ headless: true, ...(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {}) });
+const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   for (const [name, route] of [['resume', '/'], ['career', '/career/'], ['portfolio', '/portfolio/']]) {

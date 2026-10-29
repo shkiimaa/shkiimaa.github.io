@@ -38,22 +38,3 @@ PDF는 실제 페이지에 인쇄 스타일을 적용해 만든 파일입니다.
 `src/diagrams/*.mmd`는 원본 Notion 포트폴리오의 Mermaid 소스입니다. `node scripts/render-diagrams.mjs`로 `public/assets/diagrams/*.svg`를 생성합니다. `MERMAID_SCRIPT`에 Mermaid 11의 `dist/mermaid.min.js` 경로를 지정합니다. SVG는 빌드 시 HTML에 포함되므로 방문자와 PDF에서는 Mermaid 실행이나 외부 CDN이 필요하지 않습니다. `src/portfolio-content.mjs`는 원본 자료의 출처와 포트폴리오용 상세 설명을 관리합니다.
 
 Pretendard의 라이선스는 `public/fonts/LICENSE.txt`에 포함되어 있습니다. 프로젝트 화면은 본인의 기존 포트폴리오 자료를 사용합니다.
-
-## 브라우저 실행이 제한된 환경에서 PDF 생성
-
-기본 경로는 위의 Playwright 내보내기입니다. Chromium을 실행할 수 없는 환경에서는
-WeasyPrint 70을 설치한 Python 환경에서 로컬 서버를 켠 뒤 아래 명령을 사용합니다.
-
-```sh
-python scripts/export-pdfs.py
-npm run build
-npm run check
-```
-
-macOS에서 Pango를 찾지 못하면 설치된 Homebrew 라이브러리 경로를
-`DYLD_FALLBACK_LIBRARY_PATH`로 지정합니다. 이 스크립트는 같은 페이지와 인쇄 CSS를
-읽고 엔진별 배치 보정 및 페이지 번호를 추가합니다. PDF 엔진에 따라 페이지 분할이
-달라질 수 있으므로 갱신 후 실제 PDF의 모든 페이지를 확인합니다.
-
-이력서는 핵심 성과, 경력기술서는 상세 업무와 문제 해결 과정,
-포트폴리오는 측정 비교표·구조·화면 자료를 우선합니다.

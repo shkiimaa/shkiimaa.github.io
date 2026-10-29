@@ -111,7 +111,7 @@ function portfolioProject(project) {
 }
 
 function portfolio() {
-  const body = `<div class="portfolio-document"><div class="page-intro portfolio-cover"><h1>김수환 포트폴리오</h1><p>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${portfolioProject(project)}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
+  const body = `<div class="portfolio-document"><div class="page-intro"><h1>김수환 포트폴리오</h1><p>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project">${portfolioProject(project)}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
   return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:orderedProjects.map(p=>[p.id,p.name])});
 }
 

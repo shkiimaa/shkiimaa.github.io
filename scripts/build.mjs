@@ -1,3 +1,4 @@
+import hljs from 'highlight.js/lib/common';
 import { mkdir, writeFile, cp, rm } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -12,14 +13,15 @@ const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;',
 const e = escape;
 // Start each complete sentence on a fresh line so copy never leaves a short
 // fragment at the end of a wrapped line. The same markup is used for screen and print.
-const prose = value => e(value).replace(/([.!?])\s+(?=[\p{L}\d(])/gu, '$1<br class="sentence-break">');
+const prose = value => e(value).replace(/([.!?])\s+(?=[\p{L}\d(])/gu, '$1<br class="sentence-break">').replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
 const external = (label, href, cls = '') => `<a class="${cls}" href="${e(href)}" target="_blank" rel="noopener noreferrer">${e(label)}<span aria-hidden="true"> ↗</span></a>`;
 const list = items => `<ul class="bullets">${items.map(item => `<li>${prose(item)}</li>`).join('')}</ul>`;
 const techTokens = items => items.map((item,index)=>`<span class="tech-token">${e(item)}${index<items.length-1?' <span aria-hidden="true">·</span>':''}</span>`).join(' ');
 const tech = project => project.techGroups?.length
   ? `<div class="tech-groups">${project.techGroups.map(([label,items])=>`<p><span class="tech-label">${e(label)}</span><span>${techTokens(items)}</span></p>`).join('')}</div>`
-  : `<p class="tech-line"><span class="tech-label">기술</span>${techTokens(project.tech)}</p>`;
+  : `<p class="tech-line"><span class="tech-label">기술</span><span>${techTokens(project.tech)}</span></p>`;
 const projectHref = project => `/projects/${project.id}/`;
+const projectLinkIcon = '<svg class="project-link-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const projectStartDate = project => Number((project.period.match(/\d{4}\.\d{2}/)?.[0] ?? '0000.00').replace('.', ''));
 const orderedProjects = [...projects].sort((a, b) => projectStartDate(b) - projectStartDate(a));
 const workProjects = orderedProjects.filter(project => project.category === 'work');
@@ -41,7 +43,7 @@ function layout({ title, description, route, active, body, toc = [], pageLabel, 
 }
 
 function resumeProject(project) {
-  return `<article class="resume-project" id="resume-${project.id}"><div class="row-meta"><h3><a href="${projectHref(project)}">${e(project.name)}</a></h3><p>${e(project.company)}</p><p class="numeric">${e(project.period)}</p></div><div class="row-body"><h4>${e(project.kind)}</h4><p class="role-line">${e(project.role)}</p>${list(project.summary)}<p class="compact-tech">${project.tech.slice(0, project.id==='bitria'?13:9).map(e).join(' · ')}</p><a class="text-link" href="${projectHref(project)}">프로젝트 자세히 보기 <span aria-hidden="true">↗</span></a></div></article>`;
+  return `<article class="resume-project" id="resume-${project.id}"><div class="row-meta"><h3><a href="${projectHref(project)}">${e(project.name)}</a></h3><p>${e(project.company)}</p><p class="numeric">${e(project.period)}</p></div><div class="row-body"><div class="project-title-row"><h4>${e(project.kind)}</h4><a class="text-link project-detail-link" href="${projectHref(project)}"><span class="project-link-label">프로젝트 상세 보기</span>${projectLinkIcon}</a></div><p class="role-line">${e(project.role)}</p>${list(project.summary)}<p class="compact-tech">${project.tech.map(e).join(' · ')}</p></div></article>`;
 }
 
 function resume() {
@@ -60,15 +62,15 @@ function taskList(project) {
 }
 
 function caseStudy(study, prefix = '') {
-  return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${study.items?list(study.items):''}<div class="result"><strong>결과</strong><p>${prose(study.result)}</p></div>${study.note?`<p class="measurement-note">${prose(study.note)}</p>`:''}</section>`;
+  return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${study.items?list(study.items):''}${study.result?`<div class="result"><p>${prose(study.result)}</p></div>`:''}${study.note?`<p class="measurement-note">${prose(study.note)}</p>`:''}</section>`;
 }
 
-function careerProject(project, { portfolio = false } = {}) {
-  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${prose(project.description)}</p><h3 class="subsection-heading">주요 업무</h3>${taskList(project)}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${prose(project.result)}</p></div>`:''}${tech(project)}</div>${project.cases?.length?`<div class="case-group"><p class="case-group-label">대표 문제 해결</p>${project.cases.map(study=>caseStudy(study,project.id+'-')).join('')}</div>`:''}${portfolio?implementation(project,project.id+'-')+projectGallery(project):''}<a class="text-link" href="${projectHref(project)}">프로젝트 상세 보기 <span aria-hidden="true">↗</span></a></article>`;
+function careerProject(project) {
+  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><div class="project-title-row"><h2>${e(project.name)}</h2><a class="text-link project-detail-link" href="${projectHref(project)}"><span class="project-link-label">프로젝트 상세 보기</span>${projectLinkIcon}</a></div><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${prose(project.description)}</p><h3 class="subsection-heading">주요 업무</h3>${taskList(project)}${project.insight?`<div class="result"><p>${prose(project.insight)}</p></div>`:''}${project.result?`<div class="result"><p>${prose(project.result)}</p></div>`:''}<h3 class="subsection-heading">기술 스택</h3>${tech(project)}</div>${project.cases?.length?`<div class="case-group"><p class="case-group-label">대표 문제 해결</p>${project.cases.map(study=>caseStudy(study,project.id+'-')).join('')}</div>`:''}</article>`;
 }
 
 function career() {
-  const body = `<div class="page-intro"><p class="page-kicker">김수환 · Frontend Developer</p><h1>경력기술서</h1><p>개발한 서비스, 담당한 역할,<br class="mobile-break"> 그리고 문제를 해결한 과정입니다.</p></div>${experiences.slice(0,2).map(job=>`<section class="company-section" id="${job.id}"><header class="company-heading"><div><h2>${e(job.name)}</h2><p>${e(job.role)}</p></div><p class="numeric">${e(job.period)}</p></header>${workProjects.filter(p=>p.companyId===job.id).map(careerProject).join('')}</section>`).join('')}<div class="document-next"><span>프로젝트 화면과 구현 자료</span><a href="/projects/">프로젝트 둘러보기 <span aria-hidden="true">→</span></a></div>`;
+  const body = `<div class="page-intro"><h1>김수환 경력기술서</h1><p>개발한 서비스, 담당한 역할,<br class="mobile-break"> 그리고 문제를 해결한 과정입니다.</p></div>${experiences.slice(0,2).map(job=>`<section class="company-section" id="${job.id}"><header class="company-heading"><div><h2>${e(job.name)}</h2><p>${e(job.role)}</p></div><p class="numeric">${e(job.period)}</p></header>${workProjects.filter(p=>p.companyId===job.id).map(careerProject).join('')}</section>`).join('')}<div class="document-next"><span>프로젝트 화면과 구현 자료</span><a href="/projects/">프로젝트 둘러보기 <span aria-hidden="true">→</span></a></div>`;
   return layout({title:'경력기술서',description:'김수환의 프론트엔드·백엔드 개발 경험과 대표 문제 해결 사례입니다.',route:'/career/',active:'career',body,pageLabel:'경력기술서',pdf:'career',toc:workProjects.map(p=>[p.id,p.name])});
 }
 
@@ -88,24 +90,45 @@ function projectGallery(project, id = '') {
   return images.length ? `<section class="detail-section"${id?` id="${id}"`:''}><h2>${id?'':e(project.name)+' · '}프로젝트 화면</h2>${gallery(images)}</section>` : '';
 }
 
+function portfolioMeasurements(project, prefix = '') {
+  const measured = (project.cases || []).filter(study => study.note && study.result);
+  if (!measured.length) return '';
+  return `<section class="detail-section" id="${prefix}measurements"><h2>문제 해결과 개선</h2>${measured.map(study=>{
+    const material = portfolioMaterial[project.id]?.optimizations?.[study.id];
+    const examples = (items, flow = false) => items?.map(item=>`<figure class="optimization-example"><figcaption>${e(item.label)}</figcaption><pre${flow?' class="optimization-flow"':' class="syntax-block"'}><code${flow?'':' class="language-typescript"'}>${flow?e(item.text):hljs.highlight(item.code,{language:'typescript',ignoreIllegals:true}).value}</code></pre></figure>`).join('') || '';
+    return `<section class="implementation-section"><h3>${e(study.title)}</h3>${material?`<p>${prose(material.description)}</p>${material.diagrams?.map(diagram=>`<figure class="architecture-diagram"><figcaption>${e(diagram.label)}</figcaption><div class="diagram-scroll" role="region" aria-label="${e(diagram.label)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',diagram.file+'.svg'),'utf8')}</div></figure>`).join('') || examples(material.flows,true)}${examples(material.examples)}<p class="measurement-note">${e(material.caption)}</p>`:''}<div class="result"><p>${prose(study.result)}</p></div><p class="measurement-note">${prose(study.note)}</p></section>`;
+  }).join('')}${portfolioRecovery(project,prefix)}</section>`;
+}
+
+function portfolioRecovery(project,prefix = '') {
+  const cases = portfolioMaterial[project.id]?.recoveryCases || [];
+  return cases.map(material=>`<section class="implementation-section" id="${prefix}design-${material.id}"><h3>${e(material.title)}</h3>${material.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${material.diagram?`<figure class="architecture-diagram"><div class="diagram-scroll" role="region" aria-label="${e(material.caption)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',material.diagram+'.svg'),'utf8')}</div><figcaption>${e(material.caption)}</figcaption></figure>`:''}${material.result?`<div class="result"><p>${prose(material.result)}</p></div>`:''}</section>`).join('');
+}
+
+function portfolioProject(project) {
+  const material = portfolioMaterial[project.id];
+  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><div class="project-title-row"><h2>${e(project.name)}</h2><a class="text-link project-detail-link" href="${projectHref(project)}"><span class="project-link-label">프로젝트 상세 보기</span>${projectLinkIcon}</a></div><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p></div>${implementation(project,project.id+'-')}${projectGallery(project)}${portfolioMeasurements(project,project.id+'-')}<section class="detail-section"><h2>기술 스택</h2>${tech(project)}</section></article>`;
+}
+
 function portfolio() {
-  const body = `<div class="portfolio-document"><div class="page-intro portfolio-cover"><p class="page-kicker">Frontend Developer · ${external('GitHub',profile.github)}</p><h1>김수환 포트폴리오</h1><p>프로젝트별 담당 업무, 문제 해결 과정과 구현 자료입니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${careerProject(project,{portfolio:true})}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
+  const body = `<div class="portfolio-document"><div class="page-intro portfolio-cover"><h1>김수환 포트폴리오</h1><p>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project"><p class="portfolio-company">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p>${portfolioProject(project)}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
   return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:orderedProjects.map(p=>[p.id,p.name])});
 }
 
 function projectIndex() {
-  const body = `<div class="page-intro"><p class="page-kicker">프론트엔드 · 백엔드 · 서비스 운영</p><h1>프로젝트</h1><p>직접 개발하고 운영한 6개 프로젝트의<br class="mobile-break"> 담당 업무와 구현 사례입니다.</p></div><div class="project-toolbar"><p class="project-count" aria-live="polite">6개 프로젝트</p></div><div class="project-index">${orderedProjects.map(p=>`<article class="project-index-row${p.images?' has-image':''}" data-category="${p.category}"><div class="project-index-content"><p class="index-meta">${e(p.company)} <span aria-hidden="true">/</span> <span class="numeric">${e(p.period)}</span></p><h2><a href="${projectHref(p)}">${e(p.name)}<span aria-hidden="true">↗</span></a></h2><p class="index-kind">${e(p.kind)}</p><p class="index-description">${prose(p.description)}</p><p class="compact-tech">${p.tech.slice(0,6).map(e).join(' · ')}</p></div>${p.images?`<a class="project-thumbnail" href="${projectHref(p)}" tabindex="-1" aria-hidden="true"><img src="/assets/${p.images[0].src}" alt="" loading="lazy" decoding="async"></a>`:''}</article>`).join('')}</div>`;
+  const body = `<div class="page-intro"><h1>프로젝트</h1><p>직접 개발하고 운영한 6개 프로젝트의<br class="mobile-break"> 담당 업무와 구현 사례입니다.</p></div><div class="project-toolbar"><p class="project-count" aria-live="polite">6개 프로젝트</p></div><div class="project-index">${orderedProjects.map(p=>`<article class="project-index-row${p.images?' has-image':''}" data-category="${p.category}"><div class="project-index-content"><p class="index-meta">${e(p.company)} <span aria-hidden="true">/</span> <span class="numeric">${e(p.period)}</span></p><h2><a href="${projectHref(p)}">${e(p.name)}<span aria-hidden="true">↗</span></a></h2><p class="index-kind">${e(p.kind)}</p><p class="index-description">${prose(p.description)}</p><p class="compact-tech">${p.tech.map(e).join(' · ')}</p></div>${p.images?`<a class="project-thumbnail" href="${projectHref(p)}" tabindex="-1" aria-hidden="true"><img src="/assets/${p.images[0].src}" alt="" loading="lazy" decoding="async"></a>`:''}</article>`).join('')}</div>`;
   return layout({title:'프로젝트',description:'Bitria, Gobit, doit-uikit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다.',route:'/projects/',active:'projects',body,pageLabel:'프로젝트',pdf:'portfolio',toc:[['main','전체 프로젝트']]});
 }
 
 function projectDetail(project, index) {
-  const toc=[['overview','프로젝트 소개'],['work','담당 업무']];
-  if(project.cases?.length)toc.push(...project.cases.map(study=>[study.id,study.title]));
+  const material = portfolioMaterial[project.id];
+  const toc=[['overview','프로젝트 소개']];
   if(portfolioMaterial[project.id]?.sections?.length)toc.push(['implementation','구현 구조와 설계']);
   if(project.images?.length||portfolioMaterial[project.id]?.images?.length)toc.push(['screens','프로젝트 화면']);
-  toc.push(['technology','사용 기술']);
+  if(project.cases?.some(study=>study.note && study.result))toc.push(['measurements','문제 해결과 개선']);
+  toc.push(['technology','기술 스택']);
   const previous=projects[index-1],next=projects[index+1];
-  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(project.description)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${project.outcomes?`<dl class="outcome-strip">${project.outcomes.map(outcome=>`<div><dt>${e(outcome.label)}</dt><dd>${outcome.value}<span>감소</span></dd><p>${e(outcome.detail)}</p></div>`).join('')}</dl>`:''}<section class="detail-section" id="work"><h2>담당 업무</h2>${taskList(project)}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${project.result?`<div class="result"><strong>결과</strong><p>${prose(project.result)}</p></div>`:''}</section>${project.cases?.map(study=>caseStudy(study)).join('')||''}${implementation(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>사용 기술</h2><p class="technology-text">${project.tech.map(e).join(' · ')}</p></section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
+  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${implementation(project)}${projectGallery(project,'screens')}${portfolioMeasurements(project)}<section class="detail-section" id="technology"><h2>기술 스택</h2>${tech(project)}</section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
   return layout({title:project.name,description:project.description,route:projectHref(project),active:'projects',body,pageLabel:project.name,pdf:'portfolio',toc});
 }
 

@@ -37,6 +37,10 @@ try {
       assert.equal(await page.locator('img[src$="dax-architecture.png"]').count(), 1);
     }
     await page.evaluate(() => {
+      // Project names remain plain text in the submitted resume PDF.
+      for (const anchor of document.querySelectorAll('.resume-project .row-meta h3 a')) {
+        anchor.removeAttribute('href');
+      }
       for (const anchor of document.querySelectorAll('a[href^="/"]')) {
         anchor.href = `https://shkiimaa.github.io${anchor.getAttribute('href')}`;
       }

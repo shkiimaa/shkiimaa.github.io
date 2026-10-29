@@ -29,6 +29,12 @@ export const portfolioMaterial = {
           'Capacitor iOS는 `WebViewDelegationHandler`에서 이동할 주소가 `server.url`로 시작하는지 문자열로 비교해 앱 내부 이동을 판정합니다. `server.url`은 `https://bitria.com/m`인데, next-intl의 `localePrefix: \'as-needed\'` 설정으로 기본 언어 외에는 `/th/m`처럼 언어 코드가 앞에 붙어 외부 링크로 판정됐습니다.',
           '앱 요청(User-Agent의 `BitriaMobile`)에 한해 미들웨어에서 언어 코드를 붙이는 리다이렉트를 같은 대상의 rewrite로 바꿨습니다. 브라우저 주소는 `/m/...`으로 유지하고 렌더링은 `/{locale}/m/...`에서 처리해 기기 언어를 그대로 표시합니다. 이미 언어 코드가 붙은 주소로 들어온 앱 요청은 코드 없는 주소로 리다이렉트합니다.'
         ], result: '영어 외 지원 언어 5개(일본어·스페인어·베트남어·태국어·중국어) 기기에서 앱이 정상 실행됩니다. 원격 URL 방식이라 앱 재빌드·스토어 재심사 없이 서버 배포만으로 적용했습니다.'
+      }, {
+        id: 'chart-lifecycle', title: '차트 로딩 실패의 원인 분석과 해결',
+        paragraphs: [
+          '빠르게 심볼을 전환할 때 차트 로딩이 완료되지 않는 문제를 클라이언트 오류 로그와 서버·CDN 응답 시간으로 추적했습니다. 이전 위젯의 콜백이 이미 해제된 iframe에 접근하는 상황을 재현했습니다.',
+          '심볼 전환마다 차트 위젯이 재마운트되면서 발생하는 생명주기 충돌을 줄이기 위해, 위젯을 거래 레이아웃에서 유지했습니다. 위젯이 준비되기 전에는 최신 심볼을 보관하고, 준비 상태에 따라 반영하도록 변경했습니다.'
+        ], result: '빠르게 심볼을 전환해도 마지막에 선택한 심볼로 차트가 정상 로딩됩니다. 위젯을 재마운트하지 않아 전환할 때마다 차트를 다시 초기화하지 않습니다.', diagram: 'bitria-chart-lifecycle', caption: '수정 전: 심볼 전환 후 이전 위젯의 콜백이 해제된 iframe에 접근하는 흐름'
       }],
     sections: [
       {
@@ -43,13 +49,6 @@ export const portfolioMaterial = {
         paragraphs: [
           '거래소 WebSocket 데이터는 수집 서비스의 심볼 정규화와 Redis Pub/Sub을 거쳐 백엔드에 전달됩니다. 프론트엔드는 REST 스냅샷과 WebSocket 스트림으로 차트·호가·시세를 표시합니다.'
         ], diagram: 'bitria-realtime', caption: '실시간 데이터 전달 경로'
-      },
-      {
-        id: 'chart-lifecycle', title: '차트 로딩 실패의 원인 분석과 해결',
-        paragraphs: [
-          '빠르게 심볼을 전환할 때 차트 로딩이 완료되지 않는 문제를 클라이언트 오류 로그와 서버·CDN 응답 시간으로 추적했습니다. 이전 위젯의 콜백이 이미 해제된 iframe에 접근하는 상황을 재현했습니다.',
-          '심볼 전환마다 차트 위젯이 재마운트되면서 발생하는 생명주기 충돌을 줄이기 위해, 위젯을 거래 레이아웃에서 유지했습니다. 위젯이 준비되기 전에는 최신 심볼을 보관하고, 준비 상태에 따라 반영하도록 변경했습니다.'
-        ], diagram: 'bitria-chart-lifecycle', caption: '수정 전: 심볼 전환 후 이전 위젯의 콜백이 해제된 iframe에 접근하는 흐름'
       },
       {
         id: 'platforms', title: '단일 코드베이스의 멀티 플랫폼 대응',

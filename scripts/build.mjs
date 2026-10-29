@@ -75,7 +75,7 @@ function career() {
 
 function gallery(images, comparison = false) {
   if (!images?.length) return '';
-  return `<div class="project-gallery${comparison ? ' measurement-gallery' : ''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
+  return `<div class="project-gallery${comparison ? ' measurement-gallery' : ''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}${image.fullSrc ? `<a class="full-record-link" href="/assets/${e(image.fullSrc)}" target="_blank" rel="noopener noreferrer">전체 기록 보기 ↗</a>` : ''}</figcaption></figure>`).join('')}</div>`;
 }
 
 function measurementDataLink(item) {
@@ -83,7 +83,7 @@ function measurementDataLink(item) {
 }
 
 function measurementReports(item) {
-  return item?.images?.length ? `<div class="measurement-reports"><h4>${e(item.reportTitle || "Lighthouse 원본 보고서 전후 비교")}</h4>${gallery(item.images, true)}</div>` : '';
+  return item?.images?.length ? `<div class="measurement-reports"><h4>${e(item.reportTitle || "Lighthouse 원본 보고서 전후 비교")}</h4>${gallery(item.images, true)}${item.reportNote ? `<p class="measurement-note">${prose(item.reportNote)}</p>` : ''}</div>` : '';
 }
 
 function implementation(project, prefix = '') {

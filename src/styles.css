@@ -180,3 +180,6 @@
  .portfolio-document .evidence-section h3 { break-after: avoid-page; }
  .portfolio-document .evidence-section > p { orphans: 3; widows: 3; }
 }
+
+.full-record-link { display: block; margin-top: 5px; color: var(--accent); text-decoration: underline; }
+.measurement-reports > .measurement-note { margin-top: 12px; }

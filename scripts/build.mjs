@@ -61,7 +61,7 @@ function taskList(project) {
 }
 
 function caseStudy(study, prefix = '', showReports = false) {
-  return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${study.items?list(study.items):''}<div class="result"><strong>결과</strong><p>${prose(study.result)}</p></div>${study.note?`<p class="measurement-note">${prose(study.note)}</p>`:''}${showReports ? measurementDataLink(portfolioMaterial.bitria.evidence.find(item=>item.caseId===study.id)) + measurementReports(portfolioMaterial.bitria.evidence.find(item=>item.caseId===study.id)) : ''}</section>`;
+  return `<section class="case-study" id="${prefix}${study.id}"><h3>${e(study.title)}</h3>${study.period?`<p class="role-line numeric">${e(study.period)}</p>`:''}${study.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${study.items?list(study.items):''}<div class="result"><strong>결과</strong><p>${prose(study.result)}</p></div>${study.note?`<p class="measurement-note">${prose(study.note)}</p>`:''}${showReports ? measurementReports(portfolioMaterial.bitria.evidence.find(item=>item.caseId===study.id)) : ''}</section>`;
 }
 
 function careerProject(project, { portfolio = false } = {}) {
@@ -75,11 +75,7 @@ function career() {
 
 function gallery(images, comparison = false) {
   if (!images?.length) return '';
-  return `<div class="project-gallery${comparison ? ' measurement-gallery' : ''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}${image.fullSrc ? `<a class="full-record-link" href="/assets/${e(image.fullSrc)}" target="_blank" rel="noopener noreferrer">전체 기록 보기 ↗</a>` : ''}</figcaption></figure>`).join('')}</div>`;
-}
-
-function measurementDataLink(item) {
-  return item?.measurementFile ? `<p class="measurement-data-link"><a href="/assets/${e(item.measurementFile)}" download>전후 각 5회 렌더 계측 데이터(JSON) 다운로드 ↗</a> · <a href="/assets/bitria-render-evidence.zip" download>원본 Chrome trace·캡처 ZIP 다운로드 ↗</a></p>` : '';
+  return `<div class="project-gallery${comparison ? ' measurement-gallery' : ''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
 }
 
 function measurementReports(item) {
@@ -99,7 +95,7 @@ function projectGallery(project, id = '') {
 
 function portfolioProject(project) {
   const evidence = portfolioMaterial[project.id]?.evidence || [];
-  return `<article class="career-project" id="${project.id}"><div class="portfolio-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div>${project.periodNote?`<p class="period-note">${e(project.periodNote)}</p>`:''}</header><p class="project-description">${prose(project.description)}</p><div class="portfolio-scope"><h3>담당 범위</h3>${list(project.summary.slice(0, project.id==='bitria'?4:3))}</div></div>${evidence.map(item=>`<section class="evidence-section"><h3>${e(item.title)}</h3><p><strong>문제</strong> ${prose(item.problem)}</p><p><strong>판단·수정</strong> ${prose(item.decision)}</p>${item.metrics?`<table class="metric-table"><caption>${e(item.caption)}</caption><thead><tr><th scope="col">지표</th><th scope="col">개선 전</th><th scope="col">개선 후</th></tr></thead><tbody>${item.metrics.map(row=>`<tr>${row.map((cell,i)=>i===0?`<th scope="row">${e(cell)}</th>`:`<td>${e(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`:''}<p class="measurement-note">${prose(item.note)}</p>${measurementDataLink(item)}${measurementReports(item)}</section>`).join('')}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${implementation(project,project.id+'-')}${projectGallery(project)}<p class="portfolio-detail-link"><a href="${origin}${projectHref(project)}">${e(project.name)} 상세 설명 ↗</a></p></article>`;
+  return `<article class="career-project" id="${project.id}"><div class="portfolio-overview"><header class="project-heading"><h2>${e(project.name)}</h2><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div>${project.periodNote?`<p class="period-note">${e(project.periodNote)}</p>`:''}</header><p class="project-description">${prose(project.description)}</p><div class="portfolio-scope"><h3>담당 범위</h3>${list(project.summary.slice(0, project.id==='bitria'?4:3))}</div></div>${evidence.map(item=>`<section class="evidence-section"><h3>${e(item.title)}</h3><p><strong>문제</strong> ${prose(item.problem)}</p><p><strong>판단·수정</strong> ${prose(item.decision)}</p>${item.metrics?`<table class="metric-table"><caption>${e(item.caption)}</caption><thead><tr><th scope="col">지표</th><th scope="col">개선 전</th><th scope="col">개선 후</th></tr></thead><tbody>${item.metrics.map(row=>`<tr>${row.map((cell,i)=>i===0?`<th scope="row">${e(cell)}</th>`:`<td>${e(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table>`:''}<p class="measurement-note">${prose(item.note)}</p>${measurementReports(item)}</section>`).join('')}${project.insight?`<p class="implementation-note">${prose(project.insight)}</p>`:''}${implementation(project,project.id+'-')}${projectGallery(project)}<p class="portfolio-detail-link"><a href="${origin}${projectHref(project)}">${e(project.name)} 상세 설명 ↗</a></p></article>`;
 }
 
 function portfolio() {

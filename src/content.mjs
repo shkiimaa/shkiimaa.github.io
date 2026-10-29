@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa',
-  introduction: '중복되는 코드는 공통화하고, 플랫폼별 차이는 분리해 유지보수하기 좋은 프론트엔드를 만듭니다.\n\n사내 UI 라이브러리를 개발·배포하며 재사용 가능한 컴포넌트를 구축하고 개발 기준을 정립했습니다. 실시간 거래 서비스에서는 웹·모바일·데스크톱 앱이 하나의 코드베이스를 공유하되 플랫폼별 구현은 분리하는 구조를 설계하고, 프론트엔드와 백엔드 API를 개발했습니다.',
+  introduction: '중복되는 코드는 공통화하고, 플랫폼별 차이는 분리해 유지보수하기 좋은 프론트엔드를 만듭니다.\n\n사내 공통 UI 라이브러리를 개발·배포하고, 컴포넌트 사용법과 개발 규칙을 문서화해 두 프로젝트에 적용했습니다. 실시간 거래 서비스에서는 웹·모바일·데스크톱의 공통 코드와 플랫폼별 구현을 분리하고, 거래 화면과 백엔드 API를 개발했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
@@ -30,14 +30,14 @@ export const skills = [
 export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
-    kind: '멀티 거래소 연동 암호화폐 거래 플랫폼', role: '프론트엔드·백엔드 API 개발 담당',
-    description: '여러 암호화폐 거래소를 연동해 현물·선물·마진 거래를 제공하는 플랫폼입니다. 웹·모바일 앱의 프론트엔드와 백엔드 API 개발을 담당하고, 인프라 운영에 참여했습니다.',
+    kind: '멀티 거래소 연동 암호화폐 거래 플랫폼', role: '프론트엔드·백엔드 개발 담당 · 2인 팀',
+    description: '여러 암호화폐 거래소를 연동해 현물·선물·마진 거래를 제공하는 플랫폼입니다. 2인 팀에서 웹·모바일 앱의 프론트엔드와 백엔드 개발을 담당하고, 인프라 운영에 참여했습니다.',
     summary: [
-    '실시간 시세·호가·체결 및 TradingView 차트, 주문·계정·자산 관리 화면 구현',
+    '실시간 시세·호가·체결과 TradingView 차트, 주문·계정·자산 관리 화면 개발',
       '주문·인증·보안·자산·손익 조회 및 가격 알림 API 설계·개발',
-      '주문 가능액 계산 로직을 공통화해 화면 간 계산 불일치 해결',
-      '모바일 홈 스크립트 차단 시간(TBT) 약 49%, 앱 트레이딩 화면 누적 렌더 시간 약 60% 감소',
-      '웹·iOS·Android 및 Electron 빌드 대응, 모바일 앱 스토어 출시'
+      '주문 가능액 계산을 공통화해 주문 폼과 레버리지 모달의 계산 불일치 해결',
+      'shared/ui 배럴 import의 불필요한 모듈 유입과 상위 시세 구독에 따른 리렌더링 전파 개선',
+      '웹·iOS·Android·Electron 빌드 대응 및 모바일 앱 스토어 출시'
     ],
     tasks: [
       ['거래 화면', 'TradingView 차트, 실시간 시세·호가·체결, 현물·선물·마진 주문 및 포지션·체결 내역 구현'],
@@ -49,20 +49,20 @@ export const projects = [
     ],
     tech: ['TypeScript', 'Next.js 16', 'React 19', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron', 'Node.js', 'Express', 'Prisma', 'MariaDB', 'Redis', 'Docker', 'k3s'],
     techGroups: [['프론트엔드·앱', ['TypeScript', 'Next.js 16', 'React 19', 'Tailwind CSS', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드·인프라', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'Redis', 'Docker', 'k3s']]],
-    outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '49%', detail: '443 → 226ms · 로컬 비교 측정' }, { label: '앱 트레이딩 화면 누적 렌더 시간', value: '60%', detail: '1,028 → 416ms · 12초 측정' }],
+    outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '30%', detail: '417 → 292.5ms · 로컬 프로덕션 빌드·5회 중앙값' }, { label: '거래 화면 렌더 작업', value: '71%', detail: '5,241 → 1,534회 · 개발 빌드·동일 시세 재생·5회 중앙값' }],
     cases: [
       { id: 'order-calculation', title: '교차 마진 주문 가능액 계산 오류 수정', paragraphs: [
-        '레버리지 모달과 주문 폼이 최대 주문 가능액을 따로 계산해 같은 조건에서도 표시 금액이 최대 56배 차이 났습니다. 거래소 문서와 API 응답을 비교해 두 원인을 찾았습니다. 교차 마진 계산에 격리 마진용 리스크 한도를 적용했고, 잔고에 레버리지를 단순 곱하는 계산도 문제였습니다.',
-        '표시값만 고치지 않고 계산 로직을 공통 모듈로 통합했습니다. 수수료·안전 여유분·리스크 한도·레버리지 상한·최소 주문 단위를 반영했습니다. 주문 수량의 부동소수점 오차는 BigNumber로 처리했습니다.'
-      ], result: '두 화면의 계산값을 거래 단위까지 일치시켰습니다. 경계 사례 20건을 검증하고, 운영 환경에서 발견한 양방향 포지션의 조건부 주문 누락도 수정했습니다.' },
-      { id: 'mobile-performance', title: '모바일 홈 JavaScript 실행 시간 개선', paragraphs: [
-        '프로덕션 모바일 홈에서 Lighthouse 성능 점수 38점, 총 차단 시간(TBT) 1,610ms를 측정했습니다. JavaScript 청크 실행 시간을 분석해 shared/ui의 일괄 재수출 구조가 불필요한 모듈까지 같은 청크에 포함하는 것을 확인했습니다.',
-        'optimizePackageImports를 적용했지만 청크 수와 전체 번들이 늘어 이를 되돌렸습니다. 대신 컴포넌트를 직접 import하도록 바꾸고 three.js 배경은 늦게 불러오도록 했습니다.'
-      ], result: '로컬 프로덕션 빌드 비교에서 TBT가 443ms에서 226ms로 약 49% 줄었습니다. 일부 청크 크기는 늘었지만 초기 로드에서 불러오는 JavaScript는 22KB 줄었습니다.', note: 'Lighthouse 모바일 설정(CPU 4배 스로틀·느린 4G)에서 워밍업 후 3~5회 측정했습니다. 프로덕션 진단값 1,610ms와 로컬 비교값은 측정 환경이 다릅니다.' },
+        '주문 폼과 레버리지 모달이 서로 다른 계산식을 사용해 같은 조건에서도 주문 가능액이 달랐습니다. 거래소별 교차·격리 마진 정책과 계산 조건을 확인하고, 화면마다 계산식을 관리하는 구조를 공통화하기로 했습니다.',
+        '수수료·안전 여유분·리스크 한도·레버리지 상한을 공통 계산 함수에 반영하고, BigNumber로 최소 주문 단위에 맞춰 절사했습니다.'
+      ], result: '두 화면이 같은 계산 함수와 절사 규칙을 사용하도록 통합했습니다.' },
+      { id: 'mobile-performance', title: '배럴 import의 불필요한 모듈 유입 개선', paragraphs: [
+        '번들 분석을 통해 shared/ui의 다단계 배럴 재수출 경로로 불필요한 UI 모듈이 함께 유입되는 구조를 확인했습니다. 공통 배럴 대신 컴포넌트 정의 파일을 직접 참조하도록 변경했습니다.',
+        'optimizePackageImports도 비교했지만 청크 수와 전체 번들이 증가해 채택하지 않았습니다. three.js 기반 장식용 배경은 별도 조치로 next/dynamic을 이용해 클라이언트 청크로 분리했습니다.'
+      ], result: '직접 import 변경 전후의 로컬 프로덕션 빌드를 각 5회 측정한 결과, 모바일 Lighthouse TBT 중앙값은 417ms에서 292.5ms로 감소했습니다.', note: '로컬 프로덕션 빌드·모바일 CPU 4배 감속·네트워크 제한 조건입니다. 이번 비교는 직접 import 변경만 포함하며, three.js 동적 import는 전후 모두 적용돼 있습니다. 외부 응답과 기기 부하는 고정하지 못했으므로 이번 실험의 관측값으로 기록했습니다.' },
       { id: 'render-isolation', title: '실시간 갱신 범위를 표시 컴포넌트로 제한', paragraphs: [
-        '페이지 최상위에서 실시간 스냅샷을 구독해 시세가 갱신될 때 주문 폼·하단 패널·닫힌 UI까지 다시 렌더링됐습니다. 웹에서는 같은 현상이 재현되지 않았습니다.',
-        '앱 화면에서는 데이터 구독을 실제 시세 표시 컴포넌트로 옮기고, props와 구독 인자의 참조를 안정화했습니다.'
-      ], result: '12초 프로파일링에서 누적 렌더 시간 1,028 → 416ms(약 60% 감소), 렌더 횟수 2,802 → 1,323회(약 53% 감소)를 확인했습니다.', note: '앱 현물 트레이딩 화면에서 조작 없이 실시간 데이터만 갱신한 구간입니다. 해당 구간에서 주문 폼·하단 패널의 불필요한 렌더링도 줄었습니다.' }
+        '상위 거래 레이아웃의 시세 state가 갱신되면서 시세를 직접 사용하지 않는 주문 폼과 하단 패널까지 리렌더링됐습니다. 실시간 데이터를 실제로 표시하는 컴포넌트가 직접 구독하도록 갱신 범위를 분리했습니다.',
+        '구독과 state를 LiveChangeRate·LiveSymbolStats로 옮기고, 구독 인자 배열을 useMemo로 안정화해 불필요한 effect 재실행을 줄였습니다.'
+      ], result: '동일 시세의 12초 재생 구간을 전후 각 5회 비교했습니다. 전체 렌더 작업 중앙값은 5,241회에서 1,534회로 감소했고, 주문 폼과 하단 패널은 각각 8회에서 0회로 줄었습니다.', note: '개발 빌드·동일 시세 재생 조건의 자체 React hook 계측입니다. 초기 마운트는 제외했으며 실사용자 응답 속도와 구분합니다.' }
     ]
   },
   {
@@ -96,7 +96,7 @@ export const projects = [
       ['문서화', 'Storybook·Chromatic으로 사용법·Props·상태별 UI 문서화'],
       ['팀 표준', '디렉토리 구조·디자인 패턴·라이브러리 선정 기준 정립, ESLint·Prettier 설정 및 팀 온보딩 교육']
     ],
-    result: 'D.A.X와 회사 홈페이지에서 사용하며 요구사항에 맞춰 라이브러리를 개선하고 배포했습니다. 컴포넌트·사용 문서·린터 설정을 함께 제공해 공통 UI와 개발 규칙을 적용했습니다.',
+    result: '컴포넌트·사용 문서·린터 설정을 함께 배포해 D.A.X와 회사 홈페이지에 공통 UI와 개발 규칙을 적용했습니다. 각 프로젝트에서 발생한 요구사항을 라이브러리에 반영해 개선·배포했습니다.',
     tech: ['TypeScript', 'React 18', 'Vite', 'styled-components', 'Storybook 8', 'Chromatic', 'vite-plugin-dts'],
     images: [{ src: 'uikit-storybook.png', alt: 'doit-uikit 컴포넌트의 Storybook 문서와 Props 설정 화면' }]
   },

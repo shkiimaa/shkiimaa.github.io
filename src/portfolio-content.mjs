@@ -15,15 +15,15 @@ export const portfolioMaterial = {
         id: 'realtime', title: '실시간 데이터 전달과 구독 구조',
         paragraphs: [
           '거래소 WebSocket 데이터는 수집 서비스의 심볼 정규화와 Redis Pub/Sub을 거쳐 백엔드에 전달됩니다. 프론트엔드는 REST 스냅샷과 WebSocket 스트림으로 차트·호가·시세를 표시합니다.',
-          '실시간 구독을 값을 표시하는 컴포넌트로 옮기고, 티커 데이터도 항목별로 구독하도록 분리했습니다. 보이지 않는 오더북과 닫힌 드로어는 구독을 중지하고, 체결 내역 행에는 memo를 적용해 갱신 범위를 줄였습니다.'
-        ], diagram: 'bitria-realtime', caption: '실시간 데이터가 프론트엔드에 전달되는 흐름'
+          '상위 레이아웃에서 시세 구독을 제거하고, 값을 표시하는 컴포넌트가 직접 구독하도록 변경했습니다. 화면의 마운트 상태를 유지하면서도 시세 갱신에 따른 리렌더링 전파 범위를 줄였습니다. 닫힌 오더북은 구독을 중지하고, 체결 내역은 구독을 유지하되 행에 memo를 적용했습니다.'
+        ], diagram: 'bitria-realtime', caption: '실시간 데이터 전달 경로: 프론트엔드에서는 표시 컴포넌트별로 시세를 구독'
       },
       {
         id: 'chart-lifecycle', title: '차트 로딩 실패의 원인 분석과 해결',
         paragraphs: [
-          '간헐적인 차트 로딩 실패를 클라이언트 오류 로그와 서버·CDN 응답 시간으로 추적했습니다. 심볼을 빠르게 바꾸면 이전 위젯의 콜백이 이미 해제된 iframe에 접근해 새 차트가 초기화되지 않는 상황을 재현했습니다.',
-          '라우트가 바뀔 때 페이지 전체가 다시 마운트되는 구조가 원인이었습니다. 차트 뷰를 레이아웃에 두어 불필요한 재마운트를 막고, 위젯 초기화 중 심볼이 바뀌어도 최신 심볼을 적용하도록 수정했습니다.'
-        ], diagram: 'bitria-chart-lifecycle', caption: '수정 전: 빠른 심볼 전환에서 발생한 위젯 생명주기 충돌'
+          '빠르게 심볼을 전환할 때 차트 로딩이 완료되지 않는 문제를 클라이언트 오류 로그와 서버·CDN 응답 시간으로 추적했습니다. 이전 위젯의 콜백이 이미 해제된 iframe에 접근하는 상황을 재현했습니다.',
+          '심볼 전환마다 차트 위젯이 재마운트되면서 발생하는 생명주기 충돌을 줄이기 위해, 위젯을 거래 레이아웃에서 유지했습니다. 위젯이 준비되기 전에는 최신 심볼을 보관하고, 준비 상태에 따라 반영하도록 변경했습니다.'
+        ], diagram: 'bitria-chart-lifecycle', caption: '수정 전: 심볼 전환 후 이전 위젯의 콜백이 해제된 iframe에 접근하는 흐름'
       },
       {
         id: 'platforms', title: '단일 코드베이스의 멀티 플랫폼 대응',
@@ -37,7 +37,7 @@ export const portfolioMaterial = {
   'doit-uikit': {
     source: 'https://www.notion.so/9e63c15c084243cbb651e0c422457cf8',
     sections: [{ id: 'packaging', title: '컴포넌트 조합과 라이브러리 배포', paragraphs: [
-      'Button·Input 같은 Atom을 조합해 FileInput 등의 Molecule을 구성했습니다. Storybook에서 Props·상태·사용 예를 확인하고 Playground로 직접 값을 바꿔볼 수 있도록 문서화했습니다.',
+      'Button·Input 같은 Atom을 조합해 FileInput 등의 Molecule을 구성했습니다. 컴포넌트의 Props와 상태별 UI를 Storybook에 문서화하고, 사용하는 프로젝트에서 같은 기준으로 확인하도록 구성했습니다. Playground에서는 값을 직접 바꿔 사용 예를 확인할 수 있습니다.',
       'vite-plugin-dts로 타입 선언을 함께 배포하고 React·React DOM은 peer dependency로 분리했습니다. D.A.X와 회사 홈페이지에 적용하면서 발견한 요구사항을 라이브러리에 반영했습니다.'
     ] }],
     images: [
@@ -50,7 +50,7 @@ export const portfolioMaterial = {
     source: 'https://www.notion.so/ee21c0264f7a440ab88ff4643901869c',
     sections: [{ id: 'architecture', title: '서비스 구성과 프론트엔드 담당 범위', paragraphs: [
       'React 프론트엔드는 웹 서버 API를 통해 프로젝트·라벨·모델 데이터를 조회하고 변경합니다. 백엔드와 AI 서버가 연결된 전체 구성에서 프론트엔드 화면과 API 연동을 담당했습니다.',
-      '사내 표준 디렉토리 구조를 적용하고 API 호출을 auth·project·class·datamanage·aiModel·operation 등 도메인별 서비스 모듈로 나눴습니다. 원본·렌더 좌표 변환은 useCoordinateTransform 훅으로 분리해 그리기·저장·재표시에 같은 규칙을 적용했습니다.'
+      'API 호출을 auth·project·class·datamanage·aiModel·operation 등 도메인별 서비스 모듈로 나눴습니다. 축소된 화면에서 그린 좌표는 원본 이미지 좌표로 변환해 저장하고, 다시 표시할 때 역변환했습니다. 양방향 변환은 useCoordinateTransform 훅으로 분리해 그리기·저장·재표시에 같은 규칙을 적용했습니다.'
     ], images: [{ src: 'dax-architecture.png', alt: 'D.A.X 전체 서비스 구성 — 담당 범위는 React 프론트엔드와 API 연동' }] }]
   },
   xrgis: {
@@ -58,7 +58,7 @@ export const portfolioMaterial = {
     images: [
       { src: 'xrgis-users.png', alt: 'XRGIS 사용자 관리 화면' },
       { src: 'xrgis-teams.png', alt: 'XRGIS 팀 관리 화면' },
-      { src: 'xrgis-data.png', alt: 'XRGIS 팀별 데이터·파일 관리 화면' }
+      { src: 'xrgis-data.png', alt: 'XRGIS 팀별 데이터·파일 관리 화면: 대용량 파일 관리와 ZIP 다운로드 기능' }
     ]
   },
 

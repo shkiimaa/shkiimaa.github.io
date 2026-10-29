@@ -186,3 +186,7 @@
 .detail-intro>.implementation-note,.project-overview>.implementation-note{margin-top:12px}
 }
 @media screen and (max-width:767px){.detail-intro>.detail-kind{grid-column:1/-1;margin-top:4px}}
+/* 모바일 스크린샷 갤러리는 세로 비율이 길어 여러 장을 한 줄에 나열 */
+.phone-gallery{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));align-items:start}
+.phone-gallery .image-expand img{max-height:none}
+@media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.portfolio-document .phone-gallery .image-expand img{max-height:170pt}}

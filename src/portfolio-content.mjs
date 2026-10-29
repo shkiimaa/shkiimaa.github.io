@@ -15,6 +15,11 @@ export const portfolioMaterial = {
       },
     },
     source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
+    images: [
+      { src: 'bitria-app-home.jpg', alt: '앱 홈 화면: 총 자산·당일 손익 요약과 주요 마켓 시세' },
+      { src: 'bitria-app-markets.jpg', alt: '앱 마켓 화면: 거래쌍별 시세·거래량·등락률 목록' },
+      { src: 'bitria-app-trade.jpg', alt: '앱 현물 거래 화면: 지정가 주문과 실시간 호가·체결' }
+    ],
     recoveryCases: [{
         id: 'app-resume', title: '앱 복귀 후 포지션·자산 정보 불일치 해결',
         paragraphs: [

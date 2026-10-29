@@ -190,3 +190,5 @@
 .phone-gallery{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));align-items:start}
 .phone-gallery .image-expand img{max-height:none}
 @media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.portfolio-document .phone-gallery .image-expand img{max-height:170pt}}
+/* 웹 이력서 링크는 웹에선 자기 자신이라 PDF에만 노출 */
+@media screen{.pdf-only{display:none!important}}

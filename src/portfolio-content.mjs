@@ -141,13 +141,13 @@ useSnapshotSocket({
       'Binance WebSocket으로 수집한 시세를 Redis에 캐시하고 Socket.IO로 웹 클라이언트에 전달했습니다. 시세 이외의 조회 데이터는 SWR로 관리해 실시간 스트림과 API 조회의 역할을 구분했습니다.',
       'TradingView 차트와 tiptap 에디터를 연동하고 회원 인증·게시글·댓글·북마크 기능을 구현했습니다.'
     ] }, { id: 'deployment', title: '레거시 서비스의 통합·배포 구성', paragraphs: [
-      'Gobit·모의투자·코인 매매 시그널 서비스를 모노레포로 통합했습니다. 수집기 → Redis → 서버로 데이터 전달 경로를 정리하고, 서비스별 Dockerfile과 Kubernetes 매니페스트를 구성했습니다.',
+      '다른 개발자가 만든 레거시 서비스는 소스 코드가 유실돼 바이너리로만 서버 5대에 흩어져 있었습니다. Gobit·모의투자·코인 매매 시그널 서비스를 모노레포로 통합했습니다. 수집기 → Redis → 서버로 데이터 전달 경로를 정리하고, 서비스별 Dockerfile과 Kubernetes 매니페스트를 구성했습니다.',
       'GitHub Actions로 빌드·배포를 자동화하고, 설정값은 Kubernetes Secret에서 불러오도록 구성했습니다. DB 백업과 캔들 보관 작업은 CronJob으로 분리했습니다.'
     ] }]
   },
 
   'doit-homepage': {
-    overview: '기존 jQuery 기반 회사 홈페이지를 React로 전환한 프로젝트입니다.',
+    overview: '사내 React 도입에 맞춰 기존 jQuery 기반 회사 홈페이지를 React로 전환하고 새로 단장한 프로젝트입니다.',
     scope: '메인·회사소개·서비스·인증·파트너 페이지를 담당했습니다. 공통 UI 적용과 한국어·영어, 반응형 화면의 구성 방식을 설명합니다.',
     sections: [{ id: 'composition', title: '공통 UI와 페이지별 구성', paragraphs: [
       '색상·타이포·레이아웃 등의 공통 요소에 doit-uikit을 적용하고, 페이지별 콘텐츠를 React 컴포넌트로 구성했습니다.',

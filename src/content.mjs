@@ -85,7 +85,7 @@ export const projects = [
   },
   {
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
-    description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. 2인 팀에서 Next.js 웹 클라이언트를 새로 구축하고 Node.js·Express API를 개발했습니다. Binance 시세를 수집해 Redis에 캐시하고 Socket.IO로 전달했으며, 회원·게시글 기능과 운영 도구를 구현했습니다.',
+    description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. 다른 개발자가 만든 기존 코드가 유실돼, 2인 팀에서 Next.js 웹 클라이언트를 새로 구축하고 Node.js·Express API를 개발했습니다. Binance 시세를 수집해 Redis에 캐시하고 Socket.IO로 전달했으며, 회원·게시글 기능과 운영 도구를 구현했습니다.',
     summary: ['시세·차트·뉴스·커뮤니티 화면과 회원 인증·커뮤니티 API 개발', 'Binance WebSocket·Redis·Socket.IO 기반 실시간 시세 처리', '종료 후 서버 5대·13개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 08)'],
     tasks: [
       ['웹 클라이언트', 'Next.js 15·React 19 기반 마켓·코인 상세 등 주요 화면 구현, TradingView 차트·tiptap 에디터 연동'],
@@ -96,7 +96,7 @@ export const projects = [
     tech: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Node.js', 'Express', 'MariaDB', 'Redis', 'Socket.IO'],
     techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS']], ['백엔드', ['Node.js', 'Express', 'MariaDB', 'Redis', 'Socket.IO']]],
     cases: [{ id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
-      'Gobit·모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 분산돼 있었습니다. 핵심 시세 수집기는 소스 코드 없이 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스를 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
+      'Gobit과 다른 개발자가 만든 모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 흩어져 있었습니다. 레거시 서비스는 소스 코드가 유실돼 핵심 시세 수집기는 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스를 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
     ], items: [
       '기존 바이너리의 동작과 데이터 형식을 분석해 수집기를 Node.js로 재작성했습니다. 실시간 시세·캔들·과거 데이터 수집 모드를 구현하고, 연결 분산 처리와 요청 속도 제한으로 WebSocket 연결 끊김에 대응했습니다.',
       '중계 계층을 정리해 데이터 흐름을 수집기 → Redis → 서버로 단순화했습니다.',
@@ -135,7 +135,7 @@ export const projects = [
   },
   {
     id: 'doit-homepage', name: 'doit-homepage', category: 'work', company: '두잇', companyId: 'doit', period: '2024.05 – 2024.07', role: '프론트엔드 개발 담당', kind: '회사 홈페이지 React 마이그레이션',
-    description: 'jQuery 기반 회사 홈페이지를 React·TypeScript·Vite SPA로 재작성해 한국어·영어와 반응형 화면을 지원했습니다.',
+    description: '사내에 React를 도입하면서 회사 홈페이지도 React로 옮겨 새로 단장하기로 했습니다. jQuery 기반 회사 홈페이지를 React·TypeScript·Vite SPA로 재작성해 한국어·영어와 반응형 화면을 지원했습니다.',
     summary: ['주요 5개 페이지를 React로 재작성하고 공통 UI를 doit-uikit으로 통일', 'i18next 기반 한국어·영어 및 반응형 화면 구현'],
     tasks: [
       ['마이그레이션', '메인·회사소개·서비스·인증·파트너 5개 페이지를 컴포넌트 구조로 재작성'],

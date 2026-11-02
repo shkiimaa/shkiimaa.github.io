@@ -3,15 +3,44 @@
 export const portfolioMaterial = {
   bitria: {
     overview: '실시간 시세·차트와 주문·계정·자산 관리를 제공하는 암호화폐 거래 플랫폼입니다.',
-    scope: '2인 팀에서 프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 개발에도 참여했습니다. 아래 자료는 화면·도메인 분리, 실시간 데이터 전달, 차트 생명주기와 멀티 플랫폼 구성을 설명합니다.',
+    scope: '2인 팀에서 프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 개발에도 참여했습니다. 아래 자료는 화면·도메인 분리, 실시간 데이터 전달, 멀티 플랫폼 구성을 설명합니다.',
     optimizations: {
       'mobile-performance': {
-        description: '`shared/ui` 전체 163개 모듈을 하나의 청크로 묶던 배럴 import 136곳을 컴포넌트 정의 파일 직접 참조로 변경했습니다. 아래는 실제 변경한 import의 예시입니다.',
+        description: '공통 컴포넌트를 한 경로로 가져오도록 만든 `shared/ui` 배럴이 three.js 컴포넌트까지 다시 내보내, 버튼 하나를 import해도 163개 모듈이 하나의 청크로 묶였습니다. 모바일에서 가장 오래 실행되던 이 청크를 없애려고 배럴 import 136곳을 컴포넌트 정의 파일 직접 참조로 변경했습니다. 아래는 실제 변경한 import의 예시입니다.',
         examples: [
           { label: '변경 전 · 공통 배럴 참조', code: "import { SortButton } from '@/shared/ui';" },
           { label: '변경 후 · 정의 파일 직접 참조', code: "import { SortButton } from '@/shared/ui/navigation/sort-icon';" }
         ],
         caption: 'symbol-list-header.tsx 변경 예시'
+      },
+      'build-optimization': {
+        description: 'SVG를 컴포넌트와 이미지 주소(`?url`)로 나눠 쓰는데 당시 Turbopack 규칙은 쿼리 분기를 지원하지 않아, 개발 서버는 Turbopack, 프로덕션 빌드는 webpack으로 나눠 운영했습니다. Next.js 16.2에서 쿼리 조건이 추가된 것을 확인하고 16.4로 올려 빌드를 Turbopack으로 통일했습니다. 불러오는 순간 동작해야 하는 모듈 4개와 CSS만 `sideEffects`에 명시해 나머지 모듈은 쓰지 않으면 번들에서 빠지도록 했고, 한국어 화면이 없는데도 한글 전체를 받던 Pretendard 폰트는 화면에 필요한 글자 구간만 받는 서브셋으로 바꿨습니다.',
+        examples: [
+          { label: '부수효과가 있는 모듈만 명시', code: `"sideEffects": [
+  "**/*.css",
+  "./src/entities/symbol/lib/market-socket.ts",
+  "./src/shared/lib/notify-socket.ts",
+  "./src/shared/api/client.ts",
+  "./src/shared/lib/error-report.ts"
+]` }
+        ],
+        caption: 'package.json의 sideEffects 선언'
+      },
+      'render-isolation': {
+        description: '앱 거래 화면은 차트를 바로 보여주려고 주문 화면과 차트 화면을 함께 마운트해 두고 보이는 쪽만 전환했습니다. 차트 화면으로 이동한 뒤에야 캔들 조회와 소켓 연결을 시작해 빈 화면을 기다리던 문제를 없애기 위한 설계였습니다. 그 대가로 숨겨진 화면도 시세 갱신마다 다시 렌더링됐고, React가 렌더할 때마다 알려주는 내부 연결 지점(DevTools 훅)에 측정 코드를 붙여 확인해 보니, 보이지 않는 UI가 렌더 시간의 64%(1,028ms 중 653ms)를 차지했습니다. 숨겨진 화면에 구독 비활성화 옵션을 넘겨도 시세 핸들러가 전역 목록으로 호출돼 효과가 없어, 실시간 값을 표시하는 컴포넌트가 직접 구독하도록 분리했습니다.',
+        examples: [
+          { label: '변경 전 · 화면 최상위에서 시세 구독', code: `const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+useSnapshotSocket({
+  symbols: symbolInfo ? [symbolInfo] : [],
+  onUpdate: handleSnapshotUpdate,
+});` },
+          { label: '변경 후 · 표시 컴포넌트가 직접 구독', code: `// 실시간 값은 LiveSymbolStats 안에서 구독한다
+<LiveSymbolStats
+  fallbackPrice={symbolInfo?.snapshot?.price}
+  fallbackChange={symbolInfo?.snapshot?.change24h}
+/>` }
+        ],
+        caption: 'spot-chart-view.tsx 변경 요약 (실제 코드에서 발췌)'
       },
     },
     source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
@@ -21,25 +50,28 @@ export const portfolioMaterial = {
       { src: 'bitria-app-trade.jpg', alt: '앱 현물 거래 화면: 지정가 주문과 실시간 호가·체결', phone: true }
     ],
     recoveryCases: [{
+        id: 'chart-lifecycle', title: '차트 로딩 실패의 원인 분석과 해결',
+        paragraphs: [
+          '처음에는 차트가 실패하면 로딩 화면에 그대로 멈췄고, 서버에 실패 기록이 한 건도 남지 않았습니다. TradingView는 실패 신호를 주지 않고, 데이터 요청에는 타임아웃이 없었기 때문입니다. 스크립트 로드 재시도, 응답 없이 멈춘 요청의 타임아웃, 준비 완료 신호 안전망을 추가하고 실패 단계와 원인을 서버 로그로 보고하도록 했습니다. TradingView가 캔들 요청 실패 뒤 다시 요청하지 않아, 직접 재시도하고 최종 실패 시 재시도 버튼을 보여주도록 했습니다.',
+          '수집된 로그에서 13일간 50건 대부분이 앱 거래 화면에서 발생한 것을 확인했습니다. 인앱 브라우저 대응으로 켜 둔 호환 로딩 모드와, Cloudflare 엣지 캐시를 살리려고 1년 캐시로 바꾼 번들이 겹치면서 TradingView 릴리스 노트의 알려진 버그(`onChartReady` 누락) 조건이 만들어졌습니다. 라이선스 제약으로 버전을 올릴 수 없어, blob 주소를 쓰지 않는 `same_origin` iframe 로딩 방식으로 전환했습니다.',
+          '빠르게 심볼을 전환할 때 차트 로딩이 완료되지 않는 문제를 클라이언트 오류 로그와 서버·CDN 응답 시간으로 추적했습니다. 이전 위젯에 남아 있던 콜백이 이미 제거된 iframe에 접근하는 상황을 재현했습니다.',
+          '심볼 전환마다 차트 위젯이 재마운트되면서 발생하는 생명주기 충돌을 줄이기 위해, 위젯을 거래 레이아웃에서 유지했습니다. 위젯이 준비되기 전에는 최신 심볼을 보관하고, 준비 상태에 따라 반영하도록 변경했습니다.',
+          '실패했을 때의 대응도 바꿨습니다. TradingView는 로드 성공 콜백(`onChartReady`)만 제공해 실패는 25초 타임아웃으로 추정하고 있었습니다. 차트 iframe에 리소스 오류 리스너를 연결해, 스크립트 로드가 실패하면 타임아웃을 기다리지 않고 바로 실패 화면과 재시도 버튼을 보여주도록 했습니다.'
+        ], result: '빠르게 심볼을 전환해도 마지막에 선택한 심볼로 차트가 정상 로딩되고, 실패하더라도 로딩 화면에 갇히지 않고 재시도로 복구됩니다. 실패는 단계별 원인과 함께 운영 로그에 남고, 정상 로드에서는 실패로 오판하지 않는 것을 함께 확인했습니다.', diagram: 'bitria-chart-lifecycle', caption: '수정 전 심볼 전환 경쟁 상태: 이전 위젯에 남아 있던 콜백이 제거된 iframe에 접근해 새 위젯이 준비 완료에 도달하지 못하는 흐름'
+      }, {
         id: 'app-resume', title: '앱 복귀 후 포지션·자산 정보 불일치 해결',
         paragraphs: [
-          '앱 복귀 후 시세는 움직이지만 이미 청산된 포지션이 화면에 남는 프로덕션 장애가 있었습니다. 앱 복귀 이벤트로 복구되는 것은 시세 소켓뿐이었고, API 조회 캐시와 체결·잔고 알림 소켓은 복구되지 않았습니다.',
+          '앱 복귀 후 시세는 움직이지만 이미 종료된 포지션이 화면에 그대로 남는 문제가 있었습니다. 앞서 복귀 문제를 시세 소켓 기준으로 고쳐, 앱 복귀 이벤트로 복구되는 것은 시세 소켓뿐이었고 API 조회 캐시와 체결·잔고 알림 소켓은 복구되지 않았습니다.',
           '네이티브 `appStateChange`를 공통 진입점으로 사용했습니다. `focusManager.setFocused(isActive)`로 화면에서 사용 중인 stale 쿼리를 다시 조회하고, 시세·알림 소켓의 복귀 처리를 함께 실행합니다.',
           'API 재조회는 복귀 시점의 현재 상태를 확인하고, 소켓 재연결은 이후 변경을 계속 받는 역할입니다. 알림 소켓의 재연결 5회 제한을 제거하고, 이미 연결돼 있거나 로그인한 사용자가 없으면 추가 연결을 생략하도록 했습니다.'
-        ], result: '앱 복귀 시 청산된 포지션이 남지 않고, 포지션·자산이 바로 최신 상태로 표시됩니다. 페이지 새로고침 없이 갱신이 필요한 쿼리만 다시 요청합니다.', diagram: 'bitria-app-resume', caption: '앱 복귀 이벤트에서 현재 상태 재조회와 실시간 연결 복구를 함께 실행하는 흐름'
+        ], result: '앱 복귀 시 종료된 포지션이 남지 않고, 포지션·자산이 바로 최신 상태로 표시됩니다. 페이지 새로고침 없이 갱신이 필요한 쿼리만 다시 요청합니다.', diagram: 'bitria-app-resume', caption: '앱 복귀 이벤트에서 현재 상태 재조회와 실시간 연결 복구를 함께 실행하는 흐름'
       }, {
         id: 'app-locale-navigation', title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결',
         paragraphs: [
           '일본어·스페인어·베트남어·태국어·중국어 기기에서 iOS 앱을 실행하면 앱 대신 Safari로 `bitria.com/th/m`이 열렸습니다.',
-          'Capacitor iOS는 `WebViewDelegationHandler`에서 이동할 주소가 `server.url`로 시작하는지 문자열로 비교해 앱 내부 이동을 판정합니다. `server.url`은 `https://bitria.com/m`인데, next-intl의 `localePrefix: \'as-needed\'` 설정으로 기본 언어 외에는 `/th/m`처럼 언어 코드가 앞에 붙어 외부 링크로 판정됐습니다.',
+          '앱은 Next.js 서버 기능(서버 렌더링·미들웨어)을 그대로 쓰기 위해 원격 URL로 웹을 불러오고, 언어 주소는 기본 언어인 영어만 코드 없이 쓰는 `as-needed` 방식입니다. Capacitor iOS는 `WebViewDelegationHandler`에서 이동할 주소가 `server.url`로 시작하는지 문자열로 비교해 앱 내부 이동을 판정합니다. `server.url`은 `https://bitria.com/m`인데, next-intl의 `localePrefix: \'as-needed\'` 설정으로 기본 언어 외에는 `/th/m`처럼 언어 코드가 앞에 붙어 외부 링크로 판정됐습니다.',
           '앱 요청(User-Agent의 `BitriaMobile`)에 한해 미들웨어에서 언어 코드를 붙이는 리다이렉트를 같은 대상의 rewrite로 바꿨습니다. 브라우저 주소는 `/m/...`으로 유지하고 렌더링은 `/{locale}/m/...`에서 처리해 기기 언어를 그대로 표시합니다. 이미 언어 코드가 붙은 주소로 들어온 앱 요청은 코드 없는 주소로 리다이렉트합니다.'
         ], result: '영어 외 지원 언어 5개(일본어·스페인어·베트남어·태국어·중국어) 기기에서 앱이 정상 실행됩니다. 원격 URL 방식이라 앱 재빌드·스토어 재심사 없이 서버 배포만으로 적용했습니다.'
-      }, {
-        id: 'chart-lifecycle', title: '차트 로딩 실패의 원인 분석과 해결',
-        paragraphs: [
-          '빠르게 심볼을 전환할 때 차트 로딩이 완료되지 않는 문제를 클라이언트 오류 로그와 서버·CDN 응답 시간으로 추적했습니다. 이전 위젯에 남아 있던 콜백이 이미 제거된 iframe에 접근하는 상황을 재현했습니다.',
-          '심볼 전환마다 차트 위젯이 재마운트되면서 발생하는 생명주기 충돌을 줄이기 위해, 위젯을 거래 레이아웃에서 유지했습니다. 위젯이 준비되기 전에는 최신 심볼을 보관하고, 준비 상태에 따라 반영하도록 변경했습니다.'
-        ], result: '빠르게 심볼을 전환해도 마지막에 선택한 심볼로 차트가 정상 로딩됩니다. 위젯을 유지한 채 심볼만 교체하므로 전환 시 차트가 다시 초기화되지 않습니다.', diagram: 'bitria-chart-lifecycle', caption: '수정 전: 심볼 전환 후 이전 위젯에 남아 있던 콜백이 제거된 iframe에 접근하는 흐름'
       }],
     sections: [
       {
@@ -58,7 +90,7 @@ export const portfolioMaterial = {
       {
         id: 'platforms', title: '단일 코드베이스의 멀티 플랫폼 대응',
         paragraphs: [
-          'Next.js·TypeScript 코드베이스를 웹, Capacitor 기반 iOS·Android 앱, Electron 데스크톱 앱으로 빌드했습니다. 모바일 앱을 스토어에 출시하고 푸시(APNs·FCM)·소셜 로그인·기기 식별 기능을 연결했습니다.',
+          '2인 팀에서 웹·iOS·Android·데스크톱을 빠르게 함께 내기 위해, 각 플랫폼을 따로 만들지 않고 기존 Next.js 코드베이스를 그대로 쓰는 Capacitor와 Electron을 선택했습니다. Next.js·TypeScript 코드베이스를 웹, Capacitor 기반 iOS·Android 앱, Electron 데스크톱 앱으로 빌드했습니다. 모바일 앱을 스토어에 출시하고 푸시(APNs·FCM)·소셜 로그인·기기 식별 기능을 연결했습니다.',
           '앱 강제 업데이트 정책을 연동하고, Electron 앱의 API 요청을 식별하는 헤더를 추가했습니다.'
         ], diagram: 'bitria-platforms', caption: '웹·모바일·데스크톱 빌드와 네이티브 기능 연결 구조'
       }

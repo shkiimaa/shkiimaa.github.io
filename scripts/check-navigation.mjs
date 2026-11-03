@@ -45,7 +45,7 @@ try {
     await page.locator('.section-nav a[href="#education"]').click();
     await settle(page);
     assert.equal(await page.locator('.section-nav a[aria-current]').getAttribute('href'), '#education', 'Reduced motion navigation');
-    for (const [route, ids] of [['/career/', ['xrgis', 'doit-homepage', 'bitria']], ['/projects/bitria/', ['technology', 'work', 'overview']]]) {
+    for (const [route, ids] of [['/career/', ['xrgis', 'doit-homepage', 'bitria']], ['/projects/bitria/', ['technology', 'measurements', 'overview']]]) {
       await page.goto(base + route);
       await page.evaluate(() => document.fonts.ready);
       for (const id of ids) {

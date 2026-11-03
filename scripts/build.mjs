@@ -90,24 +90,31 @@ function projectGallery(project, id = '') {
   return images.length ? `<section class="detail-section"${id?` id="${id}"`:''}><h2>${id?'':e(project.name)+' · '}프로젝트 화면</h2>${gallery(images)}</section>` : '';
 }
 
-function portfolioMeasurements(project, prefix = '') {
-  const measured = (project.cases || []).filter(study => study.note && study.result);
-  if (!measured.length) return '';
-  return `<section class="detail-section" id="${prefix}measurements"><h2>문제 해결과 개선</h2>${measured.map(study=>{
-    const material = portfolioMaterial[project.id]?.optimizations?.[study.id];
-    const examples = (items, flow = false) => items?.map(item=>`<figure class="optimization-example"><figcaption>${e(item.label)}</figcaption><pre${flow?' class="optimization-flow"':' class="syntax-block"'}><code${flow?'':' class="language-typescript"'}>${flow?e(item.text):hljs.highlight(item.code,{language:'typescript',ignoreIllegals:true}).value}</code></pre></figure>`).join('') || '';
-    return `<section class="implementation-section"><h3>${e(study.title)}</h3>${material?`<p>${prose(material.description)}</p>${material.diagrams?.map(diagram=>`<figure class="architecture-diagram"><figcaption>${e(diagram.label)}</figcaption><div class="diagram-scroll" role="region" aria-label="${e(diagram.label)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',diagram.file+'.svg'),'utf8')}</div></figure>`).join('') || examples(material.flows,true)}${examples(material.examples)}<p class="measurement-note">${e(material.caption)}</p>`:''}<div class="result"><p>${prose(study.result)}</p></div><p class="measurement-note">${prose(study.note)}</p></section>`;
-  }).join('')}${portfolioRecovery(project,prefix)}</section>`;
-}
-
-function portfolioRecovery(project,prefix = '') {
-  const cases = portfolioMaterial[project.id]?.recoveryCases || [];
-  return cases.map(material=>`<section class="implementation-section" id="${prefix}design-${material.id}"><h3>${e(material.title)}</h3>${material.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${material.diagram?`<figure class="architecture-diagram"><div class="diagram-scroll" role="region" aria-label="${e(material.caption)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',material.diagram+'.svg'),'utf8')}</div><figcaption>${e(material.caption)}</figcaption></figure>`:''}${material.result?`<div class="result"><p>${prose(material.result)}</p></div>`:''}</section>`).join('');
+function portfolioHighlights(project, prefix = '') {
+  const material = portfolioMaterial[project.id] || {};
+  const items = (project.cases || []).filter(study => study.highlight);
+  if (!items.length) return '';
+  const diagrams = Object.fromEntries((material.caseDiagrams || []).map(c => [c.id, c]));
+  const diagramFigure = d => `<figure class="architecture-diagram"><div class="diagram-scroll" role="region" aria-label="${e(d.caption)}" tabindex="0">${readFileSync(path.join(root,'public/assets/diagrams',d.diagram+'.svg'),'utf8')}</div><figcaption>${e(d.caption)}</figcaption></figure>`;
+  const codeExamples = id => (material.codeExamples?.[id]?.examples || []).map(item=>`<figure class="optimization-example"><figcaption>${e(item.label)}</figcaption><pre class="syntax-block"><code class="language-typescript">${hljs.highlight(item.code,{language:'typescript',ignoreIllegals:true}).value}</code></pre></figure>`).join('');
+  const featured = material.featured || [];
+  const featuredIds = new Set(featured.map(f => f.id));
+  const detail = featured.map(f => {
+    const study = items.find(s => s.id === f.id);
+    const evidence = f.evidence === 'code' ? codeExamples(f.id) : (diagrams[f.id] ? diagramFigure(diagrams[f.id]) : '');
+    return `<section class="implementation-section featured-case" id="${prefix}case-${f.id}"><h3>${e(f.title || study.title)}</h3>${f.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${f.result?`<div class="result"><p>${e(f.result)}</p></div>`:''}${evidence}</section>`;
+  }).join('');
+  const rest = items.filter(study => !featuredIds.has(study.id));
+  const list = rest.length ? `${featured.length ? '<h3 class="rest-heading">그 밖의 개선</h3>' : ''}<ul class="highlight-list">${rest.map(study=>{
+    const d = diagrams[study.id];
+    return `<li id="${prefix}case-${study.id}"><p class="highlight-title">${e(study.title)}</p><p class="highlight-result">${e(study.highlight)}</p>${d?diagramFigure(d):''}</li>`;
+  }).join('')}</ul>` : '';
+  return `<section class="detail-section" id="${prefix}measurements"><h2>문제 해결과 개선</h2>${detail}${list}</section>`;
 }
 
 function portfolioProject(project) {
   const material = portfolioMaterial[project.id];
-  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><div class="project-title-row"><h2>${e(project.name)}</h2><a class="text-link project-detail-link" href="${projectHref(project)}"><span class="project-link-label">프로젝트 상세 보기</span>${projectLinkIcon}</a></div><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p></div>${implementation(project,project.id+'-')}${portfolioMeasurements(project,project.id+'-')}${projectGallery(project)}<section class="detail-section"><h2>기술 스택</h2>${tech(project)}</section></article>`;
+  return `<article class="career-project" id="${project.id}"><div class="project-overview"><header class="project-heading"><div class="project-title-row"><h2>${e(project.name)}</h2><a class="text-link project-detail-link" href="${projectHref(project)}"><span class="project-link-label">프로젝트 상세 보기</span>${projectLinkIcon}</a></div><p class="project-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div></header><p class="project-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p></div>${implementation(project,project.id+'-')}${portfolioHighlights(project,project.id+'-')}${projectGallery(project)}<section class="detail-section"><h2>기술 스택</h2>${tech(project)}</section></article>`;
 }
 
 function portfolio() {
@@ -124,11 +131,11 @@ function projectDetail(project, index) {
   const material = portfolioMaterial[project.id];
   const toc=[['overview','프로젝트 소개']];
   if(portfolioMaterial[project.id]?.sections?.length)toc.push(['implementation','구현 구조와 설계']);
-  if(project.cases?.some(study=>study.note && study.result))toc.push(['measurements','문제 해결과 개선']);
+  if(project.cases?.some(study=>study.highlight))toc.push(['measurements','문제 해결과 개선']);
   if(project.images?.length||portfolioMaterial[project.id]?.images?.length)toc.push(['screens','프로젝트 화면']);
   toc.push(['technology','기술 스택']);
   const previous=projects[index-1],next=projects[index+1];
-  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${implementation(project)}${portfolioMeasurements(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>기술 스택</h2>${tech(project)}</section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
+  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${implementation(project)}${portfolioHighlights(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>기술 스택</h2>${tech(project)}</section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
   return layout({title:project.name,description:project.description,route:projectHref(project),active:'projects',body,pageLabel:project.name,pdf:'portfolio',toc});
 }
 

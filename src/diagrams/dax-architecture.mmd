@@ -1,0 +1,16 @@
+graph LR
+    FE["Frontend<br>React"]
+    subgraph WEB["Web Server"]
+        direction TB
+        NGINX["NGINX"]
+        WAS["WAS<br>Node.js + Express"]
+        PM2["PM2"]
+        NGINX -->|"요청 전달"| WAS
+        PM2 -.->|"프로세스 관리"| WAS
+    end
+    DB[("DB<br>MariaDB")]
+    AI["AI Server<br>Python"]
+    FE <-->|"API 요청 · 응답"| NGINX
+    WAS <-->|"데이터 조회 · 저장"| DB
+    WAS <-->|"학습 · 추론 요청 · 결과"| AI
+    AI <-->|"데이터"| DB

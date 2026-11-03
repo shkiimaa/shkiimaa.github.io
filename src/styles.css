@@ -198,3 +198,17 @@
 @media screen{.pdf-only{display:none!important}}
 /* 모바일 이력서: 프로젝트 상세 보기 링크를 프로젝트명 줄 오른쪽으로 */
 @media screen and (max-width:767px){.resume-project{position:relative}.resume-project .project-title-row .project-detail-link{position:absolute;top:23px;right:0;margin:0;line-height:27px}.resume-project .row-meta h3{padding-right:120px}}
+
+/* 포트폴리오 문제 해결: 제목 + 한 줄 결과 */
+.highlight-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:18px}
+.highlight-list li{min-width:0}
+.highlight-title{font-weight:600;color:var(--ink);margin:0}
+.highlight-result{margin:4px 0 0;color:var(--muted)}
+.highlight-list .architecture-diagram{margin-top:14px}
+@media print{.highlight-list{gap:9pt;margin-top:8pt}.highlight-result{margin-top:2pt}.portfolio-document .portfolio-project+.portfolio-project{break-before:page}}
+/* 포트폴리오 PDF: 웹 화면 스크린샷은 칸 너비에 맞춰 키우고, 줄 단위로 페이지를 넘김 */
+@media print{.portfolio-document .project-gallery:not(.phone-gallery){break-inside:auto}.portfolio-document .project-gallery:not(.phone-gallery) figure{break-inside:avoid}.portfolio-document .project-gallery:not(.phone-gallery) .image-expand img{max-height:130pt}}
+
+/* 포트폴리오: 대표 사례와 그 밖의 개선 구분 */
+.detail-section .rest-heading{margin-top:28px;margin-bottom:0;font-size:18px;color:var(--ink)}
+@media print{.detail-section .rest-heading{margin-top:14pt;font-size:var(--pfs-heading)}.featured-case{break-inside:auto}}

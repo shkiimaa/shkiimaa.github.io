@@ -21,7 +21,7 @@ try {
       primaryColor: '#f5f7fb', primaryTextColor: '#20242b', primaryBorderColor: '#aab4c5',
       lineColor: '#68717d', secondaryColor: '#edf2fc', tertiaryColor: '#ffffff',
       actorBkg: '#f5f7fb', actorBorder: '#aab4c5', actorTextColor: '#20242b',
-      signalColor: '#4d5663', signalTextColor: '#20242b', noteBkgColor: '#edf2fc', noteBorderColor: '#aab4c5' },
+      edgeLabelBackground: '#ffffff', signalColor: '#4d5663', signalTextColor: '#20242b', noteBkgColor: '#edf2fc', noteBorderColor: '#aab4c5' },
     flowchart: { htmlLabels: false, curve: 'linear', nodeSpacing: 25, rankSpacing: 35 },
     sequence: { useMaxWidth: true, wrap: true, actorMargin: 35, width: 140, messageMargin: 30 }
   }));
@@ -33,7 +33,9 @@ try {
       return rendered.svg;
     }, { name, source });
     if (!svg.includes('<svg') || svg.includes('<foreignObject')) throw new Error(`Non-vector diagram: ${name}`);
-    await writeFile(path.join(target, `${name}.svg`), svg);
+    // 연결선 라벨 배경은 기본값이 반투명이라 선이 글자 뒤로 비친다 → 다이어그램 배경색으로 불투명 처리
+    const opaque = svg.replace(/(\.edgeLabel rect\{)opacity:0\.5;/g, '$1opacity:1;');
+    await writeFile(path.join(target, `${name}.svg`), opaque);
     console.log(`Rendered ${name}.svg`);
   }
 } finally { await browser.close(); }

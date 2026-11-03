@@ -11,7 +11,7 @@ await mkdir(path.join(root, 'artifacts'), { recursive: true });
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  for (const [name, route] of [['resume', '/'], ['career', '/career/'], ['portfolio', '/portfolio/']]) {
+  for (const [name, route] of [['resume', '/'], ['career', '/career/'], ['portfolio', '/portfolio/'], ['portfolio-detail', '/portfolio-detail/']]) {
     await page.goto(base + route);
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(async () => {

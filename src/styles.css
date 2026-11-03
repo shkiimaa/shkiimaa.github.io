@@ -243,3 +243,4 @@
 .phone-gallery .image-expand{background:var(--wash);padding:24px}
 .phone-gallery .image-expand img{width:auto;max-width:100%;max-height:520px;margin:0 auto}
 @media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14pt;row-gap:8pt}.portfolio-document .phone-gallery .image-expand{padding:10pt}.portfolio-document .phone-gallery .image-expand img{height:262pt;max-height:none;width:auto}}
+.portfolio-document .measure-shot .project-gallery{grid-template-columns:1fr}

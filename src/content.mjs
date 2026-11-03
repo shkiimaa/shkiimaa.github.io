@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '중복되는 코드는 공통화하고, 플랫폼별 차이는 분리해 유지보수하기 좋은 프론트엔드를 만듭니다.\n\n사내 공통 UI 라이브러리(컴포넌트 24종)를 개발·배포하고 개발 규칙을 문서화해 두 프로젝트에 도입했습니다. 2인 팀에서 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다.',
+  introduction: '원인은 로그와 측정으로 확인하고, 해결은 유지보수하기 좋은 구조로 만듭니다.\n\nClaude Code·Codex 같은 AI 코딩 에이전트를 실무에 적극 활용하며, 팀 규칙 문서로 결과물의 품질을 관리합니다. 2인 팀에서 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
@@ -12,9 +12,9 @@ export const experiences = [
   ] },
   { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
     'D.A.X (AI 모델 학습·운영 플랫폼) | 프론트엔드 개발 · React',
-    'doit-uikit (사내 UI 라이브러리) | 컴포넌트 개발·npm 배포 · React',
-    'XRGIS BackOffice (사용자·파일 관리) | 프론트엔드·백엔드 개발 · React·Express',
-    'doit-homepage (회사 홈페이지 React 전환) | 프론트엔드 개발 · React'
+    'Doit UI Kit (사내 UI 라이브러리) | 컴포넌트 개발·npm 배포 · React',
+    'XRGIS 백오피스 (사용자·파일 관리) | 프론트엔드·백엔드 개발 · React·Express',
+    '두잇 홈페이지 리뉴얼 (React 전환) | 프론트엔드 개발 · React'
   ] },
   { id: 'founder', name: '개인 사업', role: 'Founder', period: '2019.09 – 2022.06', items: ['온라인 커머스·유통 사업. 국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개.'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인.'] }
@@ -23,7 +23,7 @@ export const experiences = [
 export const skills = [
   { label: 'Front-End', items: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'styled-components', 'Zustand', 'TanStack Query', 'SWR', 'Capacitor', 'Electron'] },
   { label: 'Back-End', items: ['Node.js', 'Express', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ'] },
-  { label: 'Infra', items: ['Docker', 'Kubernetes(K3s)', 'GitHub Actions'] }
+  { label: 'Infra·AI', items: ['Docker', 'Kubernetes(K3s)', 'GitHub Actions', 'Claude Code', 'Codex'] }
 ];
 
 export const projects = [
@@ -46,7 +46,8 @@ export const projects = [
       ['멀티 플랫폼', '하나의 코드베이스로 웹·iOS·Android·Electron 앱 빌드, 모바일 앱 스토어 출시, 네이티브 푸시·소셜 로그인·생체인증 연동'],
       ['인증·보안', '회원가입·소셜 로그인, 2단계 인증(2FA)·패스키·신뢰 기기·세션·계정 복구 개발, 고객확인(KYC)·입출금 연동 및 API 키 관리 구현'],
       ['백엔드 API', '주문 생성·조회·취소·수정 API 개발 및 요청 검증·권한 확인·주문 처리 서비스 연동, 계좌별 자산·USDT 환산·스냅샷·일별 손익 조회 구현'],
-      ['서비스 운영', '가격 조건별 알림·클라이언트 오류 수집·앱 버전 정책·고객 문의(CS) API 개발, K3s 프로덕션 배포·운영 및 장애 대응']
+      ['서비스 운영', '가격 조건별 알림·클라이언트 오류 수집·앱 버전 정책·고객 문의(CS) API 개발, K3s 프로덕션 배포·운영 및 장애 대응'],
+      ['AI 개발 환경', 'AI 코딩 에이전트 도입, 아키텍처·디자인 토큰·로깅 규칙을 에이전트 규칙 문서로 관리, 여러 에이전트 세션에 작업을 나눠 병렬 진행, 성능 계측·버그 재현 자동화']
     ],
     tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Node.js', 'Express', 'Socket.IO'],
     techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'Docker', 'Kubernetes(K3s)']]],
@@ -105,7 +106,7 @@ export const projects = [
     ], result: '서버 5대에 흩어져 있던 13개 서비스를 하나의 Kubernetes 환경에서 배포·운영합니다. 소스 없이 바이너리만 남아 있던 수집기도 코드로 관리할 수 있게 됐습니다.' }]
   },
   {
-    id: 'doit-uikit', name: 'doit-uikit', category: 'work', company: '두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 개발 담당', kind: '사내 공통 UI 라이브러리',
+    id: 'doit-uikit', name: 'Doit UI Kit', category: 'work', company: '두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 개발 담당', kind: '사내 공통 UI 라이브러리',
     description: '프로젝트마다 반복 구현하던 UI를 공통 라이브러리로 만들고, React 개발 규칙을 팀에 공유했습니다.',
     summary: ['Atomic Design 기반 UI 컴포넌트 24종 개발 및 npm 배포', '타입 선언 자동 생성·React 외부화 등 패키징 구성', 'Storybook·Chromatic 문서화 및 사내 프로젝트 2곳에 도입'],
     tasks: [
@@ -117,7 +118,7 @@ export const projects = [
     result: 'D.A.X와 회사 홈페이지가 같은 컴포넌트와 개발 규칙을 사용하게 됐습니다. 두 프로젝트에서 나온 요구사항은 라이브러리에 반영해 다시 배포했습니다.',
     tech: ['TypeScript', 'React', 'styled-components', 'Storybook'],
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'Storybook']]],
-    images: [{ src: 'uikit-storybook.png', alt: 'doit-uikit 컴포넌트의 Storybook 문서와 Props 설정 화면' }]
+    images: [{ src: 'uikit-storybook.png', alt: 'Doit UI Kit 컴포넌트의 Storybook 문서와 Props 설정 화면' }]
   },
   {
     id: 'dax', name: 'D.A.X', category: 'work', company: '두잇', companyId: 'doit', period: '2024.01 – 2024.06', role: '프론트엔드 개발 담당 · 백엔드 1명과 협업', kind: 'AI 모델 학습·운영 플랫폼',
@@ -126,7 +127,7 @@ export const projects = [
     tasks: [
       ['플랫폼 화면', '프로젝트·대시보드·클래스·컬렉션·라벨링·모델 학습·추론 화면 구현'],
       ['데이터 도구', '캔버스 기반 바운딩 박스 라벨링, 이미지·폴더 업로드, 컬렉션 ZIP 다운로드 기능 개발'],
-      ['공통 구조', '검색 조건·페이지네이션·로딩 상태 처리, 사내 표준 구조와 doit-uikit 적용']
+      ['공통 구조', '검색 조건·페이지네이션·로딩 상태 처리, 사내 표준 구조와 Doit UI Kit 적용']
     ],
     insight: '라벨링 이미지는 화면 크기에 맞춰 축소되지만 학습용 좌표는 원본 해상도로 저장해야 했습니다. 원본↔화면 좌표의 양방향 변환을 전용 훅으로 분리해 그리기·저장·재표시가 같은 규칙을 사용하도록 구현했습니다.',
     tech: ['TypeScript', 'React', 'styled-components', 'TanStack Query', 'Zustand'],
@@ -134,12 +135,12 @@ export const projects = [
     images: [{ src: 'dax-labeling-example.png', alt: 'D.A.X에서 이미지 위에 바운딩 박스를 그려 라벨링하는 화면' }, { src: 'dax-dashboard.png', alt: 'D.A.X의 프로젝트 데이터와 학습 현황 대시보드' }]
   },
   {
-    id: 'doit-homepage', name: 'doit-homepage', category: 'work', company: '두잇', companyId: 'doit', period: '2024.05 – 2024.07', role: '프론트엔드 개발 담당', kind: '회사 홈페이지 React 마이그레이션',
+    id: 'doit-homepage', name: '두잇 홈페이지 리뉴얼', category: 'work', company: '두잇', companyId: 'doit', period: '2024.05 – 2024.07', role: '프론트엔드 개발 담당', kind: '회사 홈페이지 React 마이그레이션',
     description: '사내에 React를 도입하면서 회사 홈페이지도 React로 옮겨 새로 단장하기로 했습니다. jQuery 기반 회사 홈페이지를 React·TypeScript·Vite SPA로 재작성해 한국어·영어와 반응형 화면을 지원했습니다.',
-    summary: ['주요 5개 페이지를 React로 재작성하고 공통 UI를 doit-uikit으로 통일', 'i18next 기반 한국어·영어 및 반응형 화면 구현'],
+    summary: ['주요 5개 페이지를 React로 재작성하고 공통 UI를 Doit UI Kit으로 통일', 'i18next 기반 한국어·영어 및 반응형 화면 구현'],
     tasks: [
       ['마이그레이션', '메인·회사소개·서비스·인증·파트너 5개 페이지를 컴포넌트 구조로 재작성'],
-      ['UI 재사용', '사내 UI 라이브러리 doit-uikit을 적용해 색상·타이포·레이아웃 등 공통 요소 재사용'],
+      ['UI 재사용', '사내 UI 라이브러리 Doit UI Kit을 적용해 색상·타이포·레이아웃 등 공통 요소 재사용'],
       ['다국어', 'i18next로 한국어·영어를 지원하고 번역 리소스를 페이지별 네임스페이스로 분리'],
       ['반응형', 'CSS·JavaScript 브레이크포인트 통일, 화면 크기 변화는 CSS로 처리하고 모바일에서 불필요한 영역은 렌더링 제외']
     ],
@@ -147,7 +148,7 @@ export const projects = [
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'i18next']]]
   },
   {
-    id: 'xrgis', name: 'XRGIS BackOffice', category: 'work', company: '두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 시스템 백오피스',
+    id: 'xrgis', name: 'XRGIS 백오피스', category: 'work', company: '두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 시스템 백오피스',
     description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express API를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
     summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
     tasks: [

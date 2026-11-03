@@ -194,3 +194,5 @@
 @media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.portfolio-document .phone-gallery .image-expand img{max-height:none}}
 /* 웹 이력서 링크는 웹에선 자기 자신이라 PDF에만 노출 */
 @media screen{.pdf-only{display:none!important}}
+/* 모바일 이력서: 프로젝트 상세 보기 링크를 프로젝트명 줄 오른쪽으로 */
+@media screen and (max-width:767px){.resume-project{position:relative}.resume-project .project-title-row .project-detail-link{position:absolute;top:23px;right:0;margin:0;line-height:27px}.resume-project .row-meta h3{padding-right:120px}}

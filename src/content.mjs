@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '원인은 로그와 측정으로 확인하고, 해결은 유지보수하기 좋은 구조로 만듭니다.\n\nClaude Code·Codex 같은 AI 코딩 에이전트를 실무에 적극 활용하며, 팀 규칙 문서로 결과물의 품질을 관리합니다. 2인 팀에서 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다.',
+  introduction: '원인은 로그와 측정으로 확인하고, 해결은 유지보수하기 좋은 구조로 만듭니다.\n\n2인 팀에서 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다. Claude Code·Codex 같은 AI 코딩 에이전트를 실무에 적극 활용하며, 팀 규칙 문서로 결과물의 품질을 관리합니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
@@ -23,7 +23,7 @@ export const experiences = [
 export const skills = [
   { label: 'Front-End', items: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'styled-components', 'Zustand', 'TanStack Query', 'SWR', 'Capacitor', 'Electron'] },
   { label: 'Back-End', items: ['Node.js', 'Express', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ'] },
-  { label: 'Infra·AI', items: ['Docker', 'Kubernetes(K3s)', 'GitHub Actions', 'Claude Code', 'Codex'] }
+  { label: 'Infra', items: ['AWS(EC2)', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions'] }
 ];
 
 export const projects = [
@@ -33,7 +33,7 @@ export const projects = [
     description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 브로커리지 플랫폼입니다. 2인 팀에서 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 주문·인증·자산 API 개발과 인프라 운영에도 참여했습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트와 주문·자산 화면, 주문·인증·자산·가격 알림 API 개발',
-      '렌더 계측으로 숨은 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 71% 감소',
+      '렌더 계측으로 숨은 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 70% 감소',
       '번들·폰트 최적화로 홈 JS 27%·초기 폰트 전송 95%·모바일 TBT 30% 감소',
       '운영 로그로 TradingView 캐시 버그·심볼 전환 경쟁 상태 등 차트 로딩 실패 원인을 특정해 해결',
       'iOS 앱 복귀 시 포지션·자산이 이전 데이터로 표시되던 원인을 WebView 동작 차이로 특정·해결',
@@ -50,7 +50,7 @@ export const projects = [
       ['AI 개발 환경', 'AI 코딩 에이전트 도입, 아키텍처·디자인 토큰·로깅 규칙을 에이전트 규칙 문서로 관리, 여러 에이전트 세션에 작업을 나눠 병렬 진행, 성능 계측·버그 재현 자동화']
     ],
     tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Node.js', 'Express', 'Socket.IO'],
-    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'Docker', 'Kubernetes(K3s)']]],
+    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'AWS(EC2)', 'Docker', 'Kubernetes(K3s)']]],
     outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '30%', detail: '417 → 292.5ms · 로컬 프로덕션 빌드·5회 중앙값' }],
     cases: [
       { id: 'mobile-performance', title: '배럴 import의 불필요한 모듈 유입 개선', highlight: '배럴 import 136곳을 직접 참조로 바꿔 모바일 홈 TBT 30% 감소(417 → 292.5ms)', paragraphs: [
@@ -62,11 +62,11 @@ export const projects = [
         'Next.js 16.2부터 Turbopack 규칙에 쿼리 조건이 추가된 것을 확인하고 16.4로 올려 webpack과 같은 SVG 분기를 적용했습니다. 빌드를 Turbopack으로 통일하고 webpack 설정은 폴백으로 남겼습니다. 전환 중 상위 모노레포의 lockfile 때문에 Tailwind가 프로젝트 밖 경로까지 탐지해 빌드가 실패하던 문제는 소스 경로를 명시해 해결했습니다.',
         '부수효과 선언이 없으면 번들러는 모든 모듈에 부수효과가 있다고 보고 쓰지 않는 모듈도 평가합니다. 다만 소켓 싱글턴·API 인터셉터·오류 수집처럼 불러오는 순간 동작해야 하는 모듈 4개가 있어 전부 제외할 수는 없었고, 이 4개와 CSS만 예외로 명시했습니다. 한국어 화면을 지원하지 않는데도 한글 11,172자가 담긴 Pretendard 전체 폰트를 모든 화면에서 받고 있어, 화면에 필요한 글자 구간만 받는 서브셋으로 바꿨습니다.'
       ], result: '프로덕션 빌드 시간은 74.2초에서 32.8초로 56%, 홈 JS는 752KB에서 550KB로 27%, 초기 폰트 전송은 2,048KB에서 111KB로 95% 줄었습니다.', note: '빌드 시간은 캐시 없는 프로덕션 빌드를 전후 커밋 교대로 3회 측정한 중앙값입니다. JS 크기는 프로덕션 빌드 결과물의 gzip 기준, 폰트 전송량은 홈 화면 기준입니다.' },
-      { id: 'render-isolation', title: '보이지 않는 화면이 렌더 시간을 차지하던 문제 해결', highlight: '렌더 계측으로 숨은 화면이 렌더 시간의 64%를 쓰는 것을 찾아 구독 격리, 렌더 작업 71% 감소', paragraphs: [
+      { id: 'render-isolation', title: '보이지 않는 화면이 렌더 시간을 차지하던 문제 해결', highlight: '렌더 계측으로 숨은 화면이 렌더 시간의 64%를 쓰는 것을 찾아 구독 격리, 렌더 작업 70% 감소', paragraphs: [
         '앱 거래 화면에서 차트 아이콘을 누르면 별도 차트 화면으로 이동했고, 그때부터 캔들 조회와 소켓 연결을 시작해 빈 화면을 기다려야 했습니다. 주문 화면과 차트 화면을 함께 마운트해 두고 보이는 쪽만 전환해, 숨겨진 차트가 캔들과 소켓을 미리 준비하도록 바꿨습니다. display:none으로 숨기면 크기가 0이라 TradingView가 초기화되지 않아, visibility로 숨겨 실제 크기를 유지했습니다.',
         '그 대가로 숨겨진 화면도 시세가 바뀔 때마다 다시 렌더링됐습니다. React가 렌더할 때마다 알려주는 내부 연결 지점(DevTools 훅)에 측정 코드를 붙여 컴포넌트별 렌더 횟수와 시간을 자동으로 수집했고, 숨겨진 차트 화면과 닫힌 오더북 드로어가 렌더 시간의 64%(1,028ms 중 653ms)를 차지하는 것을 확인했습니다.',
         '두 화면은 시세 스냅샷을 각자 최상위 상태로 받고 있었고, 숨겨진 화면에 구독 비활성화 옵션을 넘겨도 시세 핸들러가 전역 목록으로 호출돼 상태 갱신이 멈추지 않았습니다. 실시간 값을 표시하는 컴포넌트가 직접 구독하도록 분리하고, 닫힌 드로어와 탭 뒤의 오더북은 구독을 멈췄습니다.'
-      ], result: '동일한 시세 메시지를 12초간 재생한 실험에서 렌더 작업 합계 중앙값이 5,241회에서 1,534회로 71% 줄었습니다. 차트를 미리 준비하는 동작은 그대로 유지하면서, 주문 폼·하단 패널·차트 헤더는 시세 갱신 중 다시 렌더링되지 않습니다.', note: '원인 진단 수치(64%)는 개발 빌드에서 실시간 갱신만 12초간 측정한 1회 결과입니다. 개선 결과는 개발 빌드, 모바일 화면(390×844), 같은 공개 시세 메시지 73개 재생, 개선 전후 각 5회 중앙값이며, 기기 부하 차이로 렌더 시간 대신 렌더 횟수를 대표 지표로 사용했습니다.' },
+      ], result: '동일한 시세 메시지를 12초간 재생한 실험에서 렌더 작업 합계 중앙값이 5,192회에서 1,534회로 70% 줄었습니다. 차트를 미리 준비하는 동작은 그대로 유지하면서, 주문 폼·하단 패널·차트 헤더는 시세 갱신 중 다시 렌더링되지 않습니다.', note: '원인 진단 수치(64%)는 개발 빌드에서 실시간 갱신만 12초간 측정한 1회 결과입니다. 개선 결과는 개발 빌드, 모바일 화면(390×844), 같은 공개 시세 메시지 73개 재생, 개선 전후 각 5회 중앙값이며, 기기 부하 차이로 렌더 시간 대신 렌더 횟수를 대표 지표로 사용했습니다.' },
       { id: 'chart-lifecycle', title: '차트 로딩 실패 원인 추적과 해결', highlight: '운영 로그로 TradingView 캐시 버그와 심볼 전환 경쟁 상태를 특정해 해결, 실패해도 재시도로 복구', paragraphs: [
         '차트 로딩이 실패하면 로딩 화면에 그대로 멈춰 있었고, 실패 기록이 서버에 한 건도 남지 않아 원인을 알 수 없었습니다. TradingView는 로드 실패 신호를 주지 않고, 스크립트는 실패 처리 없이 불러오고 있었으며, 데이터 요청에는 타임아웃이 없어 응답이 없으면 계속 대기했기 때문입니다. 스크립트 로드 재시도, 응답 없이 멈춘 요청의 타임아웃, 준비 완료 신호를 기다리는 안전망을 추가하고 실패 단계와 원인을 서버 로그로 보고하도록 했습니다. TradingView가 캔들 요청 실패 뒤 다시 요청하지 않는 것을 확인해 직접 재시도하고, 그래도 실패하면 재시도 버튼을 보여주도록 했습니다.',
         '수집된 로그에서 13일간 기록된 50건 대부분이 앱 거래 화면에서 발생한 것을 확인했습니다. 당시 차트는 인앱 브라우저에서 표시되지 않던 문제 때문에 호환 로딩 모드로 불러오고 있었고, Cloudflare가 정적 번들을 매번 원본 서버에서 다시 받던 문제를 고치려고 번들을 1년 캐시하도록 바꾼 상태였습니다. TradingView 릴리스 노트에서 호환 로딩 모드와 캐시된 번들이 겹치면 준비 완료 신호가 누락되는 알려진 버그를 찾았고, 두 조건이 모두 일치했습니다. 라이선스 제약으로 수정된 버전으로 올릴 수 없어, 같은 출처(same_origin) iframe 로딩 방식으로 전환했습니다. 이 방식은 blob 주소를 쓰지 않아 인앱 브라우저 대응이라는 원래 목적과도 맞습니다.',

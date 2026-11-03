@@ -212,3 +212,34 @@
 /* 포트폴리오: 대표 사례와 그 밖의 개선 구분 */
 .detail-section .rest-heading{margin-top:28px;margin-bottom:0;font-size:18px;color:var(--ink)}
 @media print{.detail-section .rest-heading{margin-top:14pt;font-size:var(--pfs-heading)}.featured-case{break-inside:auto}}
+
+/* 웹 화면 스크린샷: 배경·여백 없이 칸을 꽉 채우고 얇은 테두리만 */
+.screen-gallery .image-expand{padding:0;background:none;overflow:hidden}
+.screen-gallery .image-expand img{display:block;max-height:none;aspect-ratio:16/10;object-fit:cover;object-position:top}
+.featured-case .screen-gallery .image-expand img{aspect-ratio:auto}
+@media print{.portfolio-document .screen-gallery .image-expand{padding:0}.portfolio-document .project-gallery.screen-gallery .image-expand img{max-height:none}}
+
+/* 사례 근거 캡처: 앱 측정 화면 2장은 좌우로 작게 */
+.featured-case .phone-gallery,.highlight-list .project-gallery{margin-top:12px}
+.featured-case .phone-gallery{grid-template-columns:repeat(2,minmax(0,220px))}
+@media print{.portfolio-document .featured-case .phone-gallery{grid-template-columns:repeat(2,minmax(0,130pt))}.portfolio-document .featured-case .phone-gallery .image-expand img{max-height:240pt}}
+
+/* 대표 사례 근거 캡처(DevTools Summary): 전후 두 장을 나란히 */
+.featured-case .screen-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media screen and (max-width:767px){.featured-case .screen-gallery{grid-template-columns:1fr}}
+@media print{.portfolio-document .featured-case .screen-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* 이미지: 회색 배경·안쪽 여백 없이 이미지를 키우고, 테두리 선만 이미지 위에 그림 (흰 화면도 경계가 보이도록) */
+.image-expand{padding:0;background:none;border:0;overflow:hidden}
+.image-expand::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px var(--strong-line);pointer-events:none;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.image-expand img{display:block}
+.image-hint{position:absolute;right:8px;bottom:8px;padding:3px 8px;background:rgba(255,255,255,.92);border-radius:4px}
+.phone-gallery{grid-template-columns:repeat(2,minmax(0,236px))}
+.phone-gallery .image-expand img{max-height:none}
+@media print{.portfolio-document .image-expand{padding:0;box-shadow:none}}
+.portfolio-document .measure-shot .project-gallery .image-expand img,.measure-shot .image-expand img{max-height:none;width:100%}
+/* 앱 화면: 2장씩 2줄, 회색 배경 칸 가운데에 폰 화면 */
+.phone-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+.phone-gallery .image-expand{background:var(--wash);padding:24px}
+.phone-gallery .image-expand img{width:auto;max-width:100%;max-height:520px;margin:0 auto}
+@media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14pt;row-gap:8pt}.portfolio-document .phone-gallery .image-expand{padding:10pt}.portfolio-document .phone-gallery .image-expand img{height:262pt;max-height:none;width:auto}}

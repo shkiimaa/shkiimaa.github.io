@@ -76,7 +76,7 @@ function career() {
 
 function gallery(images) {
   if (!images?.length) return '';
-  return `<div class="project-gallery${images.every(image=>image.phone)?' phone-gallery':''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
+  return `<div class="project-gallery${images.every(image=>image.phone)?' phone-gallery':images.every(image=>image.screen)?' screen-gallery':''}">${images.map(image=>`<figure><button class="image-expand" type="button" data-image="/assets/${e(image.src)}" data-caption="${e(image.alt)}" aria-label="${e(image.alt)} 확대"><img src="/assets/${e(image.src)}" alt="${e(image.alt)}" loading="lazy" decoding="async"><span class="image-hint">화면 확대 <span aria-hidden="true">↗</span></span></button><figcaption>${e(image.alt)}</figcaption></figure>`).join('')}</div>`;
 }
 
 function implementation(project, prefix = '') {
@@ -101,13 +101,13 @@ function portfolioHighlights(project, prefix = '') {
   const featuredIds = new Set(featured.map(f => f.id));
   const detail = featured.map(f => {
     const study = items.find(s => s.id === f.id);
-    const evidence = f.evidence === 'code' ? codeExamples(f.id) : (diagrams[f.id] ? diagramFigure(diagrams[f.id]) : '');
-    return `<section class="implementation-section featured-case" id="${prefix}case-${f.id}"><h3>${e(f.title || study.title)}</h3>${f.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${f.result?`<div class="result"><p>${e(f.result)}</p></div>`:''}${evidence}</section>`;
+    const evidence = f.evidence === 'code' ? codeExamples(f.id) : f.evidence === 'images' ? gallery(material.caseImages?.[f.id]) : (diagrams[f.id] ? diagramFigure(diagrams[f.id]) : '');
+    return `<section class="implementation-section featured-case" id="${prefix}case-${f.id}"><h3>${e(f.title || study.title)}</h3>${f.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${f.result?`<div class="result"><p>${e(f.result)}</p></div>`:''}${f.method?`<p class="measurement-note">${e(f.method)}</p>`:''}${f.measure?`<div class="measure-shot">${gallery([f.measure])}</div>`:''}${evidence}</section>`;
   }).join('');
   const rest = items.filter(study => !featuredIds.has(study.id));
   const list = rest.length ? `${featured.length ? '<h3 class="rest-heading">그 밖의 개선</h3>' : ''}<ul class="highlight-list">${rest.map(study=>{
     const d = diagrams[study.id];
-    return `<li id="${prefix}case-${study.id}"><p class="highlight-title">${e(study.title)}</p><p class="highlight-result">${e(study.highlight)}</p>${d?diagramFigure(d):''}</li>`;
+    return `<li id="${prefix}case-${study.id}"><p class="highlight-title">${e(study.title)}</p><p class="highlight-result">${e(study.highlight)}</p>${d?diagramFigure(d):''}${gallery(material.caseImages?.[study.id])}</li>`;
   }).join('')}</ul>` : '';
   return `<section class="detail-section" id="${prefix}measurements"><h2>문제 해결과 개선</h2>${detail}${list}</section>`;
 }

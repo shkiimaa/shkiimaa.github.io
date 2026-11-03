@@ -11,6 +11,17 @@ export const portfolioMaterial = {
       { src: 'bitria-app-trade.jpg', alt: '앱 현물 거래 화면', phone: true },
       { src: 'bitria-app-chart.jpg', alt: '앱 선물 차트 화면', phone: true }
     ],
+    // 사례 근거 캡처 (같은 조건의 개선 전·후)
+    caseImages: {
+      'render-isolation': [
+        { src: 'bitria-profiler-before.jpg', alt: '개선 전 · 시세 갱신 한 번에 레이아웃·주문 폼까지 리렌더', screen: true },
+        { src: 'bitria-profiler-after.jpg', alt: '개선 후 · 같은 갱신에 값 표시 컴포넌트만 리렌더', screen: true }
+      ],
+      'build-optimization': [
+        { src: 'bitria-devtools-before.jpg', alt: '개선 전: 거래 화면 콜드 로드 4.6MB 전송 · 194 요청', screen: true },
+        { src: 'bitria-devtools-after.jpg', alt: '개선 후: 같은 조건에서 2.5MB 전송 · 187 요청', screen: true }
+      ]
+    },
     // 대표 사례의 변경 전후 코드
     codeExamples: {
       'render-isolation': {
@@ -29,10 +40,12 @@ useSnapshotSocket({
       }
     },
     featured: [
-      { id: 'render-isolation', title: '비활성 화면의 불필요한 렌더링 개선', paragraphs: [
+      { id: 'render-isolation', title: '비활성 화면의 불필요한 리렌더 개선', paragraphs: [
         '차트 사전 로딩을 위해 숨겨둔 화면이 시세 갱신마다 렌더링되며 전체 렌더 시간의 64%를 차지하는 문제를 발견했습니다.',
         '실시간 데이터 구독을 화면 최상위에서 실제 값을 쓰는 컴포넌트로 옮기고, 비활성 화면의 구독을 멈췄습니다.'
-      ], result: '렌더 작업 5,241회 → 1,534회 (71% 감소)', evidence: 'code' },
+      ], result: '렌더 작업 5,192회 → 1,534회 (70% 감소)', evidence: 'images',
+        method: '측정 방법: 공개 시세 메시지 73개를 녹화해 개선 전·후 커밋에 같은 12초 동안 재생하고, React DevTools 훅(onCommitFiberRoot)으로 커밋마다 실제로 렌더된 컴포넌트를 집계했습니다. 개발 빌드, 모바일 앱 화면(390×844), 회차마다 새 브라우저로 전후 각 5회 실행한 중앙값입니다.',
+        measure: { src: 'bitria-render-measure.jpg', alt: '측정 스크립트 실행 결과 · 렌더된 컴포넌트 합계와 컴포넌트별 렌더 횟수 (5회 중앙값)' } },
       { id: 'chart-lifecycle', title: 'TradingView 차트 로딩 안정화', paragraphs: [
         '운영 로그로 실패를 추적해 캐시 버그와 심볼 전환 시 경쟁 상태를 원인으로 특정했습니다.',
         '버그와 무관한 로딩 방식으로 전환하고 위젯을 유지한 채 심볼만 교체하도록 바꿨으며, 실패해도 재시도로 복구되도록 했습니다.'
@@ -108,11 +121,11 @@ useSnapshotSocket({
     overview: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자를 제공하는 플랫폼입니다.',
     scope: '2인 팀에서 Next.js 웹 클라이언트와 Node.js·Express API를 개발했습니다. 조회 데이터와 실시간 시세의 전달 경로, 레거시 서비스 통합 구조를 설명합니다.',
     images: [
-      { src: 'gobit-home.jpg', alt: '홈 화면' },
-      { src: 'gobit-market.jpg', alt: '마켓 화면' },
-      { src: 'gobit-coin-btc.jpg', alt: '코인 상세 화면' },
-      { src: 'gobit-news.jpg', alt: '뉴스 화면' },
-      { src: 'gobit-community.jpg', alt: '커뮤니티 화면' }
+      { src: 'gobit-home.jpg', alt: '홈 화면', screen: true },
+      { src: 'gobit-market.jpg', alt: '마켓 화면', screen: true },
+      { src: 'gobit-coin-btc.jpg', alt: '코인 상세 화면', screen: true },
+      { src: 'gobit-news.jpg', alt: '뉴스 화면', screen: true },
+      { src: 'gobit-community.jpg', alt: '커뮤니티 화면', screen: true }
     ],
     sections: [{ id: 'data-flow', title: '실시간 시세와 일반 조회 데이터의 분리', paragraphs: [
       'Binance WebSocket으로 수집한 시세를 Redis에 캐시하고 Socket.IO로 웹 클라이언트에 전달했습니다. 시세 이외의 조회 데이터는 SWR로 관리해 실시간 스트림과 API 조회의 역할을 구분했습니다.',
@@ -127,10 +140,10 @@ useSnapshotSocket({
     overview: '사내 React 도입에 맞춰 기존 jQuery 기반 회사 홈페이지를 React로 전환하고 새로 단장한 프로젝트입니다.',
     scope: '메인·회사소개·서비스·인증·파트너 페이지를 담당했습니다. 공통 UI 적용과 한국어·영어, 반응형 화면의 구성 방식을 설명합니다.',
     images: [
-      { src: 'doit-site-home.jpg', alt: '메인 화면' },
-      { src: 'doit-site-company.jpg', alt: '회사소개 화면' },
-      { src: 'doit-site-service.jpg', alt: '서비스 화면' },
-      { src: 'doit-site-certification.jpg', alt: '인증 화면' }
+      { src: 'doit-site-home.jpg', alt: '메인 화면', screen: true },
+      { src: 'doit-site-company.jpg', alt: '회사소개 화면', screen: true },
+      { src: 'doit-site-service.jpg', alt: '서비스 화면', screen: true },
+      { src: 'doit-site-certification.jpg', alt: '인증 화면', screen: true }
     ],
     sections: [{ id: 'composition', title: '공통 UI와 페이지별 구성', paragraphs: [
       '색상·타이포·레이아웃 등의 공통 요소에 Doit UI Kit을 적용하고, 페이지별 콘텐츠를 React 컴포넌트로 구성했습니다.',

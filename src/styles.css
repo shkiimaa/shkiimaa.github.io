@@ -187,8 +187,10 @@
 }
 @media screen and (max-width:767px){.detail-intro>.detail-kind{grid-column:1/-1;margin-top:4px}}
 /* 모바일 스크린샷 갤러리는 세로 비율이 길어 여러 장을 한 줄에 나열 */
-.phone-gallery{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));align-items:start}
-.phone-gallery .image-expand img{max-height:none}
-@media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.portfolio-document .phone-gallery .image-expand img{max-height:170pt}}
+/* 앱 스크린샷: 웹은 2×2, 모바일은 한 장씩, PDF는 한 줄 4장 */
+.phone-gallery{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.phone-gallery .image-expand img{max-height:480px}
+@media screen and (max-width:767px){.phone-gallery{grid-template-columns:1fr}.phone-gallery .image-expand img{max-height:none}}
+@media print{.portfolio-document .phone-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.portfolio-document .phone-gallery .image-expand img{max-height:none}}
 /* 웹 이력서 링크는 웹에선 자기 자신이라 PDF에만 노출 */
 @media screen{.pdf-only{display:none!important}}

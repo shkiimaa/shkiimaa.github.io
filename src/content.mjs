@@ -1,13 +1,13 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '중복되는 코드는 공통화하고, 플랫폼별 차이는 분리해 유지보수하기 좋은 프론트엔드를 만듭니다.\n\n사내 공통 UI 라이브러리(컴포넌트 24종)를 개발·배포하고 개발 규칙을 문서화해 두 프로젝트에 도입했습니다. 2인 팀에서 실시간 암호화폐 거래 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API까지 개발했습니다.',
+  introduction: '중복되는 코드는 공통화하고, 플랫폼별 차이는 분리해 유지보수하기 좋은 프론트엔드를 만듭니다.\n\n사내 공통 UI 라이브러리(컴포넌트 24종)를 개발·배포하고 개발 규칙을 문서화해 두 프로젝트에 도입했습니다. 2인 팀에서 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
 export const experiences = [
   { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 현재', items: [
-    'Bitria (암호화폐 거래 플랫폼) | 프론트엔드·백엔드 개발 · Next.js·Express',
+    'Bitria (암호화폐 브로커리지 플랫폼) | 프론트엔드·백엔드 개발 · Next.js·Express',
     'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발, 이후 13개 서비스 K3s 통합'
   ] },
   { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
@@ -29,8 +29,8 @@ export const skills = [
 export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재 · 운영 중',
-    kind: '멀티 거래소 연동 암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드 전담(앱 스토어 출시)·백엔드 API 개발 · 2인 팀',
-    description: '여러 암호화폐 거래소를 연동해 현물·선물·마진 거래를 제공하는 플랫폼입니다. 2인 팀에서 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 주문·인증·자산 API 개발과 인프라 운영에도 참여했습니다.',
+    kind: '암호화폐 브로커리지 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드 전담(앱 스토어 출시)·백엔드 API 개발 · 2인 팀',
+    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 브로커리지 플랫폼입니다. 2인 팀에서 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 주문·인증·자산 API 개발과 인프라 운영에도 참여했습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트와 주문·자산 화면, 주문·인증·자산·가격 알림 API 개발',
       '렌더 계측으로 숨은 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 71% 감소',

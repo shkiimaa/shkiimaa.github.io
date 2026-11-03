@@ -28,7 +28,7 @@ export const skills = [
 
 export const projects = [
   {
-    id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
+    id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재 · 운영 중',
     kind: '멀티 거래소 연동 암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드 전담(앱 스토어 출시)·백엔드 API 개발 · 2인 팀',
     description: '여러 암호화폐 거래소를 연동해 현물·선물·마진 거래를 제공하는 플랫폼입니다. 2인 팀에서 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 주문·인증·자산 API 개발과 인프라 운영에도 참여했습니다.',
     summary: [

@@ -4,6 +4,13 @@ export const portfolioMaterial = {
   bitria: {
     overview: '외부 거래소 유동성으로 현물·선물·마진 거래와 계정·자산 관리를 제공하는 암호화폐 브로커리지 플랫폼입니다.',
     scope: '2인 팀에서 프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 개발에도 참여했습니다. 아래 자료는 화면·도메인 분리, 실시간 데이터 전달, 멀티 플랫폼 구성을 설명합니다.',
+    source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
+    images: [
+      { src: 'bitria-app-home.jpg', alt: '앱 홈 화면', phone: true },
+      { src: 'bitria-app-markets.jpg', alt: '앱 마켓 화면', phone: true },
+      { src: 'bitria-app-trade.jpg', alt: '앱 현물 거래 화면', phone: true },
+      { src: 'bitria-app-chart.jpg', alt: '앱 선물 차트 화면', phone: true }
+    ],
     // 대표 사례의 변경 전후 코드
     codeExamples: {
       'render-isolation': {

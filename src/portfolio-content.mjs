@@ -124,7 +124,7 @@ useSnapshotSocket({
 
   gobit: {
     overview: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자를 제공하는 플랫폼입니다.',
-    scope: '2인 팀에서 Next.js 웹 클라이언트와 Node.js·Express API를 개발했습니다. 조회 데이터와 실시간 시세의 전달 경로, 레거시 서비스 통합 구조를 설명합니다.',
+    scope: '2인 팀에서 React SPA와 Next.js 웹 클라이언트, Node.js·Express API를 개발했습니다. 조회 데이터와 실시간 시세의 전달 경로, 레거시 서비스 통합 구조를 설명합니다.',
     images: [
       { src: 'gobit-home.jpg', alt: '홈 화면', screen: true },
       { src: 'gobit-market.jpg', alt: '마켓 화면', screen: true },
@@ -133,8 +133,8 @@ useSnapshotSocket({
       { src: 'gobit-community.jpg', alt: '커뮤니티 화면', screen: true }
     ],
     sections: [{ id: 'data-flow', title: '실시간 시세와 일반 조회 데이터의 분리', paragraphs: [
-      'Binance WebSocket으로 수집한 시세를 Redis에 캐시하고 Socket.IO로 웹 클라이언트에 전달했습니다. 시세 이외의 조회 데이터는 SWR로 관리해 실시간 스트림과 API 조회의 역할을 구분했습니다.',
-      'TradingView 차트와 tiptap 에디터를 연동하고 회원 인증·게시글·댓글·북마크 기능을 구현했습니다.'
+      '서버가 Redis에 캐시한 시세를 Socket.IO로 받아 표시하고, 연결이 끊기면 재연결·헬스체크로 복구하도록 개선했습니다. 시세 이외의 조회 데이터는 SWR로 관리해 실시간 스트림과 API 조회의 역할을 구분했습니다.',
+      'TradingView 차트를 연동하고 회원 인증·모의투자·랭킹·채팅 기능을 구현했습니다.'
     ] }, { id: 'deployment', title: '레거시 서비스의 통합·배포 구성', paragraphs: [
       '다른 개발자가 만든 레거시 서비스는 소스 코드가 유실돼 바이너리로만 서버 5대에 흩어져 있었습니다. Gobit·모의투자·코인 매매 시그널 서비스를 모노레포로 통합했습니다. 수집기 → Redis → 서버로 데이터 전달 경로를 정리하고, 서비스별 Dockerfile과 Kubernetes 매니페스트를 구성했습니다.',
       'GitHub Actions로 빌드·배포를 자동화하고, 설정값은 Kubernetes Secret에서 불러오도록 구성했습니다. DB 백업과 캔들 보관 작업은 CronJob으로 분리했습니다.'

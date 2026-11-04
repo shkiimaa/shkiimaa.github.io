@@ -96,7 +96,7 @@ function implementation(project, prefix = '') {
 function projectGallery(project, id = '') {
   const webImages = portfolioMaterial[project.id]?.webImages || [];
   const images = [...(project.images || []), ...(portfolioMaterial[project.id]?.images || [])];
-  return images.length || webImages.length ? `<section class="detail-section screens-section"${id?` id="${id}"`:''}><h2>${id?'':e(project.name)+' · '}프로젝트 화면</h2>${gallery(webImages)}${gallery(images)}</section>` : '';
+  return images.length || webImages.length ? `<section class="detail-section screens-section"${id?` id="${id}"`:''}><h2>프로젝트 화면</h2>${gallery(webImages)}${gallery(images)}</section>` : '';
 }
 
 function portfolioHighlights(project, prefix = '') {
@@ -114,7 +114,7 @@ function portfolioHighlights(project, prefix = '') {
     return `<section class="implementation-section featured-case" id="${prefix}case-${f.id}"><h3>${e(f.title || study.title)}</h3>${f.paragraphs.map(copy=>`<p>${prose(copy)}</p>`).join('')}${f.result?`<div class="result"><p>${e(f.result)}</p></div>`:''}${f.method?`<p class="measurement-note">${e(f.method)}</p>`:''}${f.measure?`<div class="measure-shot">${gallery([f.measure])}</div>`:''}${evidence}</section>`;
   }).join('');
   const rest = items.filter(study => !featuredIds.has(study.id));
-  const list = rest.length ? `${featured.length ? '<h3 class="rest-heading">그 밖의 개선</h3>' : ''}<ul class="highlight-list">${rest.map(study=>{
+  const list = rest.length ? `<ul class="highlight-list">${rest.map(study=>{
     const d = diagrams[study.id];
     return `<li id="${prefix}case-${study.id}"><p class="highlight-title">${e(study.title)}</p><p class="highlight-result">${e(study.highlight)}</p>${d?diagramFigure(d):''}${gallery(material.caseImages?.[study.id])}</li>`;
   }).join('')}</ul>` : '';

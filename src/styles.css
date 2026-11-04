@@ -266,7 +266,8 @@
 /* 프로젝트·포트폴리오 공통 상단 줄: 개수 + 다른 보기 링크, 아래 굵은 선 */
 .project-toolbar{border-bottom:2px solid var(--ink)}
 .project-toolbar .text-link{margin-top:0}
-.portfolio-document>.project-toolbar+.portfolio-project{margin-top:40px}
+@media screen{.portfolio-document>.project-toolbar+.portfolio-project{margin-top:0}.portfolio-document>.project-toolbar+.portfolio-project>.career-project{padding-top:31px}}
+@media screen and (max-width:767px){.portfolio-document>.project-toolbar+.portfolio-project>.career-project{padding-top:24px}}
 @media print{.portfolio-document>.project-toolbar+.portfolio-project{border-top:1pt solid #333}}
 /* 포트폴리오 구간·개요: 문장마다 줄바꿈하므로 단락 사이 추가 간격을 없애 행간이 들쭉날쭉해 보이지 않게 */
 .implementation-section>p+p,.portfolio-document .implementation-section>p+p{margin-top:0}
@@ -277,3 +278,12 @@
 @media print{.portfolio-document .project-gallery+.project-gallery{margin-top:10pt}}
 /* PDF: 웹+앱 화면이 함께 있으면 새 페이지에서 시작하고, 웹 2×2 아래 앱 화면은 한 줄 4장 */
 @media print{.portfolio-document .screens-section:has(.screen-gallery+.phone-gallery){break-before:page}.portfolio-document .screen-gallery+.phone-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.portfolio-document .screen-gallery+.phone-gallery .image-expand img{height:auto;width:100%}.portfolio-document .screens-section .screen-gallery{break-inside:avoid}}
+/* 웹: 구간 제목(h2)과 세부 제목(h3)의 크기 차이를 키워 위계 구분 */
+@media screen{.detail-section>h2{font-size:26px;margin-bottom:28px}.detail-section{padding-top:40px;margin-top:40px}.detail-section .implementation-section h3{font-size:16px}}
+@media screen and (max-width:767px){.detail-section>h2{font-size:22px;margin-bottom:22px}.detail-section{padding-top:30px;margin-top:30px}.detail-section .implementation-section h3{font-size:15px}}
+/* 문제 해결 사례: "그 밖의 개선" 묶음 없이 대표 사례와 같은 레벨로 나열 (제목은 사례 제목과 같은 크기, 설명은 본문 크기) */
+@media screen{.featured-case+.highlight-list{margin-top:36px}.highlight-list{gap:32px}.highlight-list .highlight-title{font-size:16px;font-weight:720}.highlight-list .highlight-result{font-size:14px;color:var(--secondary);margin-top:8px}}
+@media screen and (max-width:767px){.highlight-list .highlight-title{font-size:15px}.highlight-list .highlight-result{font-size:13px}}
+/* 웹 포트폴리오: 프로젝트명을 상세 페이지처럼 크게 해 구간 제목(26px)과 위계를 분리 */
+@media screen{.portfolio-document .project-heading h2{font-size:44px;line-height:1.25}}
+@media screen and (max-width:767px){.portfolio-document .project-heading h2{font-size:34px}}

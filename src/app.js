@@ -1,5 +1,20 @@
-const printButton = document.querySelector('[data-print]');
-printButton?.addEventListener('click', () => window.print());
+const downloadButton = document.querySelector('.download-menu > button');
+const downloadList = document.getElementById('download-list');
+if (downloadButton && downloadList) {
+  const setOpen = open => {
+    downloadButton.setAttribute('aria-expanded', String(open));
+    downloadList.hidden = !open;
+  };
+  downloadButton.addEventListener('click', () => setOpen(downloadList.hidden));
+  downloadList.addEventListener('click', event => { if (event.target.closest('a')) setOpen(false); });
+  document.addEventListener('pointerdown', event => { if (!event.target.closest('.download-menu')) setOpen(false); });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !downloadList.hidden) {
+      setOpen(false);
+      downloadButton.focus();
+    }
+  });
+}
 
 const sectionLinks = [...document.querySelectorAll('.section-nav a')];
 const sections = sectionLinks.map(link => document.getElementById(link.hash.slice(1))).filter(Boolean);

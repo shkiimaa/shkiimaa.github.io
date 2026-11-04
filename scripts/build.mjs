@@ -31,12 +31,20 @@ function sidebar(items, pageTitle) {
   return `<aside class="page-sidebar"><div class="sidebar-sticky"><p class="sidebar-title">${pageTitle}</p><nav class="section-nav" aria-label="페이지 목차">${items.map(([id,label])=>`<a href="#${id}">${e(label)}</a>`).join('')}</nav><div class="sidebar-contact"><span>Contact</span><a href="mailto:${profile.email}">${profile.email}</a>${external('GitHub', profile.github)}</div></div></aside>`;
 }
 
+// 헤더 PDF 다운로드 메뉴: 어느 페이지에서든 네 문서를 받을 수 있게 한다
+const downloads = [
+  ['resume', '이력서', '경력과 프로젝트 요약'],
+  ['career', '경력기술서', '담당 업무와 문제 해결 과정'],
+  ['portfolio', '포트폴리오', '구조도, 측정 근거, 서비스 화면'],
+  ['portfolio-detail', '포트폴리오 상세', '경력기술서 설명까지 담은 단독 제출용']
+];
+
 function layout({ title, description, route, active, body, toc = [], pageLabel, pdf }) {
-  const nav = [['/', '이력서', 'resume'], ['/career/', '경력기술서', 'career'], ['/projects/', '프로젝트', 'projects']];
+  const nav = [['/', '이력서', 'resume'], ['/career/', '경력기술서', 'career'], ['/portfolio/', '포트폴리오', 'portfolio']];
   return `<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${e(title)} | 김수환</title><meta name="description" content="${e(description)}"><meta name="theme-color" content="#ffffff"><meta name="color-scheme" content="light"><link rel="canonical" href="${origin}${route}"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><meta property="og:site_name" content="김수환 · Frontend Developer"><meta property="og:title" content="${e(title)} | 김수환"><meta property="og:description" content="${e(description)}"><meta property="og:url" content="${origin}${route}"><meta property="og:image" content="${origin}/assets/og.png"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preload" href="/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
 <body><a class="skip-link" href="#main">본문으로 이동</a>
-<header class="site-header"><div class="header-inner"><a class="wordmark" href="/" aria-label="김수환 이력서">김수환<span>Frontend Developer</span></a><nav class="primary-nav" aria-label="주 메뉴">${nav.map(([href,label,key])=>`<a href="${href}"${active===key?' aria-current="page"':''}>${label}</a>`).join('')}</nav>${pdf ? `<a class="download-link" href="/${pdf}.pdf" download="김수환_${pdf==='resume'?'이력서':pdf==='career'?'경력기술서':pdf==='portfolio-detail'?'포트폴리오_상세':'포트폴리오'}.pdf">${pdf==='portfolio'?'포트폴리오 PDF':pdf==='portfolio-detail'?'상세 PDF':'PDF 다운로드'} <span aria-hidden="true">↓</span></a>` : '<button class="download-link" type="button" data-print>인쇄 <span aria-hidden="true">↗</span></button>'}</div></header>
+<header class="site-header"><div class="header-inner"><a class="wordmark" href="/" aria-label="김수환 이력서">김수환<span>Frontend Developer</span></a><nav class="primary-nav" aria-label="주 메뉴">${nav.map(([href,label,key])=>`<a href="${href}"${active===key?' aria-current="page"':''}>${label}</a>`).join('')}</nav><div class="download-menu"><button class="download-link" type="button" aria-expanded="false" aria-controls="download-list">PDF 다운로드${projectLinkIcon}</button><ul class="download-list" id="download-list" hidden>${downloads.map(([file,label,note])=>`<li><a href="/${file}.pdf" download="김수환_${label.replace(' ','_')}.pdf"${pdf===file?' aria-current="page"':''}><strong>${label}${pdf===file?'<em class="download-current">현재 문서</em>':''}</strong><span>${note}</span></a></li>`).join('')}</ul></div></div></header>
 <div class="page-shell">${sidebar(toc,pageLabel)}<main id="main" class="document" tabindex="-1">${body}</main></div>
 <footer class="site-footer"><span>© ${new Date().getUTCFullYear()} Suhwan Kim</span><a href="mailto:${profile.email}">${profile.email}</a><a href="#main" class="back-top">맨 위로 <span aria-hidden="true">↑</span></a></footer>
 <dialog class="image-dialog" aria-label="프로젝트 화면 확대"><button type="button" class="dialog-close" aria-label="확대 화면 닫기">닫기 ×</button><img src="" alt=""><p></p></dialog></body></html>`;
@@ -70,7 +78,7 @@ function careerProject(project) {
 }
 
 function career() {
-  const body = `<div class="page-intro"><h1>김수환 경력기술서</h1><p>개발한 서비스, 담당한 역할,<br class="mobile-break"> 그리고 문제를 해결한 과정입니다.</p></div>${experiences.slice(0,2).map(job=>`<section class="company-section" id="${job.id}"><header class="company-heading"><div><h2>${e(job.name)}</h2><p>${e(job.role)}</p></div><p class="numeric">${e(job.period)}</p></header>${workProjects.filter(p=>p.companyId===job.id).map(careerProject).join('')}</section>`).join('')}<div class="document-next"><span>프로젝트 화면과 구현 자료</span><a href="/projects/">프로젝트 둘러보기 <span aria-hidden="true">→</span></a></div>`;
+  const body = `<div class="page-intro"><h1>김수환 경력기술서</h1><p>개발한 서비스, 담당한 역할,<br class="mobile-break"> 그리고 문제를 해결한 과정입니다.</p></div>${experiences.slice(0,2).map(job=>`<section class="company-section" id="${job.id}"><header class="company-heading"><div><h2>${e(job.name)}</h2><p>${e(job.role)}</p></div><p class="numeric">${e(job.period)}</p></header>${workProjects.filter(p=>p.companyId===job.id).map(careerProject).join('')}</section>`).join('')}<div class="document-next"><span>프로젝트 화면과 구현 자료</span><a href="/portfolio/">포트폴리오 보기 <span aria-hidden="true">→</span></a></div>`;
   return layout({title:'경력기술서',description:'김수환의 프론트엔드·백엔드 개발 경험과 문제 해결과 개선 사례입니다.',route:'/career/',active:'career',body,pageLabel:'경력기술서',pdf:'career',toc:workProjects.map(p=>[p.id,p.name])});
 }
 
@@ -119,7 +127,7 @@ function portfolioProject(project) {
 
 function portfolio() {
   const body = `<div class="portfolio-document"><div class="page-intro"><h1>김수환 포트폴리오</h1><p>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</p></div>${orderedProjects.map(project=>`<div class="portfolio-project">${portfolioProject(project)}${project.links?.length?`<div class="portfolio-links">${project.links.map(link=>external(link.label,link.url)).join('')}</div>`:''}</div>`).join('')}</div>`;
-  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'projects',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:orderedProjects.map(p=>[p.id,p.name])});
+  return layout({title:'포트폴리오',description:'김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다.',route:'/portfolio/',active:'portfolio',body,pageLabel:'포트폴리오',pdf:'portfolio',toc:orderedProjects.map(p=>[p.id,p.name])});
 }
 
 // 포트폴리오 단독 제출용: 경력기술서의 설명(주요 업무·문제 해결 전문)에 포트폴리오 근거 자료를 붙인 문서
@@ -142,12 +150,12 @@ function fullPortfolioProject(project) {
 
 function fullPortfolio() {
   const body = `<div class="portfolio-document"><div class="page-intro"><h1>김수환 포트폴리오</h1><p>프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</p></div>${orderedProjects.map(project => `<div class="portfolio-project">${fullPortfolioProject(project)}</div>`).join('')}</div>`;
-  return layout({title:'포트폴리오 상세',description:'김수환의 프로젝트 담당 업무·문제 해결 과정·구현 구조·화면 자료입니다.',route:'/portfolio-detail/',active:'projects',body,pageLabel:'포트폴리오 상세',pdf:'portfolio-detail',toc:orderedProjects.map(p=>[p.id,p.name])});
+  return layout({title:'포트폴리오 상세',description:'김수환의 프로젝트 담당 업무·문제 해결 과정·구현 구조·화면 자료입니다.',route:'/portfolio-detail/',active:'portfolio',body,pageLabel:'포트폴리오 상세',pdf:'portfolio-detail',toc:orderedProjects.map(p=>[p.id,p.name])});
 }
 
 function projectIndex() {
   const body = `<div class="page-intro"><h1>프로젝트</h1><p>직접 개발하고 운영한 6개 프로젝트의<br class="mobile-break"> 담당 업무와 구현 사례입니다.</p></div><div class="project-toolbar"><p class="project-count" aria-live="polite">6개 프로젝트</p><a class="text-link" href="/portfolio-detail.pdf" download="김수환_포트폴리오_상세.pdf">담당 업무·문제 해결 과정까지 담은 포트폴리오 상세 PDF <span aria-hidden="true">↓</span></a></div><div class="project-index">${orderedProjects.map(p=>`<article class="project-index-row${p.images?' has-image':''}" data-category="${p.category}"><div class="project-index-content"><p class="index-meta">${e(p.company)} <span aria-hidden="true">/</span> <span class="numeric">${e(p.period)}</span></p><h2><a href="${projectHref(p)}">${e(p.name)}${projectLinkIcon}</a></h2><p class="index-kind">${e(p.kind)}</p><p class="index-description">${prose(p.description)}</p><p class="compact-tech">${p.tech.map(e).join(' · ')}</p></div>${p.images?`<a class="project-thumbnail" href="${projectHref(p)}" tabindex="-1" aria-hidden="true"><img src="/assets/${p.images[0].src}" alt="" loading="lazy" decoding="async"></a>`:''}</article>`).join('')}</div>`;
-  return layout({title:'프로젝트',description:'Bitria, Gobit, doit-uikit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다.',route:'/projects/',active:'projects',body,pageLabel:'프로젝트',pdf:'portfolio',toc:[['main','전체 프로젝트']]});
+  return layout({title:'프로젝트',description:'Bitria, Gobit, doit-uikit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다.',route:'/projects/',active:'portfolio',body,pageLabel:'프로젝트',pdf:'portfolio',toc:[['main','전체 프로젝트']]});
 }
 
 function projectDetail(project, index) {
@@ -158,8 +166,8 @@ function projectDetail(project, index) {
   if(project.images?.length||portfolioMaterial[project.id]?.images?.length)toc.push(['screens','프로젝트 화면']);
   toc.push(['technology','기술 스택']);
   const previous=projects[index-1],next=projects[index+1];
-  const body=`<a class="breadcrumb" href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${implementation(project)}${portfolioHighlights(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>기술 스택</h2>${tech(project)}</section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
-  return layout({title:project.name,description:project.description,route:projectHref(project),active:'projects',body,pageLabel:project.name,pdf:'portfolio',toc});
+  const body=`<a class="breadcrumb" href="/portfolio/#${project.id}"><span aria-hidden="true">←</span> 포트폴리오</a><section class="detail-intro" id="overview"><p class="page-kicker">${project.category==='work'?e(project.company)+' · 업무 프로젝트':'팀 프로젝트'}</p><h1>${e(project.name)}</h1><p class="detail-kind">${e(project.kind)}</p><div class="project-meta"><span class="numeric">${e(project.period)}</span><span>${e(project.role)}</span></div><p class="detail-description">${prose(material.overview)}</p><p class="implementation-note">${prose(material.scope)}</p>${project.links?.length?`<div class="project-links">${project.links.map(link=>external(link.label,link.url,'text-link')).join('')}</div>`:''}</section>${implementation(project)}${portfolioHighlights(project)}${projectGallery(project,'screens')}<section class="detail-section" id="technology"><h2>기술 스택</h2>${tech(project)}</section><nav class="project-pagination" aria-label="다른 프로젝트">${previous?`<a href="${projectHref(previous)}"><span>이전 프로젝트</span><strong>← ${e(previous.name)}</strong></a>`:'<span></span>'}${next?`<a href="${projectHref(next)}"><span>다음 프로젝트</span><strong>${e(next.name)} →</strong></a>`:''}</nav>`;
+  return layout({title:project.name,description:project.description,route:projectHref(project),active:'portfolio',body,pageLabel:project.name,pdf:'portfolio',toc});
 }
 
 export async function build() {

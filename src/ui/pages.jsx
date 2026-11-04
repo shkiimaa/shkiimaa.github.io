@@ -55,10 +55,17 @@ function Resume() {
       </ResumeSection>
       <ResumeSection id="projects" title="프로젝트" en="Projects">
         {workProjects.map(project => (
-          <Row key={project.id} id={`resume-${project.id}`} className="resume-project" meta={<><RowTitle><a href={projectHref(project)}>{project.name}</a></RowTitle><Meta>{project.company}</Meta><Meta className="tabular-nums">{project.period}</Meta></>}>
+          <Row key={project.id} id={`resume-${project.id}`} className="resume-project" meta={<>
+            {/* 모바일은 경력기술서처럼 상세 보기 링크를 프로젝트 이름 줄에 둔다 */}
+            <div className="flex items-baseline justify-between gap-3 mobile:basis-full">
+              <RowTitle><a href={projectHref(project)}>{project.name}</a></RowTitle>
+              <span className="hidden mobile:inline"><TextLink href={projectHref(project)} className="whitespace-nowrap">프로젝트 상세 보기</TextLink></span>
+            </div>
+            <Meta>{project.company}</Meta><Meta className="tabular-nums">{project.period}</Meta>
+          </>}>
             <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
               <h4 className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</h4>
-              <TextLink href={projectHref(project)} className="mt-px ml-auto">프로젝트 상세 보기</TextLink>
+              <TextLink href={projectHref(project)} className="mt-px ml-auto mobile:hidden">프로젝트 상세 보기</TextLink>
             </div>
             <Meta className="mb-2.5">{project.role}</Meta>
             <Bullets items={project.summary} />

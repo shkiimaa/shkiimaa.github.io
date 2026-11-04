@@ -12,6 +12,8 @@ const startDate = project => Number((project.period.match(/\d{4}\.\d{2}/)?.[0] ?
 export const orderedProjects = [...projects].sort((a, b) => startDate(b) - startDate(a));
 const workProjects = orderedProjects.filter(project => project.category === 'work');
 const material = project => portfolioMaterial[project.id] || {};
+// 포트폴리오 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
+const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */
 const ResumeSection = ({ id, title, en, children }) => (
@@ -222,7 +224,7 @@ function Portfolio() {
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
-            <ProjectIntro project={project} items={[material(project).overview, material(project).scope]} />
+            <ProjectIntro project={project} items={[portfolioIntro(project)]} />
             <Implementation project={project} prefix={`${project.id}-`} />
             <Highlights project={project} prefix={`${project.id}-`} />
             <Screens project={project} />
@@ -258,7 +260,7 @@ function PortfolioDetail() {
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
-            <ProjectIntro project={project} items={[material(project).overview, material(project).scope]} />
+            <ProjectIntro project={project} items={[portfolioIntro(project)]} />
             <SectionBlock title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
             <Implementation project={project} prefix={`${project.id}-`} />
             {project.cases?.length > 0 && (
@@ -324,7 +326,7 @@ function ProjectDetail({ project, index }) {
       <section id="overview">
         <Meta className="mb-3.5">{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</Meta>
         <ProjectHeader project={project} large />
-        <ProjectIntro project={project} items={[m.overview, m.scope]} />
+        <ProjectIntro project={project} items={[portfolioIntro(project)]} />
         {project.links?.length > 0 && <div className="mt-4 flex gap-5">{project.links.map(link => <TextLink key={link.url} href={link.url} external>{link.label}</TextLink>)}</div>}
       </section>
       <Implementation project={project} />

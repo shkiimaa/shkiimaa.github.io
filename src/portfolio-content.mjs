@@ -3,7 +3,7 @@
 export const portfolioMaterial = {
   bitria: {
     overview: '외부 거래소 유동성으로 현물·선물·마진 거래와 계정·자산 관리를 제공하는 암호화폐 브로커리지 플랫폼입니다.',
-    scope: '2인 팀에서 프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 개발에도 참여했습니다. 아래 자료는 화면·도메인 분리, 실시간 데이터 전달, 멀티 플랫폼 구성을 설명합니다.',
+    scope: '2인 팀에서 프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 서버의 인증·주문·자산·시세 API와 K3s 운영을 담당했습니다.',
     source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
     // 웹 화면 (데스크톱 1440×900)
     webImages: [
@@ -86,7 +86,7 @@ useSnapshotSocket({
   },
   'doit-uikit': {
     overview: 'D.A.X와 회사 홈페이지에 적용한 사내 공통 React UI 라이브러리입니다.',
-    scope: '컴포넌트 24종과 패키징·npm 배포·사용 문서를 담당했습니다. 아래 Storybook 화면에서 컴포넌트별 Props와 상태별 UI를 확인할 수 있습니다.',
+    scope: '컴포넌트 24종과 패키징·npm 배포·사용 문서를 담당했습니다.',
     source: 'https://www.notion.so/9e63c15c084243cbb651e0c422457cf8',
     sections: [{ id: 'packaging', title: '컴포넌트 조합과 라이브러리 배포', paragraphs: [
       'Button·Input 같은 Atom을 조합해 FileInput 등의 Molecule을 구성했습니다. 컴포넌트의 Props와 상태별 UI를 Storybook에 문서화하고, 사용하는 프로젝트에서 같은 기준으로 확인하도록 구성했습니다. Playground에서는 값을 직접 바꿔 사용 예를 확인할 수 있습니다.',
@@ -100,7 +100,7 @@ useSnapshotSocket({
   },
   dax: {
     overview: '데이터 관리·라벨링·모델 학습·추론을 지원하는 AI 플랫폼입니다.',
-    scope: '백엔드 개발자 1명과 협업해 프론트엔드를 담당했습니다. 서비스 구성도와 라벨링 화면을 중심으로 API 연동 범위와 좌표 변환 방식을 설명합니다.',
+    scope: '백엔드 개발자 1명과 협업해 프론트엔드를 담당했습니다.',
     source: 'https://www.notion.so/ee21c0264f7a440ab88ff4643901869c',
     sections: [{ id: 'architecture', title: '서비스 구성과 프론트엔드 담당 범위', paragraphs: [
       'React 프론트엔드는 웹 서버 API를 통해 프로젝트·라벨·모델 데이터를 조회하고 변경합니다. 백엔드와 AI 서버가 연결된 전체 구성에서 프론트엔드 화면과 API 연동을 담당했습니다.',
@@ -109,7 +109,7 @@ useSnapshotSocket({
   },
   xrgis: {
     overview: 'XR·GIS 원격 협업 서비스의 사용자·팀·파일 관리 백오피스입니다.',
-    scope: 'React 화면과 Express API를 담당했습니다. 아래 화면은 사용자·팀 관리와 팀별 파일 접근, 대용량 파일 처리 기능을 보여줍니다.',
+    scope: 'React 화면과 Express API를 담당했습니다.',
     source: 'https://www.notion.so/a49f2628c6534bb4ad84ae93a2a287e3',
     sections: [{ id: 'files', title: '팀별 접근 권한과 대용량 파일 처리', paragraphs: [
       '파일 관리 API에서 사용자의 팀 소속에 따라 다운로드 권한을 확인합니다. 같은 관리자 계정을 사용하는 사내 서비스와는 MariaDB 기반 세션 저장소를 통해 인증 체계를 맞췄습니다.',
@@ -124,7 +124,7 @@ useSnapshotSocket({
 
   gobit: {
     overview: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자를 제공하는 플랫폼입니다.',
-    scope: '2인 팀에서 React SPA와 Next.js 웹 클라이언트, Node.js·Express API를 개발했습니다. 조회 데이터와 실시간 시세의 전달 경로, 레거시 서비스 통합 구조를 설명합니다.',
+    scope: '2인 팀에서 React SPA와 Next.js 웹 클라이언트, Node.js·Express API를 개발했습니다.',
     images: [
       { src: 'gobit-home.jpg', alt: '홈 화면', screen: true },
       { src: 'gobit-market.jpg', alt: '마켓 화면', screen: true },
@@ -143,7 +143,7 @@ useSnapshotSocket({
 
   'doit-homepage': {
     overview: '사내 React 도입에 맞춰 기존 jQuery 기반 회사 홈페이지를 React로 전환하고 새로 단장한 프로젝트입니다.',
-    scope: '메인·회사소개·서비스·인증·파트너 페이지를 담당했습니다. 공통 UI 적용과 한국어·영어, 반응형 화면의 구성 방식을 설명합니다.',
+    scope: '메인·회사소개·서비스·인증·파트너 페이지를 담당했습니다.',
     images: [
       { src: 'doit-site-home.jpg', alt: '메인 화면', screen: true },
       { src: 'doit-site-company.jpg', alt: '회사소개 화면', screen: true },

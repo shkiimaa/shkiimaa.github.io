@@ -251,7 +251,7 @@ function PortfolioDetail() {
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
-            <ProjectIntro project={project} items={[project.description]} />
+            <ProjectIntro project={project} items={[material(project).overview, material(project).scope]} />
             <SectionBlock title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
             <Implementation project={project} prefix={`${project.id}-`} />
             {project.cases?.length > 0 && (

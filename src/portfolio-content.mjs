@@ -5,6 +5,13 @@ export const portfolioMaterial = {
     overview: '외부 거래소 유동성으로 현물·선물·마진 거래와 계정·자산 관리를 제공하는 암호화폐 브로커리지 플랫폼입니다.',
     scope: '2인 팀에서 프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 개발에도 참여했습니다. 아래 자료는 화면·도메인 분리, 실시간 데이터 전달, 멀티 플랫폼 구성을 설명합니다.',
     source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
+    // 웹 화면 (데스크톱 1440×900)
+    webImages: [
+      { src: 'bitria-web-home.jpg', alt: '웹 홈 화면', screen: true },
+      { src: 'bitria-web-market.jpg', alt: '웹 마켓 화면', screen: true },
+      { src: 'bitria-web-spot.jpg', alt: '웹 거래 화면', screen: true },
+      { src: 'bitria-web-mypage.jpg', alt: '웹 마이페이지 화면 (이메일·UID 가림)', screen: true }
+    ],
     images: [
       { src: 'bitria-app-home.jpg', alt: '앱 홈 화면', phone: true },
       { src: 'bitria-app-markets.jpg', alt: '앱 마켓 화면', phone: true },
@@ -41,14 +48,12 @@ useSnapshotSocket({
     },
     featured: [
       { id: 'render-isolation', title: '비활성 화면의 불필요한 리렌더 개선', paragraphs: [
-        '차트 사전 로딩을 위해 숨겨둔 화면이 시세 갱신마다 렌더링되며 전체 렌더 시간의 64%를 차지하는 문제를 발견했습니다.',
-        '실시간 데이터 구독을 화면 최상위에서 실제 값을 쓰는 컴포넌트로 옮기고, 비활성 화면의 구독을 멈췄습니다.'
+        '차트 사전 로딩을 위해 숨겨둔 화면이 시세 갱신마다 렌더링되며 전체 렌더 시간의 64%를 차지하는 문제를 발견했습니다. 실시간 데이터 구독을 화면 최상위에서 실제 값을 쓰는 컴포넌트로 옮기고, 비활성 화면의 구독을 멈췄습니다.'
       ], result: '렌더 작업 5,192회 → 1,534회 (70% 감소)', evidence: 'images',
         method: '측정 방법: 공개 시세 메시지 73개를 녹화해 개선 전·후 커밋에 같은 12초 동안 재생하고, React DevTools 훅(onCommitFiberRoot)으로 커밋마다 실제로 렌더된 컴포넌트를 집계했습니다. 개발 빌드, 모바일 앱 화면(390×844), 회차마다 새 브라우저로 전후 각 5회 실행한 중앙값입니다.',
         measure: { src: 'bitria-render-measure.jpg', alt: '측정 스크립트 실행 결과 · 렌더된 컴포넌트 합계와 컴포넌트별 렌더 횟수 (5회 중앙값)' } },
       { id: 'chart-lifecycle', title: 'TradingView 차트 로딩 안정화', paragraphs: [
-        '운영 로그로 실패를 추적해 캐시 버그와 심볼 전환 시 경쟁 상태를 원인으로 특정했습니다.',
-        '버그와 무관한 로딩 방식으로 전환하고 위젯을 유지한 채 심볼만 교체하도록 바꿨으며, 실패해도 재시도로 복구되도록 했습니다.'
+        '운영 로그로 실패를 추적해 캐시 버그와 심볼 전환 시 경쟁 상태를 원인으로 특정했습니다. 버그와 무관한 로딩 방식으로 전환하고 위젯을 유지한 채 심볼만 교체하도록 바꿨으며, 실패해도 재시도로 복구되도록 했습니다.'
       ], evidence: 'diagram' }
     ],
     // 사례 옆에 붙이는 구조도

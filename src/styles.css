@@ -261,3 +261,19 @@
 /* 웹 포트폴리오: 프로젝트 경계는 굵은 검은 선과 넓은 간격, 프로젝트 안 구간은 기존 회색 선 */
 @media screen{.portfolio-document .portfolio-project+.portfolio-project{margin-top:110px;border-top:2px solid var(--ink)}}
 @media screen and (max-width:767px){.portfolio-document .portfolio-project+.portfolio-project{margin-top:72px}}
+.download-link .download-label,.download-link .download-word{font-size:inherit}
+@media screen and (max-width:767px){.download-word{display:none}}
+/* 프로젝트·포트폴리오 공통 상단 줄: 개수 + 다른 보기 링크, 아래 굵은 선 */
+.project-toolbar{border-bottom:2px solid var(--ink)}
+.project-toolbar .text-link{margin-top:0}
+.portfolio-document>.project-toolbar+.portfolio-project{margin-top:40px}
+@media print{.portfolio-document>.project-toolbar+.portfolio-project{border-top:1pt solid #333}}
+/* 포트폴리오 구간·개요: 문장마다 줄바꿈하므로 단락 사이 추가 간격을 없애 행간이 들쭉날쭉해 보이지 않게 */
+.implementation-section>p+p,.portfolio-document .implementation-section>p+p{margin-top:0}
+.detail-intro>.implementation-note,.project-overview>.implementation-note,.portfolio-document .project-overview>.implementation-note{margin-top:0}
+/* 웹 화면 캡처 갤러리: 웹에서도 PDF처럼 2열, 웹·앱 갤러리가 이어지면 간격 */
+@media screen and (min-width:768px){.screen-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.project-gallery+.project-gallery{margin-top:25px}
+@media print{.portfolio-document .project-gallery+.project-gallery{margin-top:10pt}}
+/* PDF: 웹+앱 화면이 함께 있으면 새 페이지에서 시작하고, 웹 2×2 아래 앱 화면은 한 줄 4장 */
+@media print{.portfolio-document .screens-section:has(.screen-gallery+.phone-gallery){break-before:page}.portfolio-document .screen-gallery+.phone-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}.portfolio-document .screen-gallery+.phone-gallery .image-expand img{height:auto;width:100%}.portfolio-document .screens-section .screen-gallery{break-inside:avoid}}

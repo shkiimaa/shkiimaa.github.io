@@ -1,0 +1,65 @@
+/*
+ * 스타일은 Tailwind 내장 단계만 쓴다. 크기·간격은 src/ui/components.jsx의 공통 컴포넌트에서만 정한다.
+ * 여기에는 색·글꼴·화면 구간 정의와, 클래스로 표현할 수 없는 최소한의 기본 규칙만 둔다.
+ */
+@import "tailwindcss";
+@source "../src/ui";
+
+/* 모바일·태블릿 구간은 화면에만 적용한다. PDF(인쇄)는 항상 데스크톱 배치를 쓴다.
+ * 넓은 구간부터 정의해야 좁은 화면에서 더 좁은 구간 규칙이 이긴다 (Tailwind는 정의 순서대로 규칙을 만든다). */
+@custom-variant tablet (@media screen and (max-width: 1023px));
+@custom-variant mobile (@media screen and (max-width: 767px));
+@custom-variant narrow (@media screen and (max-width: 374px));
+
+@theme {
+  --font-sans: Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --color-ink: #20242b;
+  --color-secondary: #4d5663;
+  --color-muted: #68717d;
+  --color-line: #e6e8ec;
+  --color-strong-line: #c7ccd4;
+  --color-accent: #2457ce;
+  --color-wash: #f5f7fb;
+  --color-paper: #fff;
+}
+
+@font-face {
+  font-family: Pretendard;
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 106px; }
+  body { letter-spacing: -0.018em; word-break: keep-all; overflow-wrap: break-word; }
+  ::selection { background: #dce7ff; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; border-radius: 2px; }
+
+  @media screen and (max-width: 767px) { html { scroll-padding-top: 86px; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+
+  /* PDF: 기준 글자 크기를 85.7%로 줄여 모든 크기·간격이 같은 비율로 줄어든다 (본문 14px → 9pt) */
+  @page { size: A4; margin: 15mm 15mm 16mm; }
+  @media print {
+    html { font-size: 85.7%; scroll-behavior: auto; }
+    * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    a { color: inherit !important; }
+    h1, h2, h3, h4, p { orphans: 3; widows: 3; }
+  }
+}
+
+@layer components {
+  /* 빌드 시 highlight.js가 만든 코드 색 (브라우저에서 하이라이터를 불러오지 않음) */
+  .syntax-block .hljs-keyword, .syntax-block .hljs-selector-tag { color: #cf222e; }
+  .syntax-block .hljs-string, .syntax-block .hljs-regexp { color: #0a3069; }
+  .syntax-block .hljs-title, .syntax-block .hljs-title.function_, .syntax-block .hljs-title.class_ { color: #8250df; }
+  .syntax-block .hljs-tag, .syntax-block .hljs-name { color: #116329; }
+  .syntax-block .hljs-attr, .syntax-block .hljs-attribute, .syntax-block .hljs-literal, .syntax-block .hljs-number, .syntax-block .hljs-built_in { color: #0550ae; }
+  .syntax-block .hljs-comment { color: #57606a; }
+  .syntax-block .hljs-params, .syntax-block .hljs-subst { color: #24292f; }
+}

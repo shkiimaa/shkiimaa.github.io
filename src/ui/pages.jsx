@@ -15,6 +15,8 @@ const material = project => portfolioMaterial[project.id] || {};
 // 포트폴리오 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
 // 경력기술서·포트폴리오 PDF 첫 쪽에 넣는 웹 문서 링크 (이력서 PDF는 연락처 줄에 웹 이력서 링크가 있다)
 const webLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
+// 포트폴리오 상세 PDF의 '웹 포트폴리오'는 웹 포트폴리오 상세 페이지로 연결한다
+const detailWebLinks = [...webLinks.slice(0, 2), [`${profile.site}/portfolio-detail/`, '웹 포트폴리오']];
 const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */
@@ -258,7 +260,7 @@ function PortfolioDetail() {
   return (
     <Document title="포트폴리오 상세" description="김수환의 프로젝트 담당 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
+        <PageIntro title="김수환 포트폴리오" links={detailWebLinks}>프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
         <Toolbar count="6개 프로젝트" links={[['/portfolio/', '기본 버전으로 보기'], ['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
@@ -283,7 +285,8 @@ function PortfolioDetail() {
 }
 
 /* ── 프로젝트 목록 ── */
-const thumbnail = project => project.images?.[0] || material(project).images?.[0];
+// 목록 대표 이미지: 웹 화면이 있으면 웹 화면을 먼저 쓴다
+const thumbnail = project => material(project).webImages?.[0] || project.images?.[0] || material(project).images?.[0];
 
 function ProjectIndex() {
   return (

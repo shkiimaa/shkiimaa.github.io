@@ -160,17 +160,26 @@ export const CodeExample = ({ label, code }) => (
 );
 
 /* ── 페이지 공통 ── */
-export const PageIntro = ({ title, children }) => (
+// links: PDF에만 보이는 웹 문서 링크 ([주소, 이름] 목록). PDF 안의 링크라 전체 주소를 쓴다.
+export const PageIntro = ({ title, links, children }) => (
   <div className="pb-11 mobile:pb-8 print:pb-4">
     <PageTitle>{title}</PageTitle>
     <p className={cx(text.lead, 'mt-4 text-secondary')}>{children}</p>
+    {links && (
+      <div className={cx(text.meta, 'mt-4 hidden flex-wrap gap-x-5.5 gap-y-1.5 text-secondary print:flex')}>
+        {links.map(([href, label]) => <External key={href} href={href}>{label}</External>)}
+      </div>
+    )}
   </div>
 );
 
-export const Toolbar = ({ count, href, label }) => (
+// links: 다른 보기로 가는 링크 ([주소, 이름] 목록)
+export const Toolbar = ({ count, links }) => (
   <div className="flex items-center justify-between gap-4 border-b-2 border-ink pb-4 print:hidden">
     <Meta aria-live="polite">{count}</Meta>
-    <TextLink href={href}>{label}</TextLink>
+    <div className="flex flex-wrap justify-end gap-x-5 gap-y-1">
+      {links.map(([href, label]) => <TextLink key={href} href={href}>{label}</TextLink>)}
+    </div>
   </div>
 );
 

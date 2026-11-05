@@ -13,6 +13,8 @@ export const orderedProjects = [...projects].sort((a, b) => startDate(b) - start
 const workProjects = orderedProjects.filter(project => project.category === 'work');
 const material = project => portfolioMaterial[project.id] || {};
 // 포트폴리오 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
+// 경력기술서·포트폴리오 PDF 첫 쪽에 넣는 웹 문서 링크 (이력서 PDF는 연락처 줄에 웹 이력서 링크가 있다)
+const webLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
 const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */
@@ -192,7 +194,7 @@ const CareerProject = ({ project }) => (
 function Career() {
   return (
     <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결과 개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" toc={workProjects.map(p => [p.id, p.name])}>
-      <PageIntro title="김수환 경력기술서">개발한 서비스, 담당한 역할,<br className="hidden mobile:inline" /> 그리고 문제를 해결한 과정입니다.</PageIntro>
+      <PageIntro title="김수환 경력기술서" links={webLinks}>개발한 서비스, 담당한 역할,<br className="hidden mobile:inline" /> 그리고 문제를 해결한 과정입니다.</PageIntro>
       {experiences.slice(0, 2).map((job, j) => (
         <section key={job.id} id={job.id} className={j ? 'mt-17.5 mobile:mt-12 print:mt-7' : 'mt-7.5 mobile:mt-5 print:mt-4'}>
           <header className="flex items-start justify-between gap-5 border-t-2 border-b border-t-ink border-b-strong-line pt-5 pb-6 mobile:block mobile:py-4.5 print:items-baseline print:border-t-0 print:border-b-[#333] print:py-2.5 print:break-after-avoid">
@@ -219,8 +221,8 @@ function Portfolio() {
   return (
     <Document title="포트폴리오" description="김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다." route="/portfolio/" active="portfolio" pageLabel="포트폴리오" pdf="portfolio" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오">프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</PageIntro>
-        <Toolbar count="6개 프로젝트" href="/projects/" label="프로젝트별로 보기" />
+        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</PageIntro>
+        <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '상세 버전으로 보기'], ['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
@@ -256,7 +258,8 @@ function PortfolioDetail() {
   return (
     <Document title="포트폴리오 상세" description="김수환의 프로젝트 담당 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오">프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
+        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
+        <Toolbar count="6개 프로젝트" links={[['/portfolio/', '기본 버전으로 보기'], ['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
@@ -286,7 +289,7 @@ function ProjectIndex() {
   return (
     <Document title="프로젝트" description="Bitria, Gobit, doit-uikit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio" toc={[['main', '전체 프로젝트']]}>
       <PageIntro title="프로젝트">직접 개발하고 운영한 6개 프로젝트의<br className="hidden mobile:inline" /> 담당 업무와 구현 사례입니다.</PageIntro>
-      <Toolbar count="6개 프로젝트" href="/portfolio/" label="한 페이지로 모두 보기" />
+      <Toolbar count="6개 프로젝트" links={[['/portfolio/', '한 페이지로 모두 보기']]} />
       <div>
         {orderedProjects.map(p => (
           <article key={p.id} data-category={p.category} className={cx('project-index-row group relative border-b border-line py-8 mobile:py-6 print:break-inside-avoid', thumbnail(p) && 'grid grid-cols-[minmax(0,1fr)_14.25rem] items-center gap-7 tablet:grid-cols-[minmax(0,1fr)_10.5rem] tablet:gap-5.5 mobile:grid-cols-1 mobile:gap-4')}>

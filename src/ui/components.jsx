@@ -122,6 +122,21 @@ export const CaseStudy = ({ study, id, children }) => (
 
 /* ── 화면·구조도·코드 ── */
 // printRow: PDF에서 앱 화면을 한 줄 4장으로 작게 (웹 화면 2×2 아래에 붙을 때)
+// 이미지 원본 크기(빌드 시 파일 헤더에서 읽음). width·height를 넣어야 지연 로딩 중에도 자리가 잡혀
+// 목차로 이동할 때 위쪽 이미지가 늦게 로드되며 위치가 밀리지 않는다.
+const imageSize = src => {
+  const data = readFileSync(path.join(root, 'public/assets', src));
+  if (data.readUInt32BE(0) === 0x89504e47) return { width: data.readUInt32BE(16), height: data.readUInt32BE(20) };
+  for (let i = 2; i < data.length;) {
+    const marker = data[i + 1], length = data.readUInt16BE(i + 2);
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { width: data.readUInt16BE(i + 7), height: data.readUInt16BE(i + 5) };
+    i += 2 + length;
+  }
+  throw new Error(`이미지 크기를 읽을 수 없음: ${src}`);
+};
+
+const ratio = src => { const { width, height } = imageSize(src); return (width / height).toFixed(4); };
+
 export const Gallery = ({ images, className, printRow, single }) => {
   if (!images?.length) return null;
   const phone = images.every(image => image.phone), screen = images.every(image => image.screen);
@@ -132,7 +147,9 @@ export const Gallery = ({ images, className, printRow, single }) => {
       {images.map(image => (
         <figure key={image.src} className="min-w-0 break-inside-avoid">
           <button className={cx('image-expand relative block w-full overflow-hidden rounded-sm after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:shadow-[inset_0_0_0_1px_var(--color-strong-line)] after:content-[\'\']', phone && 'bg-wash p-6 print:p-3', phone && printRow && 'print:p-1.5')} type="button" data-image={`/assets/${image.src}`} data-caption={image.alt} aria-label={`${image.alt} 확대`}>
-            <img className={cx('block w-full', phone ? cx('mx-auto max-h-130 w-auto max-w-full', printRow ? 'print:max-h-64' : 'print:max-h-90') : screen ? 'aspect-16/10 object-cover object-top' : single ? 'object-contain' : 'max-h-115 object-contain mobile:max-h-82 print:max-h-50')} src={`/assets/${image.src}`} alt={image.alt} loading="lazy" decoding="async" />
+            {/* 휴대폰 캡처: 높이 상한(화면 32.5rem, PDF 16·22.5rem)을 원본 비율로 너비 상한으로 바꿔 둔다.
+                w-auto + max-h는 로드 전 높이가 0이라 목차 이동 위치가 밀리고, w-full + max-h는 옆으로 늘어난다. */}
+            <img className={cx('block w-full', phone ? cx('mx-auto max-w-[calc(32.5rem*var(--ratio))]', printRow ? 'print:max-w-[calc(16rem*var(--ratio))]' : 'print:max-w-[calc(22.5rem*var(--ratio))]') : screen ? 'aspect-16/10 object-cover object-top' : single ? 'object-contain' : 'max-h-115 object-contain mobile:max-h-82 print:max-h-50')} style={phone ? { '--ratio': ratio(image.src) } : undefined} src={`/assets/${image.src}`} {...imageSize(image.src)} alt={image.alt} loading="lazy" decoding="async" />
             <span className={cx(text.meta, 'absolute right-2 bottom-2 rounded-sm bg-white/90 px-2 py-0.5 text-muted print:hidden')}>화면 확대 <span aria-hidden="true">↗</span></span>
           </button>
           <Meta as="figcaption" className="mt-2">{image.alt}</Meta>

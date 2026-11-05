@@ -8,7 +8,7 @@ export const profile = {
 export const experiences = [
   { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 현재', items: [
     'Bitria (암호화폐 브로커리지 플랫폼) | 프론트엔드·백엔드 개발 · Next.js·Express',
-    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발, 이후 13개 서비스 K3s 통합'
+    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발, 이후 14개 서비스 K3s 통합'
   ] },
   { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
     'D.A.X (AI 모델 학습·운영 플랫폼) | 프론트엔드 개발 · React',
@@ -87,7 +87,7 @@ export const projects = [
   {
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 담당 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React SPA로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 2인 팀에서 웹 클라이언트 대부분과 인증·모의투자·랭킹 API를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
-    summary: ['React SPA 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리, 채팅·스케줄러 서버 개발', '종료 후 서버 5대·13개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 08)'],
+    summary: ['React SPA 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리, 채팅·스케줄러 서버 개발', '종료 후 서버 5대·14개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 08)'],
     tasks: [
       ['웹 클라이언트', 'React SPA(2024.10~)와 Next.js 15 재구축(2025.07–08), 마켓·코인 상세·뉴스·모의투자·랭킹·채팅·분석 화면, TradingView 차트 연동'],
       ['실시간 데이터', '바이낸스·바이빗·OKX·Gate.io WebSocket 연동, Socket.IO 재연결·헬스체크 개선, 조회 데이터는 SWR로 관리'],
@@ -107,14 +107,14 @@ export const projects = [
       '바이낸스·바이빗·OKX·Gate.io 시세를 연동하면서, 공통 WebSocket 훅이 호출될 때마다 새 연결을 열고 있었습니다. 바이낸스 하나에만 시세 목록·차트·보조 차트용 연결이 4개 이상 열렸고, 거래소마다 구독 메시지와 캔들 형식도 달랐습니다.',
       '거래소마다 연결 하나를 가진 스토어를 두고, 구독 중인 스트림 목록으로 중복 구독을 막고 재연결 시 다시 구독하도록 했습니다. 거래소별 메시지는 공통 캔들 형식으로 변환해, TradingView 데이터 소스 하나가 선택된 거래소에 맞춰 과거·실시간 데이터를 가져오도록 정리했습니다.',
       '코인 목록을 가상화 리스트(@tanstack/react-virtual)로 구현해, 화면에 렌더링되는 행의 심볼만 구독하고, 스크롤에서 벗어난 심볼은 구독을 해제했습니다. 바이낸스는 전체 시세 스트림 대신 화면에 보이는 심볼의 스트림만 받도록 바꿨습니다.'
-    ], result: '거래소마다 연결 하나로 시세 목록과 차트를 함께 처리하고, 목록은 화면에 보이는 코인만 구독합니다.' }, { id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', highlight: '서버 5대에 흩어진 13개 서비스를 K3s로 통합하고, 소스가 유실된 .NET 수집기를 Node.js로 재작성', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
+    ], result: '거래소마다 연결 하나로 시세 목록과 차트를 함께 처리하고, 목록은 화면에 보이는 코인만 구독합니다.' }, { id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', highlight: '서버 5대에 흩어진 14개 서비스를 K3s로 통합하고, 소스가 유실된 .NET 수집기를 Node.js로 재작성', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
       'Gobit과 다른 개발자가 만든 모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 흩어져 있었습니다. 레거시 서비스는 소스 코드가 유실돼 핵심 시세 수집기는 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스를 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
     ], items: [
       '기존 바이너리의 동작과 데이터 형식을 분석해 수집기를 Node.js로 재작성했습니다. 실시간 시세·캔들·과거 데이터 수집 모드를 구현하고, 연결 분산 처리와 요청 속도 제한으로 WebSocket 연결 끊김에 대응했습니다.',
       '중계 계층을 정리해 데이터 흐름을 수집기 → Redis → 서버로 단순화했습니다.',
-      '13개 서비스의 Dockerfile과 Kubernetes 매니페스트를 작성하고, Ingress 설정 및 DB 백업·캔들 보관 CronJob을 구성했습니다.',
+      '서비스별 Dockerfile과 Kubernetes 매니페스트를 작성하고, Ingress 설정 및 DB 백업·캔들 보관 CronJob을 구성했습니다.',
       'GitHub Actions 빌드·배포를 자동화하고, 설정값을 Kubernetes Secret에서 불러오도록 변경했습니다.'
-    ], result: '서버 5대에 흩어져 있던 13개 서비스를 하나의 Kubernetes 환경에서 배포·운영합니다. 소스 없이 바이너리만 남아 있던 수집기도 코드로 관리할 수 있게 됐습니다.' }]
+    ], result: '서버 5대에 흩어져 있던 14개 서비스를 하나의 Kubernetes 환경에서 배포·운영합니다. 소스 없이 바이너리만 남아 있던 수집기도 코드로 관리할 수 있게 됐습니다.' }]
   },
   {
     id: 'doit-uikit', name: 'Doit UI Kit', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 개발 담당', kind: '사내 공통 UI 라이브러리',

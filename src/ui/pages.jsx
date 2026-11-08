@@ -39,10 +39,10 @@ const RowTitle = ({ children }) => <h3 className={cx(text.heading, 'mb-1.5 mobil
 function Resume() {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
-    <Document title="이력서" description={profile.introduction} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['projects', '프로젝트'], ['skills', '기술'], ['education', '학력']]}>
+    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['projects', '프로젝트'], ['skills', '기술'], ['education', '학력']]}>
       <section id="about" className="pb-11 mobile:pb-6 print:pb-4">
         <div className="mb-5 flex items-baseline gap-5.5 mobile:mb-4 mobile:gap-4"><PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span></div>
-        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">원인은 로그와 측정으로 확인하고,<br className="mobile:hidden print:hidden" /> 해결은 유지보수하기 좋은 구조로 만듭니다.</p>
+        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">원인은 로그와 측정으로 확인하고,<br className="mobile:hidden print:hidden" /> 해결책은 유지보수하기 좋은 구조로 구현합니다.</p>
         <Paragraphs items={introDetails} size="lead" />
         <div className={cx(text.meta, 'mt-6 flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary')}>
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
@@ -195,7 +195,7 @@ const CareerProject = ({ project }) => (
 
 function Career() {
   return (
-    <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결과 개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" toc={workProjects.map(p => [p.id, p.name])}>
+    <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결·개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" toc={workProjects.map(p => [p.id, p.name])}>
       <PageIntro title="김수환 경력기술서" links={webLinks}>개발한 서비스, 담당한 역할,<br className="hidden mobile:inline" /> 그리고 문제를 해결한 과정입니다.</PageIntro>
       {experiences.slice(0, 2).map((job, j) => (
         <section key={job.id} id={job.id} className={j ? 'mt-17.5 mobile:mt-12 print:mt-7' : 'mt-7.5 mobile:mt-5 print:mt-4'}>
@@ -290,8 +290,8 @@ const thumbnail = project => material(project).webImages?.[0] || project.images?
 
 function ProjectIndex() {
   return (
-    <Document title="프로젝트" description="Bitria, Gobit, doit-uikit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio" toc={[['main', '전체 프로젝트']]}>
-      <PageIntro title="프로젝트">직접 개발하고 운영한 6개 프로젝트의<br className="hidden mobile:inline" /> 담당 업무와 구현 사례입니다.</PageIntro>
+    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio" toc={[['main', '전체 프로젝트']]}>
+      <PageIntro title="프로젝트">직접 개발한 6개 프로젝트의<br className="hidden mobile:inline" /> 담당 업무와 구현 사례입니다.</PageIntro>
       <Toolbar count="6개 프로젝트" links={[['/portfolio/', '한 페이지로 모두 보기']]} />
       <div>
         {orderedProjects.map(p => (
@@ -325,7 +325,7 @@ function ProjectDetail({ project, index }) {
   if (project.cases?.some(study => study.highlight)) toc.push(['measurements', '문제 해결과 개선']);
   if (project.images?.length || m.images?.length) toc.push(['screens', '프로젝트 화면']);
   toc.push(['technology', '기술 스택']);
-  const previous = projects[index - 1], next = projects[index + 1];
+  const previous = orderedProjects[index - 1], next = orderedProjects[index + 1];
   return (
     <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio" toc={toc}>
       <a className={cx(text.meta, 'mb-8 inline-flex gap-2 text-muted mobile:mb-6 print:hidden')} href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a>
@@ -351,7 +351,7 @@ function NotFound() {
   return (
     <Document title="페이지를 찾을 수 없습니다" description="김수환의 이력서로 돌아갑니다." route="/404.html" active="" pageLabel="페이지 안내">
       <Meta className="mb-3">404</Meta>
-      <PageIntro title="페이지를 찾을 수 없습니다.">주소를 확인하거나 이력서로 돌아가 주세요.</PageIntro>
+      <PageIntro title="페이지를 찾을 수 없습니다">주소를 확인하거나 이력서로 돌아가 주세요.</PageIntro>
       <TextLink href="/">이력서로 돌아가기</TextLink>
     </Document>
   );

@@ -42,7 +42,7 @@ function Resume() {
     <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['projects', '프로젝트'], ['skills', '기술'], ['education', '학력']]}>
       <section id="about" className="pb-11 mobile:pb-6 print:pb-4">
         <div className="mb-5 flex items-baseline gap-5.5 mobile:mb-4 mobile:gap-4"><PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span></div>
-        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">원인은 로그와 측정으로 확인하고,<br className="mobile:hidden print:hidden" /> 해결책은 유지보수하기 좋은 구조로 구현합니다.</p>
+        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
         <Paragraphs items={introDetails} size="lead" />
         <div className={cx(text.meta, 'mt-6 flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary')}>
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
@@ -56,6 +56,13 @@ function Resume() {
           <Row key={job.id} className="experience-row" meta={<><RowTitle>{job.name}</RowTitle><Meta className="tabular-nums">{job.period}</Meta></>}>
             <p className={cx(text.body, 'mb-2 font-semibold')}>{job.role}</p>
             {job.items.length === 1 ? <Prose as="p" text={job.items[0]} className={text.body} /> : <Bullets items={job.items} />}
+          </Row>
+        ))}
+        {/* 개발 이전 경력은 개발 경력과 같은 비중으로 두지 않고 한 줄로 간결하게 */}
+        {experiences.filter(job => job.id === 'founder').map(job => (
+          <Row key={job.id} className="experience-row" meta={<Meta>이전 경력</Meta>}>
+            <p className={cx(text.body, 'font-semibold')}>{job.name}<span className="font-normal text-secondary"> · {job.role} · <span className="tabular-nums">{job.period}</span></span></p>
+            <p className={cx(text.body, 'text-secondary')}>{job.items[0]}</p>
           </Row>
         ))}
       </ResumeSection>

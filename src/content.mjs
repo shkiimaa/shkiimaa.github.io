@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '원인은 로그와 측정으로 확인하고, 해결책은 유지보수하기 좋은 구조로 구현합니다.\n\n2인 팀에서 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담했고, 백엔드 API 개발을 주도했습니다. Claude Code·Codex 같은 AI 코딩 에이전트를 실무에 적극 활용하며, 팀 규칙 문서로 결과물의 품질을 관리합니다.',
+  introduction: '기획부터 운영까지 경험한 개발자로, 문제는 측정으로 확인하고 구조로 해결합니다.\n\n온라인 커머스를 약 3년간 직접 운영한 뒤 개발자로 전환했습니다. 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다. AI 코딩 에이전트를 활용하고, 프로젝트의 아키텍처·디자인 규칙을 문서화해 코드의 일관성을 유지합니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
@@ -16,7 +16,7 @@ export const experiences = [
     'XRGIS 백오피스 (사용자·팀·파일 관리) | 프론트엔드·백엔드 개발 · React·Express',
     '두잇 홈페이지 리뉴얼 (React 전환) | 프론트엔드 개발 · React'
   ] },
-  { id: 'founder', name: '개인 사업', role: 'Founder', period: '2019.09 – 2022.06', items: ['온라인 커머스·유통 사업 · 국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
+  { id: 'founder', name: '개인 사업 (온라인 커머스)', role: '대표', period: '2019.09 – 2022.06', items: ['국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인'] }
 ];
 

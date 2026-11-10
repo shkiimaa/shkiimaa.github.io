@@ -6,16 +6,8 @@ export const profile = {
 };
 
 export const experiences = [
-  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 재직 중', items: [
-    'Bitria (암호화폐 거래 플랫폼) | 프론트엔드·백엔드 API 개발',
-    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발, 이후 14개 서비스 K3s 통합'
-  ] },
-  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
-    'D.A.X (AI 모델 학습·운영 플랫폼) | 프론트엔드 개발',
-    'Doit UI Kit (사내 UI 라이브러리) | 컴포넌트 개발·npm 배포',
-    'XR·GIS 백오피스 (사용자·팀·파일 관리) | 프론트엔드·백엔드 개발',
-    '두잇 홈페이지 리뉴얼 (React 전환) | 프론트엔드 개발'
-  ] },
+  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 재직 중' },
+  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07' },
   { id: 'founder', name: '개인 사업 (온라인 커머스)', role: '대표', period: '2019.09 – 2022.06', items: ['국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인'] }
 ];

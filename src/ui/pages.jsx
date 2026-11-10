@@ -22,15 +22,17 @@ const portfolioIntro = project => `${material(project).overview} ${material(proj
 /* ── 이력서 ── */
 const ResumeSection = ({ id, title, en, note, className, children }) => (
   <section id={id} className={cx('mt-9 mobile:mt-8 print:mt-5', className)}>
-    <div className="flex items-baseline gap-4 border-b-2 border-ink pb-3 print:border-b print:border-[#333] print:pb-2">
+    <div className="flex items-baseline gap-2.5 border-b-2 border-ink pb-3 print:border-b print:border-[#333] print:pb-2">
       <h2 className={text.section}>{title}</h2><Meta as="span">{en}</Meta>
       {note && <span className={cx(text.body, 'ml-auto font-semibold tabular-nums')}>{note}</span>}
     </div>
     {children}
   </section>
 );
-const Row = ({ as: Tag = 'article', className, id, meta, children }) => (
-  <Tag id={id} className={cx('grid grid-cols-[10.875rem_minmax(0,1fr)] gap-7.5 border-b border-line py-7 last:border-b-0 tablet:grid-cols-[8.75rem_minmax(0,1fr)] tablet:gap-5.5 mobile:grid-cols-1 mobile:gap-3 mobile:py-6 print:break-inside-avoid print:py-4', className)}>
+// breakable: 인쇄 시 줄 안에서 쪽이 나뉘어도 되는 경우 (여러 항목을 품는 묶음 —
+// 통째로 안 쪼개지게 두면 다음 쪽으로 밀려 앞쪽에 큰 빈칸이 생긴다)
+const Row = ({ as: Tag = 'article', className, id, meta, breakable, children }) => (
+  <Tag id={id} className={cx('grid grid-cols-[10.875rem_minmax(0,1fr)] gap-7.5 border-b border-line py-7 last:border-b-0 tablet:grid-cols-[8.75rem_minmax(0,1fr)] tablet:gap-5.5 mobile:grid-cols-1 mobile:gap-3 mobile:py-6 print:py-4', !breakable && 'print:break-inside-avoid', className)}>
     <div className="row-meta mobile:flex mobile:flex-wrap mobile:items-baseline mobile:gap-x-3 mobile:gap-y-1">{meta}</div>
     <div className="min-w-0">{children}</div>
   </Tag>
@@ -59,7 +61,7 @@ const pdfContacts = [
 function Resume() {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
-    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['projects', '프로젝트'], ['skills', '기술'], ['education', '학력']]}>
+    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['skills', '기술'], ['education', '학력']]}>
       <section id="about" className="pb-11 mobile:pb-6 print:pb-8">
         {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈)
             PDF는 연락처를 이름 아래로 내리고, 그 옆에만 증명사진을 둬서 소개 문단 폭은 그대로 쓴다 (웹 화면에는 사진 없음) */}
@@ -86,38 +88,42 @@ function Resume() {
         <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
         <Paragraphs items={introDetails} muted={false} />
       </section>
+      {/* 회사는 왼쪽 칸에, 그 회사에서 한 프로젝트는 오른쪽 칸에 쌓는다 —
+          테두리·배경 없이 자리만으로 회사가 프로젝트를 묶는다 (학력·기술 구역과 같은 2단 구조) */}
       <ResumeSection id="experience" title="경력" en="Experience" note={careerTotal(devJobs)}>
         {devJobs.map(job => (
-          <Row key={job.id} className="experience-row" meta={<><RowTitle>{job.name}</RowTitle><p className={cx(text.detail, 'text-secondary tabular-nums')}>{job.period}</p></>}>
-            <p className={cx(text.body, 'mb-2 font-semibold')}>{job.role}</p>
-            {job.items.length === 1 ? <Prose as="p" text={job.items[0]} className={text.body} /> : <Bullets items={job.items} />}
+          <Row key={job.id} as="section" className="experience-group" breakable meta={<>
+            <h3 className={cx(text.group, 'mb-1.5 mobile:mb-0 mobile:basis-full')}>{job.name}</h3>
+            {/* 직무는 문서 머리말에도 있는 보조 정보 — 오른쪽 프로젝트의 보조 줄과 같은 크기로 낮춘다 */}
+            <Meta>{job.role}</Meta>
+            {/* 재직 기간은 보조 정보 — 자리가 되면 같은 줄, 좁으면 괄호째 다음 줄로 넘어간다 */}
+            <p className={cx(text.meta, 'text-secondary tabular-nums')}>
+              <span className="whitespace-nowrap">{job.period}</span>{' '}
+              <span className="whitespace-nowrap">({formatMonths(jobMonths(job))})</span>
+            </p>
+          </>}>
+            {workProjects.filter(project => project.companyId === job.id).map((project, i) => (
+              <article key={project.id} id={`resume-${project.id}`} className={cx('resume-project', i > 0 && 'mt-6 border-t border-line pt-6 print:mt-4 print:pt-4', 'print:break-inside-avoid')}>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <h3 className={text.heading}><a href={projectHref(project)}>{project.name}</a></h3>
+                    <p className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</p>
+                  </div>
+                  <TextLink href={projectHref(project)} className="ml-auto whitespace-nowrap">프로젝트 상세 보기</TextLink>
+                </div>
+                <Meta className="mt-1 mb-2.5 flex flex-wrap gap-x-4 gap-y-0.5">
+                  <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
+                </Meta>
+                <Bullets items={project.summary} />
+                <TechLine items={project.tech} />
+              </article>
+            ))}
           </Row>
         ))}
         {/* 개발 이전 경력은 개발 경력과 같은 비중으로 두지 않고 이름·직함·기간 한 줄로만 */}
         {experiences.filter(job => job.id === 'founder').map(job => (
           <Row key={job.id} className="experience-row" meta={<Meta>이전 경력</Meta>}>
             <p className={cx(text.body, 'font-semibold')}>{job.name}<span className="font-normal text-secondary"> · {job.role} · <span className="tabular-nums">{job.period}</span></span></p>
-          </Row>
-        ))}
-      </ResumeSection>
-      <ResumeSection id="projects" title="프로젝트" en="Projects">
-        {workProjects.map(project => (
-          <Row key={project.id} id={`resume-${project.id}`} className="resume-project" meta={<>
-            {/* 모바일은 경력기술서처럼 상세 보기 링크를 프로젝트 이름 줄에 둔다 */}
-            <div className="flex items-baseline justify-between gap-3 mobile:basis-full">
-              <RowTitle><a href={projectHref(project)}>{project.name}</a></RowTitle>
-              <span className="hidden mobile:inline"><TextLink href={projectHref(project)} className="whitespace-nowrap">프로젝트 상세 보기</TextLink></span>
-            </div>
-            {/* 회사·기간은 경력·학력 기간과 같은 크기·색 */}
-            <p className={cx(text.detail, 'text-secondary tabular-nums')}>{project.company}<br className="mobile:hidden" /><span className="mobile:ml-2">{project.period}</span></p>
-          </>}>
-            <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
-              <h4 className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</h4>
-              <TextLink href={projectHref(project)} className="mt-px ml-auto mobile:hidden">프로젝트 상세 보기</TextLink>
-            </div>
-            <Meta className="mb-2.5">{project.role}</Meta>
-            <Bullets items={project.summary} />
-            <TechLine items={project.tech} />
           </Row>
         ))}
       </ResumeSection>

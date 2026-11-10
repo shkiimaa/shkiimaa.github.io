@@ -21,6 +21,8 @@ export const text = {
   display: 'text-4xl font-bold leading-tight tracking-tighter mobile:text-3xl',
   title: 'text-3xl font-bold leading-tight tracking-tighter mobile:text-2xl',
   section: 'text-2xl font-bold leading-snug tracking-tight mobile:text-xl',
+  // 묶음 머리말(경력의 회사 이름): 구역 제목과 항목 제목 사이 단계 — 항목과 같은 크기면 위계가 안 보인다
+  group: 'text-xl font-bold leading-snug tracking-tight mobile:text-lg',
   heading: 'text-lg font-bold leading-snug tracking-tight',
   lead: 'text-base leading-7',
   body: 'text-sm leading-6',

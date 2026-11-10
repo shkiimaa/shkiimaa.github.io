@@ -343,16 +343,17 @@ function ProjectIndex() {
 }
 
 /* ── 프로젝트 상세 ── */
+// 포트폴리오 상세와 같은 구성: 주요 업무와 문제 해결 전문에 근거 자료를 붙인다
 function ProjectDetail({ project, index }) {
   const m = material(project);
-  const toc = [['overview', '프로젝트 소개']];
+  const toc = [['overview', '프로젝트 소개'], ['tasks', '주요 업무']];
   if (m.sections?.length) toc.push(['implementation', '구현 구조와 설계']);
-  if (project.cases?.some(study => study.highlight)) toc.push(['measurements', '문제 해결과 개선']);
+  if (project.cases?.length) toc.push(['measurements', '문제 해결과 개선']);
   if (project.images?.length || m.images?.length) toc.push(['screens', '프로젝트 화면']);
   toc.push(['technology', '기술 스택']);
   const previous = orderedProjects[index - 1], next = orderedProjects[index + 1];
   return (
-    <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio" toc={toc}>
+    <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio-detail" toc={toc}>
       <a className={cx(text.meta, 'mb-8 inline-flex gap-2 text-muted mobile:mb-6 print:hidden')} href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a>
       <section id="overview">
         <Meta className="mb-3.5">{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</Meta>
@@ -360,8 +361,15 @@ function ProjectDetail({ project, index }) {
         <ProjectIntro project={project} items={[portfolioIntro(project)]} />
         {project.links?.length > 0 && <div className="mt-4 flex gap-5">{project.links.map(link => <TextLink key={link.url} href={link.url} external>{link.label}</TextLink>)}</div>}
       </section>
+      <SectionBlock id="tasks" title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
       <Implementation project={project} />
-      <Highlights project={project} />
+      {project.cases?.length > 0 && (
+        <SectionBlock id="measurements" title="문제 해결과 개선" rule>
+          {project.cases.map(study => (
+            <CaseStudy key={study.id} study={study} id={`case-${study.id}`}><CaseEvidence project={project} study={study} /></CaseStudy>
+          ))}
+        </SectionBlock>
+      )}
       <Screens project={project} id="screens" />
       <Technology project={project} id="technology" />
       <nav className="mt-12.5 flex justify-between gap-5 border-t border-strong-line pt-5.5 mobile:mt-9 print:hidden" aria-label="다른 프로젝트">

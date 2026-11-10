@@ -3,6 +3,9 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # 매월 1일 09:00(KST)에 다시 배포해 이력서의 총 경력 개월 수를 갱신한다
+    - cron: '0 0 1 * *'
   workflow_dispatch:
 
 permissions:
@@ -23,7 +26,13 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      # PDF는 미리보기 서버(4173)에 띄운 페이지를 찍어 만들고, 끝나면 dist를 다시 빌드한다
+      - name: Build and export PDFs
+        run: |
+          node --import tsx scripts/serve.mjs &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          npm run pdf
       - run: npm run check
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4

@@ -20,10 +20,11 @@ const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 
 const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */
-const ResumeSection = ({ id, title, en, children }) => (
+const ResumeSection = ({ id, title, en, note, children }) => (
   <section id={id} className="mt-9 mobile:mt-8 print:mt-5">
     <div className="flex items-baseline gap-4 border-b-2 border-ink pb-3 print:border-b print:border-[#333] print:pb-2">
       <h2 className={text.section}>{title}</h2><Meta as="span">{en}</Meta>
+      {note && <span className={cx(text.body, 'ml-auto font-semibold tabular-nums')}>{note}</span>}
     </div>
     {children}
   </section>
@@ -35,6 +36,19 @@ const Row = ({ as: Tag = 'article', className, id, meta, children }) => (
   </Tag>
 );
 const RowTitle = ({ children }) => <h3 className={cx(text.heading, 'mb-1.5 mobile:mb-0 mobile:basis-full')}>{children}</h3>;
+
+// 개발 경력 합계: 회사 기간을 시작·종료 월을 포함해 더하고, '현재'는 빌드 시점의 달까지 센다
+const devJobs = experiences.filter(job => ['daon', 'doit'].includes(job.id));
+const monthIndex = ym => { const [y, m] = ym.split('.').map(Number); return y * 12 + m - 1; };
+const careerTotal = jobs => {
+  const now = new Date();
+  const months = jobs.reduce((sum, job) => {
+    const [start, end] = job.period.split('–').map(part => part.trim());
+    const last = end === '현재' ? now.getFullYear() * 12 + now.getMonth() : monthIndex(end);
+    return sum + last - monthIndex(start) + 1;
+  }, 0);
+  return `총 ${Math.floor(months / 12)}년${months % 12 ? ` ${months % 12}개월` : ''}`;
+};
 
 function Resume() {
   const [, ...introDetails] = profile.introduction.split('\n\n');
@@ -54,8 +68,8 @@ function Resume() {
         <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
         <Paragraphs items={introDetails} muted={false} />
       </section>
-      <ResumeSection id="experience" title="경력" en="Experience">
-        {experiences.filter(job => ['daon', 'doit'].includes(job.id)).map(job => (
+      <ResumeSection id="experience" title="경력" en="Experience" note={careerTotal(devJobs)}>
+        {devJobs.map(job => (
           <Row key={job.id} className="experience-row" meta={<><RowTitle>{job.name}</RowTitle><Meta className="tabular-nums">{job.period}</Meta></>}>
             <p className={cx(text.body, 'mb-2 font-semibold')}>{job.role}</p>
             {job.items.length === 1 ? <Prose as="p" text={job.items[0]} className={text.body} /> : <Bullets items={job.items} />}

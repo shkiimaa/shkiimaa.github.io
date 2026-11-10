@@ -8,7 +8,8 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULE
   ? pathToFileURL(process.env.PLAYWRIGHT_MODULE).href : 'playwright');
 const base = process.env.SITE_URL || 'http://127.0.0.1:4173';
 await mkdir(path.join(root, 'artifacts'), { recursive: true });
-const browser = await chromium.launch({ headless: true });
+// Linux Chrome은 글꼴 힌팅으로 글자 폭이 macOS보다 넓어져 줄바꿈이 달라지므로 힌팅을 끈다 (macOS에는 영향 없음)
+const browser = await chromium.launch({ headless: true, args: ['--font-render-hinting=none'] });
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   for (const [name, route] of [['resume', '/'], ['career', '/career/'], ['portfolio', '/portfolio/'], ['portfolio-detail', '/portfolio-detail/']]) {

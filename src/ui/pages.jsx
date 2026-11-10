@@ -15,8 +15,8 @@ const material = project => portfolioMaterial[project.id] || {};
 // 포트폴리오 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
 // 경력기술서·포트폴리오 PDF 첫 쪽에 넣는 웹 문서 링크 (이력서 PDF는 연락처 줄에 웹 이력서 링크가 있다)
 const webLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
-// 포트폴리오 상세 PDF의 '웹 포트폴리오'는 웹 포트폴리오 상세 페이지로 연결한다
-const detailWebLinks = [...webLinks.slice(0, 2), [`${profile.site}/portfolio-detail/`, '웹 포트폴리오']];
+// 포트폴리오 상세는 경력기술서 내용을 담고 있어 웹 경력기술서 링크를 빼고, '웹 포트폴리오'는 웹 포트폴리오 상세 페이지로 연결한다
+const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 포트폴리오']];
 const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */

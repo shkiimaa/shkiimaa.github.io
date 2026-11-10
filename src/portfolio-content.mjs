@@ -2,7 +2,7 @@
 // Kept separate so the resume and career document stay concise.
 export const portfolioMaterial = {
   bitria: {
-    overview: '외부 거래소 유동성을 연동해 현물·선물·마진 거래와 계정·자산 관리를 제공하는 암호화폐 브로커리지 플랫폼입니다.',
+    overview: '외부 거래소 유동성을 연동해 현물·선물·마진 거래와 계정·자산 관리를 제공하는 암호화폐 거래 플랫폼입니다.',
     scope: '프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 서버의 인증·주문·자산·시세·KYC API를 설계·개발하고 K3s 운영을 담당했습니다.',
     source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
     // 웹 화면 (데스크톱 1440×900)
@@ -116,9 +116,9 @@ useSnapshotSocket({
       'OBJ·영상 파일은 MongoDB GridFS로 청크를 나눠 저장하고, 선택한 파일은 archiver로 ZIP을 생성해 다운로드하도록 구현했습니다.'
     ] }],
     images: [
-      { src: 'xrgis-users.png', alt: 'XRGIS 사용자 관리 화면' },
-      { src: 'xrgis-teams.png', alt: 'XRGIS 팀 관리 화면' },
-      { src: 'xrgis-data.png', alt: 'XRGIS 팀별 파일 관리 화면 · 대용량 파일 관리와 ZIP 다운로드 기능' }
+      { src: 'xrgis-users.png', alt: 'XR·GIS 사용자 관리 화면' },
+      { src: 'xrgis-teams.png', alt: 'XR·GIS 팀 관리 화면' },
+      { src: 'xrgis-data.png', alt: 'XR·GIS 팀별 파일 관리 화면 · 대용량 파일 관리와 ZIP 다운로드 기능' }
     ]
   },
 

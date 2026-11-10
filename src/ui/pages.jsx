@@ -41,15 +41,18 @@ function Resume() {
   return (
     <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['projects', '프로젝트'], ['skills', '기술'], ['education', '학력']]}>
       <section id="about" className="pb-11 mobile:pb-6 print:pb-4">
-        <div className="mb-5 flex items-baseline gap-5.5 mobile:mb-4 mobile:gap-4"><PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span></div>
+        {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈) */}
+        <div className="mb-5 flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:mb-4 mobile:gap-x-4">
+          <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span>
+          <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full')}>
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a href="tel:+821099313175">{profile.phone}</a>
+            <External href={profile.github}>GitHub</External>
+            <External href={profile.site} className="hidden print:inline">웹 이력서</External>
+          </div>
+        </div>
         <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
         <Paragraphs items={introDetails} size="lead" />
-        <div className={cx(text.meta, 'mt-6 flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary')}>
-          <a href={`mailto:${profile.email}`}>{profile.email}</a>
-          <a href="tel:+821099313175">{profile.phone}</a>
-          <External href={profile.github}>GitHub</External>
-          <External href={profile.site} className="hidden print:inline">웹 이력서</External>
-        </div>
       </section>
       <ResumeSection id="experience" title="경력" en="Experience">
         {experiences.filter(job => ['daon', 'doit'].includes(job.id)).map(job => (
@@ -58,11 +61,10 @@ function Resume() {
             {job.items.length === 1 ? <Prose as="p" text={job.items[0]} className={text.body} /> : <Bullets items={job.items} />}
           </Row>
         ))}
-        {/* 개발 이전 경력은 개발 경력과 같은 비중으로 두지 않고 한 줄로 간결하게 */}
+        {/* 개발 이전 경력은 개발 경력과 같은 비중으로 두지 않고 이름·직함·기간 한 줄로만 */}
         {experiences.filter(job => job.id === 'founder').map(job => (
           <Row key={job.id} className="experience-row" meta={<Meta>이전 경력</Meta>}>
             <p className={cx(text.body, 'font-semibold')}>{job.name}<span className="font-normal text-secondary"> · {job.role} · <span className="tabular-nums">{job.period}</span></span></p>
-            <p className={cx(text.body, 'text-secondary')}>{job.items[0]}</p>
           </Row>
         ))}
       </ResumeSection>
@@ -140,7 +142,9 @@ const Highlights = ({ project, prefix = '' }) => {
     ? (m.codeExamples?.[f.id]?.examples || []).map(item => <CodeExample key={item.label} label={item.label} code={item.code} />)
     : f.evidence === 'images' ? <Gallery images={m.caseImages?.[f.id]} className="mt-5" />
     : diagrams[f.id] ? <Diagram name={diagrams[f.id].diagram} caption={diagrams[f.id].caption} /> : null;
-  const rest = items.filter(study => !featuredIds.has(study.id));
+  // 이미지·다이어그램이 있는 사례를 앞에, 글만 있는 사례를 뒤에 둔다 (PDF 에서 이미지가 글 사이에 끼어 페이지가 비는 것 방지)
+  const hasVisual = study => Boolean(m.caseImages?.[study.id]?.length || diagrams[study.id]);
+  const rest = items.filter(study => !featuredIds.has(study.id)).sort((a, b) => hasVisual(b) - hasVisual(a));
   return (
     <SectionBlock id={`${prefix}measurements`} title="문제 해결과 개선" rule>
       {featured.map(f => {
@@ -159,7 +163,7 @@ const Highlights = ({ project, prefix = '' }) => {
       {rest.length > 0 && (
         <ul className={cx('grid gap-8 print:gap-3', featured.length > 0 && 'mt-10 print:mt-5')}>
           {rest.map(study => (
-            <li key={study.id} id={`${prefix}case-${study.id}`} className="min-w-0">
+            <li key={study.id} id={`${prefix}case-${study.id}`} className="min-w-0 print:break-inside-avoid">
               <p className={text.heading}>{study.title}</p>
               <p className={cx(text.body, 'mt-2 text-secondary')}>{study.highlight}</p>
               {diagrams[study.id] && <Diagram name={diagrams[study.id].diagram} caption={diagrams[study.id].caption} />}

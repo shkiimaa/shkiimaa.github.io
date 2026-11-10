@@ -1,20 +1,20 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '기획부터 운영까지 경험한 개발자로, 문제는 측정으로 확인하고 구조로 해결합니다.\n\n온라인 커머스를 약 3년간 직접 운영한 뒤 개발자로 전환했습니다. 암호화폐 브로커리지 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담하고, 주문·인증·자산 API를 설계·개발했습니다. AI 코딩 에이전트를 활용하고, 프로젝트의 아키텍처·디자인 규칙을 문서화해 코드의 일관성을 유지합니다.',
-  education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
+  introduction: '기획부터 운영까지 경험한 개발자로, 문제는 측정으로 확인하고 구조로 해결합니다.\n\n온라인 커머스를 약 3년간 직접 운영하며 사업 전반을 경험한 뒤 개발자로 전환했습니다. 실시간 시세·주문·자산을 다루는 암호화폐 거래 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담해 앱 스토어 출시까지 이끌었고, API 서버 개발과 K3s 배포·운영을 맡았습니다. AI 코딩 에이전트에 아키텍처·디자인 규칙 문서를 적용해, 빠르게 만들면서도 코드의 일관성을 유지합니다.',
+  education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열) · 재직자 전형', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
 export const experiences = [
   { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 현재', items: [
-    'Bitria (암호화폐 브로커리지 플랫폼) | 프론트엔드 전담·백엔드 API 개발 주도 · Next.js·Express',
-    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발 주도, 이후 14개 서비스 K3s 통합 · Next.js·Express'
+    'Bitria (암호화폐 거래 플랫폼) | 프론트엔드 전담·백엔드 API 개발 주도',
+    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발 주도, 이후 14개 서비스 K3s 통합'
   ] },
   { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
-    'D.A.X (AI 모델 학습·운영 플랫폼) | 프론트엔드 개발 · React',
-    'Doit UI Kit (사내 UI 라이브러리) | 컴포넌트 개발·npm 배포 · React',
-    'XRGIS 백오피스 (사용자·팀·파일 관리) | 프론트엔드·백엔드 개발 · React·Express',
-    '두잇 홈페이지 리뉴얼 (React 전환) | 프론트엔드 개발 · React'
+    'D.A.X (AI 모델 학습·운영 플랫폼) | 프론트엔드 개발',
+    'Doit UI Kit (사내 UI 라이브러리) | 컴포넌트 개발·npm 배포',
+    'XR·GIS 백오피스 (사용자·팀·파일 관리) | 프론트엔드·백엔드 개발',
+    '두잇 홈페이지 리뉴얼 (React 전환) | 프론트엔드 개발'
   ] },
   { id: 'founder', name: '개인 사업 (온라인 커머스)', role: '대표', period: '2019.09 – 2022.06', items: ['국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인'] }
@@ -29,15 +29,14 @@ export const skills = [
 export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
-    kind: '암호화폐 브로커리지 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드 전담(앱 스토어 출시)·백엔드 API 개발 주도 · 2인 팀',
-    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 브로커리지 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 백엔드 API 서버의 인증·주문·자산·시세·KYC API를 설계·개발하고, K3s 배포·운영도 담당했습니다.',
+    kind: '암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드 전담(앱 스토어 출시)·백엔드 API 개발 주도 · 2인 팀',
+    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 백엔드 API 서버의 인증·주문·자산·시세·KYC API를 설계·개발하고, K3s 배포·운영도 담당했습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트와 주문·자산 화면, 인증·주문·자산·시세·KYC API 개발',
       '렌더 계측으로 비활성 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 70% 감소',
       '번들·폰트 최적화로 홈 JS 27%, 초기 폰트 전송 95% 감소, 배럴 import 정리로 모바일 TBT 30% 감소',
       '운영 로그로 TradingView 캐시 버그·심볼 전환 경쟁 상태 등 차트 로딩 실패 원인을 특정해 해결',
-      'iOS 앱 복귀 시 포지션·자산이 이전 데이터로 표시되던 원인을 WKWebView 동작 차이로 특정·해결',
-      'Capacitor·next-intl 경로 판정 충돌로 비영어 기기에서 Safari가 열리던 문제를 앱 업데이트 없이 해결'
+      'iOS 앱 복귀 시 이전 데이터 표시, 비영어 기기의 Safari 열림 등 앱 전용 문제를 원인 특정 후 해결'
     ],
     tasks: [
       ['공통 구조', 'FSD(Feature-Sliced Design) 구조와 시맨틱 디자인 토큰 설계, 다크·라이트 테마, 브랜드 2종, 로케일 6종 지원, 웹·앱별 코드 분리 및 컴포넌트 API 기준 문서화'],
@@ -86,7 +85,7 @@ export const projects = [
   {
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 주도 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트 대부분과 백엔드 API 서버를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
-    summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리, 채팅·스케줄러 서버 개발', '프로젝트 종료 후 서버 5대에 흩어진 14개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 2026.08)'],
+    summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리, 채팅·스케줄러 서버 개발', '종료 후 서버 5대의 14개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 08)'],
     tasks: [
       ['웹 클라이언트', 'React(2024.10 – 2025.07)와 Next.js 15 재구축(2025.07 – 2025.08), 마켓·코인 상세·뉴스·모의투자·랭킹·채팅·분석 화면, TradingView 차트 연동'],
       ['실시간 데이터', '바이낸스·바이빗·OKX·Gate.io WebSocket 연동, Socket.IO 재연결·헬스체크 개선, 조회 데이터는 SWR로 관리'],
@@ -160,7 +159,7 @@ export const projects = [
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'i18next']]]
   },
   {
-    id: 'xrgis', name: 'XRGIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 서비스 백오피스',
+    id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 서비스 백오피스',
     description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express API를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
     summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
     tasks: [

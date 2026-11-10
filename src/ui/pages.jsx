@@ -20,8 +20,8 @@ const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 
 const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */
-const ResumeSection = ({ id, title, en, note, children }) => (
-  <section id={id} className="mt-9 mobile:mt-8 print:mt-5">
+const ResumeSection = ({ id, title, en, note, className, children }) => (
+  <section id={id} className={cx('mt-9 mobile:mt-8 print:mt-5', className)}>
     <div className="flex items-baseline gap-4 border-b-2 border-ink pb-3 print:border-b print:border-[#333] print:pb-2">
       <h2 className={text.section}>{title}</h2><Meta as="span">{en}</Meta>
       {note && <span className={cx(text.body, 'ml-auto font-semibold tabular-nums')}>{note}</span>}
@@ -37,40 +37,58 @@ const Row = ({ as: Tag = 'article', className, id, meta, children }) => (
 );
 const RowTitle = ({ children }) => <h3 className={cx(text.heading, 'mb-1.5 mobile:mb-0 mobile:basis-full')}>{children}</h3>;
 
-// 개발 경력 합계: 회사 기간을 시작·종료 월을 포함해 더하고, '현재'는 빌드 시점의 달까지 센다
+// 개발 경력 합계: 회사 기간을 시작·종료 월을 포함해 더하고, '현재'·'재직 중'은 빌드 시점의 달까지 센다
 const devJobs = experiences.filter(job => ['daon', 'doit'].includes(job.id));
 const monthIndex = ym => { const [y, m] = ym.split('.').map(Number); return y * 12 + m - 1; };
-const careerTotal = jobs => {
+const jobMonths = job => {
   const now = new Date();
-  const months = jobs.reduce((sum, job) => {
-    const [start, end] = job.period.split('–').map(part => part.trim());
-    const last = end === '현재' ? now.getFullYear() * 12 + now.getMonth() : monthIndex(end);
-    return sum + last - monthIndex(start) + 1;
-  }, 0);
-  return `총 ${Math.floor(months / 12)}년${months % 12 ? ` ${months % 12}개월` : ''}`;
+  const [start, end] = job.period.split('–').map(part => part.trim());
+  const last = ['현재', '재직 중'].includes(end) ? now.getFullYear() * 12 + now.getMonth() : monthIndex(end);
+  return last - monthIndex(start) + 1;
 };
+const formatMonths = months => [months >= 12 && `${Math.floor(months / 12)}년`, months % 12 && `${months % 12}개월`].filter(Boolean).join(' ');
+const careerTotal = jobs => `총 ${formatMonths(jobs.reduce((sum, job) => sum + jobMonths(job), 0))}`;
+
+const pdfContacts = [
+  ['전화번호', 'tel:+821099313175', profile.phone],
+  ['이메일', `mailto:${profile.email}`, profile.email],
+  ['GitHub', profile.github, profile.github.replace('https://', '')],
+  ['포트폴리오', `${profile.site}/portfolio-detail/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
+];
 
 function Resume() {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
     <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['projects', '프로젝트'], ['skills', '기술'], ['education', '학력']]}>
-      <section id="about" className="pb-11 mobile:pb-6 print:pb-4">
-        {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈) */}
-        <div className="mb-5 flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:mb-4 mobile:gap-x-4">
-          <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span>
-          <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full')}>
-            <a href={`mailto:${profile.email}`}>{profile.email}</a>
-            <a href="tel:+821099313175">{profile.phone}</a>
-            <External href={profile.github}>GitHub</External>
-            <External href={`${profile.site}/portfolio-detail/`} className="hidden print:inline">포트폴리오</External>
+      <section id="about" className="pb-11 mobile:pb-6 print:pb-8">
+        {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈)
+            PDF는 연락처를 이름 아래로 내리고, 그 옆에만 증명사진을 둬서 소개 문단 폭은 그대로 쓴다 (웹 화면에는 사진 없음) */}
+        <div className="mb-5 mobile:mb-4 print:mb-8 print:flex print:items-start print:justify-between print:gap-6">
+          <div>
+            <div className="flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:gap-x-4">
+              <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span>
+              <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
+                <a href={`mailto:${profile.email}`}>{profile.email}</a>
+                <a href="tel:+821099313175">{profile.phone}</a>
+                <External href={profile.github}>GitHub</External>
+              </div>
+            </div>
+            {/* PDF 연락처: 이름 아래에 항목 이름을 붙여 세로로 나열하고, 출력해도 읽히게 주소를 보여준다 */}
+            <dl className={cx(text.body, 'mt-3 hidden grid-cols-[auto_minmax(0,1fr)] gap-x-5 print:grid')}>
+              {pdfContacts.map(([label, href, value]) => (
+                <div key={label} className="contents"><dt className="text-muted">{label}</dt><dd><a href={href}>{value}</a></dd></div>
+              ))}
+            </dl>
           </div>
+          {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기 */}
+          <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile.jpg" alt="김수환 증명사진" loading="lazy" />
         </div>
-        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
+        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
         <Paragraphs items={introDetails} muted={false} />
       </section>
       <ResumeSection id="experience" title="경력" en="Experience" note={careerTotal(devJobs)}>
         {devJobs.map(job => (
-          <Row key={job.id} className="experience-row" meta={<><RowTitle>{job.name}</RowTitle><Meta className="tabular-nums">{job.period}</Meta></>}>
+          <Row key={job.id} className="experience-row" meta={<><RowTitle>{job.name}</RowTitle><p className={cx(text.detail, 'text-secondary tabular-nums')}>{job.period}</p></>}>
             <p className={cx(text.body, 'mb-2 font-semibold')}>{job.role}</p>
             {job.items.length === 1 ? <Prose as="p" text={job.items[0]} className={text.body} /> : <Bullets items={job.items} />}
           </Row>
@@ -90,7 +108,8 @@ function Resume() {
               <RowTitle><a href={projectHref(project)}>{project.name}</a></RowTitle>
               <span className="hidden mobile:inline"><TextLink href={projectHref(project)} className="whitespace-nowrap">프로젝트 상세 보기</TextLink></span>
             </div>
-            <Meta>{project.company}</Meta><Meta className="tabular-nums">{project.period}</Meta>
+            {/* 회사·기간은 경력·학력 기간과 같은 크기·색 */}
+            <p className={cx(text.detail, 'text-secondary tabular-nums')}>{project.company}<br className="mobile:hidden" /><span className="mobile:ml-2">{project.period}</span></p>
           </>}>
             <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
               <h4 className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</h4>
@@ -102,7 +121,8 @@ function Resume() {
           </Row>
         ))}
       </ResumeSection>
-      <ResumeSection id="skills" title="기술" en="Skills">
+      {/* 기술 표는 PDF에서 페이지 사이에 나뉘지 않게 한 덩어리로 둔다 */}
+      <ResumeSection id="skills" title="기술" en="Skills" className="print:break-inside-avoid">
         <dl>
           {skills.map(group => (
             <Row key={group.label} as="div" meta={<dt className={cx(text.body, 'font-semibold')}>{group.label}</dt>} className="py-5 mobile:gap-1.5 mobile:py-4 print:py-2">
@@ -113,8 +133,8 @@ function Resume() {
       </ResumeSection>
       <ResumeSection id="education" title="학력" en="Education">
         <div className="flex justify-between gap-6 pt-6 mobile:block print:pt-4">
-          <div><RowTitle>{profile.education.school}</RowTitle><p className={cx(text.body, 'text-secondary')}>{profile.education.department}</p></div>
-          <Meta className="text-right tabular-nums mobile:mt-3 mobile:text-left">{profile.education.period}<br className="mobile:hidden" /><span className="mobile:ml-2">{profile.education.status}</span></Meta>
+          <div><RowTitle>{profile.education.school}</RowTitle><p className={cx(text.detail, 'text-secondary')}>{profile.education.department}</p></div>
+          <p className={cx(text.detail, 'text-right text-secondary tabular-nums mobile:mt-3 mobile:text-left')}>{profile.education.period}<br className="mobile:hidden" /><span className="mobile:ml-2">{profile.education.status}</span></p>
         </div>
       </ResumeSection>
       <DocumentNext label="담당 업무와 문제 해결 과정을 더 자세히" href="/career/">경력기술서 읽기</DocumentNext>

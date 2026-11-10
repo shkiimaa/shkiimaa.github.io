@@ -38,7 +38,7 @@ try {
     }
     await page.evaluate(() => {
       // Project names remain plain text in the submitted resume PDF.
-      for (const anchor of document.querySelectorAll('.resume-project .row-meta h3 a')) {
+      for (const anchor of document.querySelectorAll('.resume-project h3 a')) {
         anchor.removeAttribute('href');
       }
       for (const anchor of document.querySelectorAll('a[href^="/"]')) {

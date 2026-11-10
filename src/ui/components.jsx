@@ -24,6 +24,8 @@ export const text = {
   heading: 'text-lg font-bold leading-snug tracking-tight',
   lead: 'text-base leading-7',
   body: 'text-sm leading-6',
+  // 제목 바로 아래 붙는 보조 줄(직무·기간·학과·역할): 본문 크기, 줄 간격만 촘촘하게
+  detail: 'text-sm leading-5',
   meta: 'text-xs leading-5'
 };
 

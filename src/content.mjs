@@ -6,7 +6,7 @@ export const profile = {
 };
 
 export const experiences = [
-  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 현재', items: [
+  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 재직 중', items: [
     'Bitria (암호화폐 거래 플랫폼) | 프론트엔드·백엔드 API 개발',
     'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발, 이후 14개 서비스 K3s 통합'
   ] },

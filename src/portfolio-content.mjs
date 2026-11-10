@@ -3,7 +3,7 @@
 export const portfolioMaterial = {
   bitria: {
     overview: '외부 거래소 유동성을 연동해 현물·선물·마진 거래와 계정·자산 관리를 제공하는 암호화폐 거래 플랫폼입니다.',
-    scope: '프론트엔드 전체를 초기 구축부터 개발하고, 백엔드 API 서버의 인증·주문·자산·시세·KYC API를 설계·개발하고 K3s 운영을 담당했습니다.',
+    scope: '프론트엔드 전체를 초기 구축부터 개발하고, 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발했습니다. K3s 배포·운영을 맡았습니다.',
     source: 'https://www.notion.so/3faca024fcb88122ac88de9339a4cb44',
     // 웹 화면 (데스크톱 1440×900)
     webImages: [

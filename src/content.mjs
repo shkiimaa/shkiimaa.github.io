@@ -30,7 +30,7 @@ export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
     kind: '암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드(앱 스토어 출시)·백엔드 API 전담',
-    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 백엔드 API 서버의 인증·주문·자산·시세·KYC API를 설계·개발하고, K3s 배포·운영도 담당했습니다.',
+    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s 배포·운영을 맡았습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트, 주문·자산·인증·KYC 등 화면 및 API 서버 개발',
       '렌더 계측으로 비활성 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 70% 감소',

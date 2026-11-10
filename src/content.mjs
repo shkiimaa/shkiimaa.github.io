@@ -1,14 +1,14 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '기획부터 운영까지 경험한 개발자로, 문제는 측정으로 확인하고 구조로 해결합니다.\n\n온라인 커머스를 약 3년간 직접 운영하며 사업 전반을 경험한 뒤 개발자로 전환했습니다. 실시간 시세·주문·자산을 다루는 암호화폐 거래 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담해 앱 스토어 출시까지 이끌었고, API 서버 개발과 K3s 배포·운영을 맡았습니다. AI 코딩 에이전트에 아키텍처·디자인 규칙 문서를 적용해, 빠르게 만들면서도 코드의 일관성을 유지합니다.',
+  introduction: '기획부터 운영까지 경험한 개발자로, 문제는 측정으로 확인하고 구조로 해결합니다.\n\n온라인 커머스를 약 3년간 직접 운영하며 사업 전반을 경험한 뒤 개발자로 전환했습니다. 실시간 시세·주문·자산을 다루는 암호화폐 거래 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담해 앱 스토어 출시까지 이끌었고,\nAPI 서버 개발과 K3s 배포·운영을 맡았습니다. AI 코딩 에이전트에 아키텍처·디자인 규칙 문서를 적용해, 빠르게 만들면서도 코드의 일관성을 유지합니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열) · 재직자 전형', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
 export const experiences = [
   { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 현재', items: [
-    'Bitria (암호화폐 거래 플랫폼) | 프론트엔드 전담·백엔드 API 개발 주도',
-    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발 주도, 이후 14개 서비스 K3s 통합'
+    'Bitria (암호화폐 거래 플랫폼) | 프론트엔드·백엔드 API 개발',
+    'Gobit (코인 정보·커뮤니티 플랫폼) | 프론트엔드·백엔드 개발, 이후 14개 서비스 K3s 통합'
   ] },
   { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', items: [
     'D.A.X (AI 모델 학습·운영 플랫폼) | 프론트엔드 개발',
@@ -29,10 +29,10 @@ export const skills = [
 export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
-    kind: '암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드 전담(앱 스토어 출시)·백엔드 API 개발 주도 · 2인 팀',
+    kind: '암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드(앱 스토어 출시)·백엔드 API 전담',
     description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 백엔드 API 서버의 인증·주문·자산·시세·KYC API를 설계·개발하고, K3s 배포·운영도 담당했습니다.',
     summary: [
-    '실시간 시세·호가·TradingView 차트와 주문·자산 화면, 인증·주문·자산·시세·KYC API 개발',
+    '실시간 시세·호가·TradingView 차트, 주문·자산·인증·KYC 등 화면 및 API 서버 개발',
       '렌더 계측으로 비활성 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 70% 감소',
       '번들·폰트 최적화로 홈 JS 27%, 초기 폰트 전송 95% 감소, 배럴 import 정리로 모바일 TBT 30% 감소',
       '운영 로그로 TradingView 캐시 버그·심볼 전환 경쟁 상태 등 차트 로딩 실패 원인을 특정해 해결',
@@ -47,7 +47,7 @@ export const projects = [
       ['백엔드 API', '주문 API(요청 검증·권한 확인·주문 처리 서비스 연동), 자산 API(계좌별 자산·USDT 환산·스냅샷·일별 손익), 시세 조회 API 구현'],
       ['서비스 운영', '가격 조건별 알림·클라이언트 오류 수집·앱 버전 정책·고객 문의(CS) API 개발, K3s 프로덕션 배포·운영 및 장애 대응']
     ],
-    tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Node.js', 'Express', 'Socket.IO'],
+    tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Express', 'TimescaleDB', 'Redis', 'Socket.IO'],
     techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'AWS(EC2)', 'Docker', 'Kubernetes(K3s)']]],
     outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '30%', detail: '417 → 292.5ms · 로컬 프로덕션 빌드·5회 중앙값' }],
     cases: [
@@ -83,7 +83,7 @@ export const projects = [
     ],
   },
   {
-    id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드·백엔드 개발 주도 · 2인 팀', kind: '코인 정보·커뮤니티 플랫폼',
+    id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드 전담·백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트 대부분과 백엔드 API 서버를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
     summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리, 채팅·스케줄러 서버 개발', '종료 후 서버 5대의 14개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 08)'],
     tasks: [
@@ -94,7 +94,7 @@ export const projects = [
       ['서버 운영', '채팅 서버(Socket.IO, Redis 대화 기록, 비속어 필터) 개발, 스케줄러 서버 분리, 바이낸스 WebSocket 무응답 감시·주기 재연결'],
       ['운영 개선', '코인 상세 서버 요청 중복 제거·구간별 스켈레톤·폰트 교체, coinlns → Gobit 리브랜딩, 점검 모드·회원 탈퇴']
     ],
-    tech: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Node.js', 'Express', 'MariaDB', 'Redis', 'Socket.IO'],
+    tech: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Express', 'MariaDB', 'Redis', 'Socket.IO'],
     techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS']], ['백엔드', ['Node.js', 'Express', 'MariaDB', 'Redis', 'Socket.IO']]],
     cases: [{ id: 'nextjs-seo', title: 'SPA 검색 노출 한계로 Next.js 재구축', highlight: 'SPA 사전 렌더링의 한계를 확인하고 Next.js로 재구축해 코인·게시글 상세를 서버 렌더링', period: '2025.07 – 2025.08 · 이후 성능 개선', paragraphs: [
       'React SPA는 빈 HTML을 먼저 내려보내, 코인·뉴스·게시글 내용과 메타 정보가 검색 결과와 링크 미리보기에 잡히지 않았습니다. react-helmet-async로 페이지 제목을 바꾸고, 빌드할 때 Puppeteer로 페이지를 미리 렌더링하는 prerender를 적용했습니다.',
@@ -115,7 +115,7 @@ export const projects = [
     ], result: '서버 5대에 흩어져 있던 14개 서비스를 하나의 Kubernetes 환경에서 배포·운영합니다. 소스 없이 바이너리만 남아 있던 수집기도 코드로 관리할 수 있게 됐습니다.' }]
   },
   {
-    id: 'doit-uikit', name: 'Doit UI Kit', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 개발 담당', kind: '사내 공통 UI 라이브러리',
+    id: 'doit-uikit', name: 'Doit UI Kit', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 전담', kind: '사내 공통 UI 라이브러리',
     description: '프로젝트마다 반복 구현하던 UI를 공통 라이브러리로 만들고, React 개발 규칙을 팀에 공유했습니다.',
     summary: ['Atomic Design 기반 UI 컴포넌트 24종 개발 및 npm 배포', '타입 선언 자동 생성·React 외부화 등 패키징 구성', 'Storybook·Chromatic 문서화 및 사내 프로젝트 2곳에 도입'],
     tasks: [
@@ -130,7 +130,7 @@ export const projects = [
     images: [{ src: 'uikit-storybook.png', alt: 'Doit UI Kit 컴포넌트의 Storybook 문서와 Props 설정 화면' }]
   },
   {
-    id: 'dax', name: 'D.A.X', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.01 – 2024.06', role: '프론트엔드 개발 담당 · 백엔드 1명과 협업', kind: 'AI 모델 학습·운영 플랫폼',
+    id: 'dax', name: 'D.A.X', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.01 – 2024.06', role: '프론트엔드 전담', kind: 'AI 모델 학습·운영 플랫폼',
     description: '데이터 관리·라벨링부터 모델 학습·추론까지 지원하는 사내 AI 플랫폼입니다. 백엔드 개발자 1명과 협업해 프론트엔드 전 화면을 개발했습니다.',
     summary: ['데이터 관리·모델 학습·추론·대시보드 화면 구현', '원본↔화면 좌표 변환을 적용한 캔버스 라벨링 도구 개발', '이미지 업로드·컬렉션 ZIP 다운로드 구현 및 사내 UI 라이브러리 적용'],
     tasks: [
@@ -145,7 +145,7 @@ export const projects = [
     images: [{ src: 'dax-labeling-example.png', alt: 'D.A.X에서 이미지 위에 바운딩 박스를 그려 라벨링하는 화면' }, { src: 'dax-dashboard.png', alt: 'D.A.X의 프로젝트 데이터와 학습 현황 대시보드' }]
   },
   {
-    id: 'doit-homepage', name: '두잇 홈페이지 리뉴얼', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.05 – 2024.07', role: '프론트엔드 개발 담당', kind: '회사 홈페이지 React 마이그레이션',
+    id: 'doit-homepage', name: '두잇 홈페이지 리뉴얼', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.05 – 2024.07', role: '프론트엔드 전담', kind: '회사 홈페이지 React 마이그레이션',
     description: '사내 React 도입에 맞춰 jQuery 기반 회사 홈페이지를 React로 재작성해 한국어·영어를 지원하는 반응형 화면을 구현했습니다.',
     summary: ['주요 5개 페이지를 React로 재작성하고 공통 UI를 Doit UI Kit으로 통일', 'i18next 기반 한국어·영어 및 반응형 화면 구현'],
     tasks: [
@@ -159,7 +159,7 @@ export const projects = [
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'i18next']]]
   },
   {
-    id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 개발 담당', kind: 'XR·GIS 원격 협업 서비스 백오피스',
+    id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 전담', kind: 'XR·GIS 원격 협업 서비스 백오피스',
     description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express API를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
     summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
     tasks: [
@@ -170,7 +170,7 @@ export const projects = [
     ],
     insight: 'MongoDB에 파일을 저장해야 하는 요구사항에 맞춰, 일반 문서의 16MB 제한에 걸리는 OBJ·영상 등을 GridFS의 청크 분할 저장으로 처리했습니다. 같은 관리자 계정을 사용하는 사내 서비스와는 MariaDB 기반 세션 저장소를 통해 인증 체계를 맞췄습니다.',
     result: '팀 소속에 따라 파일 접근이 제한되고, OBJ·영상 대용량 파일을 ZIP으로 일괄 내려받을 수 있게 됐습니다.',
-    tech: ['TypeScript', 'React', 'styled-components', 'Node.js', 'Express', 'MongoDB(GridFS)', 'MariaDB'],
+    tech: ['TypeScript', 'React', 'styled-components', 'Express', 'MongoDB(GridFS)', 'MariaDB'],
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components']], ['백엔드', ['Node.js', 'Express', 'MongoDB(GridFS)', 'MariaDB']]]
   },
 ];

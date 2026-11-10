@@ -9,7 +9,9 @@ export const cx = (...names) => names.filter(Boolean).join(' ');
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 // 문장마다 줄을 바꾸고 `코드` 표기를 인라인 코드로 바꾼 HTML
+// 문장 안의 `\n` 은 넓은 화면(PC·PDF)에서만 줄을 바꾼다 — 좁은 모바일은 자동 줄바꿈에 맡긴다
 export const proseHtml = value => escape(value)
+  .replace(/\n/g, ' <br class="mobile:hidden">')
   .replace(/([.!?])\s+(?=[\p{L}\d(])/gu, '$1<br>')
   .replace(/`([^`]+)`/g, '<code class="rounded-sm border border-line bg-wash px-1 py-px font-mono text-xs text-ink">$1</code>');
 export const Prose = ({ as: Tag = 'span', text, className }) => <Tag className={className} dangerouslySetInnerHTML={{ __html: proseHtml(text) }} />;
@@ -32,8 +34,8 @@ export const SubTitle = ({ children }) => <h3 className={cx(text.heading, 'mb-3.
 export const Meta = ({ as: Tag = 'p', children, className, ...rest }) => <Tag className={cx(text.meta, 'text-muted', className)} {...rest}>{children}</Tag>;
 
 // 같은 구역 안 문단: 두 번째 문단부터 문단 사이 간격
-export const Paragraphs = ({ items, size = 'body', className }) => items.map((copy, i) => (
-  <Prose key={i} as="p" text={copy} className={cx(size === 'lead' ? text.lead : text.body, 'text-secondary', i > 0 && 'mt-3', className)} />
+export const Paragraphs = ({ items, size = 'body', muted = true, className }) => items.map((copy, i) => (
+  <Prose key={i} as="p" text={copy} className={cx(size === 'lead' ? text.lead : text.body, muted && 'text-secondary', i > 0 && 'mt-3', className)} />
 ));
 
 export const Bullets = ({ items }) => (

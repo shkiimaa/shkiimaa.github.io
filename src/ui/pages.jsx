@@ -48,11 +48,11 @@ function Resume() {
             <a href={`mailto:${profile.email}`}>{profile.email}</a>
             <a href="tel:+821099313175">{profile.phone}</a>
             <External href={profile.github}>GitHub</External>
-            <External href={profile.site} className="hidden print:inline">웹 이력서</External>
+            <External href={`${profile.site}/portfolio-detail/`} className="hidden print:inline">포트폴리오</External>
           </div>
         </div>
         <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
-        <Paragraphs items={introDetails} size="lead" />
+        <Paragraphs items={introDetails} muted={false} />
       </section>
       <ResumeSection id="experience" title="경력" en="Experience">
         {experiences.filter(job => ['daon', 'doit'].includes(job.id)).map(job => (

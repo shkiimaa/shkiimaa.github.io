@@ -79,6 +79,7 @@ export const projects = [
   },
   {
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드 전담·백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
+    links: [{ label: 'Website', url: 'https://gobit.kr' }],
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트 대부분과 백엔드 API 서버를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
     summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리하고, 가상화 리스트로 화면에 보이는 코인만 구독', '코인 상세 중복 요청 제거·구간별 스켈레톤 등 화면 개선, 채팅·스케줄러 서버 개발'],
     tasks: [

@@ -18,7 +18,7 @@ const Header = ({ active, pdf }) => (
   <header className="site-header sticky top-0 z-20 h-19 border-b border-line bg-white/97 mobile:h-16 print:hidden">
     <div className="mx-auto flex h-full max-w-296 items-center gap-10.5 px-8 tablet:gap-7.5 tablet:px-6 mobile:gap-3 mobile:px-5 narrow:gap-2 narrow:px-3.5">
       <a className="flex items-baseline gap-3 text-lg font-bold tracking-tight whitespace-nowrap mobile:text-base" href="/" aria-label="김수환 이력서">
-        김수환<span className={cx(text.meta, 'font-normal tracking-normal text-muted tablet:hidden')}>Frontend Developer</span>
+        김수환<span className={cx(text.meta, 'font-normal tracking-normal text-muted tablet:hidden')}>Frontend Engineer</span>
       </a>
       <nav className="ml-auto flex h-full items-center gap-7 mobile:gap-3 narrow:gap-2" aria-label="주 메뉴">
         {nav.map(([href, label, key]) => (
@@ -78,7 +78,7 @@ export function Document({ title, description, route, active, toc = [], pageLabe
         <link rel="canonical" href={`${origin}${route}`} />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="ko_KR" />
-        <meta property="og:site_name" content="김수환 · Frontend Developer" />
+        <meta property="og:site_name" content="김수환 · Frontend Engineer" />
         <meta property="og:title" content={`${title} | 김수환`} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={`${origin}${route}`} />

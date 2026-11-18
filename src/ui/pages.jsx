@@ -91,7 +91,7 @@ function Resume() {
         <div className="mb-5 mobile:mb-4 print:mb-8 print:flex print:items-start print:justify-between print:gap-6">
           <div>
             <div className="flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:gap-x-4">
-              <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Developer</span>
+              <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Engineer</span>
               <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
                 <a href={`mailto:${profile.email}`}>{profile.email}</a>
                 <a href="tel:+821099313175">{profile.phone}</a>

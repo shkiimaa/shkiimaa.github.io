@@ -1,13 +1,13 @@
 export const profile = {
-  name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
+  name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Engineer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
   introduction: '하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한 프론트엔드 개발자입니다.\n\n암호화폐 거래 플랫폼 Bitria의 프론트엔드를 초기 구축부터 전담해 App Store와 Google Play에 출시했습니다. 성능 문제는 계측으로 원인부터 찾아, 거래 화면의 렌더 작업을 70%, 모바일 TBT를 30% 줄였습니다. 이 밖에 코인 정보 플랫폼, AI 모델 학습 플랫폼, 사내 UI 라이브러리를 개발했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열) · 재직자 전형', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
 export const experiences = [
-  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', employment: '정규직', period: '2024.08 – 재직 중' },
-  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', employment: '정규직', period: '2023.08 – 2024.07', logo: 'logos/doit.svg' },
+  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Engineer', employment: '정규직', period: '2024.08 – 재직 중' },
+  { id: 'doit', name: '(주)두잇', role: 'Frontend Engineer', employment: '정규직', period: '2023.08 – 2024.07', logo: 'logos/doit.svg' },
   { id: 'founder', name: '개인 사업 (온라인 커머스)', role: '대표', period: '2019.09 – 2022.06', items: ['국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인'] }
 ];

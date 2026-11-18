@@ -7,7 +7,7 @@ export const profile = {
 
 export const experiences = [
   { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 재직 중' },
-  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07' },
+  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', logo: 'logos/doit.svg' },
   { id: 'founder', name: '개인 사업 (온라인 커머스)', role: '대표', period: '2019.09 – 2022.06', items: ['국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인'] }
 ];
@@ -21,10 +21,11 @@ export const skills = [
 export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
-    kind: '암호화폐 거래 플랫폼', role: '프론트엔드 전담(웹·iOS·Android·데스크톱, 앱 스토어 출시)·백엔드 API 개발',
+    kind: '암호화폐 거래 플랫폼', // 역할은 짧게 쓴다 — 플랫폼·출시는 소개 문단, 주요 업무, 스토어 버튼에 있다
+    role: '프론트엔드 전담 · 백엔드 API 개발',
     // 링크 이름에 주소(bitria.com)를 쓰면 macOS 미리보기가 글자를 주소로 감지해 클릭 영역을 넓게 덧씌운다
     // 옆의 App Store·Google Play와 글자 모양이 맞도록 영문으로 쓴다 (한글이 섞이면 한 칸만 내려앉아 보인다)
-    links: [{ label: 'Website', url: 'https://bitria.com' }, { label: 'App Store', url: 'https://apps.apple.com/kr/app/bitria/id6775212278' }, { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.bitria.app' }],
+    links: [{ label: 'Website', icon: 'world', url: 'https://bitria.com' }, { label: 'App Store', icon: 'apple', url: 'https://apps.apple.com/kr/app/bitria/id6775212278' }, { label: 'Google Play', icon: 'googleplay', url: 'https://play.google.com/store/apps/details?id=com.bitria.app' }],
     description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s 배포·운영을 맡았습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트, 주문·자산·인증·KYC 등 화면 및 API 서버 개발',
@@ -78,8 +79,8 @@ export const projects = [
     ],
   },
   {
-    id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드 전담·백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
-    links: [{ label: 'Website', url: 'https://gobit.kr' }],
+    id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드 전담 · 백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
+    links: [{ label: 'Website', icon: 'world', url: 'https://gobit.kr' }],
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트 대부분과 백엔드 API 서버를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
     summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리하고, 가상화 리스트로 화면에 보이는 코인만 구독', '코인 상세 중복 요청 제거·구간별 스켈레톤 등 화면 개선, 채팅·스케줄러 서버 개발'],
     tasks: [
@@ -155,7 +156,7 @@ export const projects = [
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'i18next']]]
   },
   {
-    id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드·백엔드 전담', kind: 'XR·GIS 원격 협업 서비스 백오피스',
+    id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드 · 백엔드 전담', kind: 'XR·GIS 원격 협업 서비스 백오피스',
     description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express API를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
     summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
     tasks: [

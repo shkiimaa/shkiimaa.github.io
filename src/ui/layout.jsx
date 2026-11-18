@@ -3,7 +3,9 @@ import { profile } from '../content.mjs';
 import { ArrowIcon, cx, text } from './components.jsx';
 
 const origin = 'https://shkiimaa.github.io';
-const nav = [['/', '이력서', 'resume'], ['/career/', '경력기술서', 'career'], ['/projects/', '프로젝트', 'projects'], ['/portfolio/', '포트폴리오', 'portfolio']];
+// 사이트에서 보이는 문서는 이력서·프로젝트·포트폴리오 상세 세 가지다.
+// 경력기술서와 포트폴리오(기본)는 PDF 다운로드용으로만 두고, 사이트 안에서는 링크하지 않는다 (PDF를 만드는 페이지는 주소로만 남는다)
+const nav = [['/', '이력서', 'resume'], ['/projects/', '프로젝트', 'projects'], ['/portfolio-detail/', '포트폴리오', 'portfolio']];
 // 헤더 PDF 다운로드 메뉴: 어느 페이지에서든 네 문서를 받을 수 있게 한다
 const downloads = [
   ['resume', '이력서', '경력과 프로젝트 요약'],
@@ -62,9 +64,10 @@ const Sidebar = ({ items, title }) => (
   </aside>
 );
 
-export function Document({ title, description, route, active, toc = [], pageLabel, pdf, children }) {
+// htmlClass: 문서별 인쇄 글자 크기 같은 문서 단위 설정 (tailwind.css의 html 규칙과 짝)
+export function Document({ title, description, route, active, toc = [], pageLabel, pdf, htmlClass, children }) {
   return (
-    <html lang="ko">
+    <html lang="ko" className={htmlClass}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -86,7 +89,8 @@ export function Document({ title, description, route, active, toc = [], pageLabe
         <link rel="stylesheet" href="/styles.css" />
         <script src="/app.js" defer />
       </head>
-      <body className="bg-paper font-sans text-ink">
+      {/* 본문은 보통 굵기 대신 중간 굵기로 쓴다 — 작은 글씨와 보조 줄이 가늘어 흐리게 보이지 않게 한다 */}
+      <body className="bg-paper font-sans font-medium text-ink">
         <a className="fixed -top-25 left-4 z-50 bg-ink px-4.5 py-2 text-white focus:top-3 print:hidden" href="#main">본문으로 이동</a>
         <Header active={active} pdf={pdf} />
         <div className="mx-auto grid max-w-296 grid-cols-[10.5rem_minmax(0,1fr)] gap-x-17.5 px-8 pt-17 tablet:grid-cols-[8.5rem_minmax(0,1fr)] tablet:gap-x-9 tablet:px-6 mobile:block mobile:px-6 mobile:pt-9 narrow:px-5 print:block print:max-w-none print:p-0">

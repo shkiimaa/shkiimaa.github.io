@@ -24,6 +24,8 @@ export const text = {
   // 묶음 머리말(경력의 회사 이름): 구역 제목과 항목 제목 사이 단계 — 항목과 같은 크기면 위계가 안 보인다
   group: 'text-xl font-bold leading-snug tracking-tight mobile:text-lg',
   heading: 'text-lg font-bold leading-snug tracking-tight',
+  // 이력서 항목 이름(회사·프로젝트·학교): 바로 아래 보조 줄과 같은 크기에 굵기만 올린다 — 크기를 여러 단계로 쓰지 않는다
+  item: 'text-base font-bold leading-6',
   lead: 'text-base leading-7',
   body: 'text-sm leading-6',
   // 제목 바로 아래 붙는 보조 줄(직무·기간·학과·역할): 본문 크기, 줄 간격만 촘촘하게
@@ -33,8 +35,12 @@ export const text = {
 
 export const PageTitle = ({ children }) => <h1 className={text.display}>{children}</h1>;
 // 구역 제목: 위 간격은 놓이는 자리(SectionBlock)에서, 아래 간격은 여기서
-export const SectionTitle = ({ as: Tag = 'h2', children, className }) => <Tag className={cx(text.section, 'mb-4 print:break-after-avoid', className)}>{children}</Tag>;
-export const SubTitle = ({ children }) => <h3 className={cx(text.heading, 'mb-3.5 print:break-after-avoid')}>{children}</h3>;
+// 크기 단계를 좁게 쓴다: 프로젝트 이름(section) > 구역 제목(group) > 소제목(heading) > 본문
+export const SectionTitle = ({ as: Tag = 'h2', children, className }) => <Tag className={cx(text.group, 'mb-4 print:break-after-avoid', className)}>{children}</Tag>;
+export const SubTitle = ({ children }) => <h3 className={cx(text.item, 'mb-3 print:break-after-avoid')}>{children}</h3>;
+// 한 줄 안의 항목 구분선 (기간 | 역할, 기간 | 상태 | 학과)
+// 모바일에서는 선을 감추고 간격만 남긴다 — 좁은 폭에서 뒤 항목이 다음 줄로 넘어가면 선이 줄 끝에 홀로 남는다
+export const Bar = ({ className }) => <span className={cx('mx-2.5 inline-block h-3 w-px bg-strong-line mobile:bg-transparent', className)} aria-hidden="true" />;
 export const Meta = ({ as: Tag = 'p', children, className, ...rest }) => <Tag className={cx(text.meta, 'text-muted', className)} {...rest}>{children}</Tag>;
 
 // 같은 구역 안 문단: 두 번째 문단부터 문단 사이 간격
@@ -43,7 +49,7 @@ export const Paragraphs = ({ items, size = 'body', muted = true, className }) =>
 ));
 
 export const Bullets = ({ items }) => (
-  <ul className={cx(text.body, 'list-disc pl-4 marker:text-muted')}>{items.map((item, i) => <Prose key={i} as="li" text={item} className="my-0.5 pl-px" />)}</ul>
+  <ul className={cx(text.body, 'list-disc pl-4 marker:text-secondary')}>{items.map((item, i) => <Prose key={i} as="li" text={item} className="my-0.5 pl-px" />)}</ul>
 );
 
 export const ResultBox = ({ text: copy, raw }) => (
@@ -63,31 +69,36 @@ export const TextLink = ({ href, children, className }) => (
     <span className="group-hover:underline group-hover:underline-offset-3">{children}</span><ArrowIcon />
   </a>
 );
-// 외부 링크: 화살표 없이 글자만 둔다 — 링크 표시는 놓이는 자리의 강조색·굵기로 한다
-export const External = ({ href, children, className }) => (
-  <a className={className} href={href} target="_blank" rel="noopener noreferrer">{children}</a>
-);
 
-// 서비스 주소·스토어 링크: TextLink와 달리 PDF에서도 보이고 눌린다
-export const ProjectLinks = ({ links, className }) => links?.length > 0 && (
-  <p className={cx(text.meta, 'flex flex-wrap gap-x-4 gap-y-0.5 font-semibold text-accent', className)}>
-    {links.map(link => <External key={link.url} href={link.url}>{link.label}</External>)}
+// 아이콘: src/icons의 SVG를 빌드 시 HTML에 넣는다 (Simple Icons·Tabler Icons 원본, 글자색을 따른다)
+const iconSvg = name => readFileSync(path.join(root, 'src/icons', `${name}.svg`), 'utf8');
+export const Icon = ({ name, className }) => (
+  <span className={cx('inline-flex [&_svg]:size-full', className)} aria-hidden="true" dangerouslySetInnerHTML={{ __html: iconSvg(name) }} />
+);
+// 서비스 링크 버튼: 아이콘 + 이름을 같은 높이의 테두리 칸에 넣는다 —
+// 아이콘만 두면 로고마다 생김새가 달라 크기가 들쭉날쭉해 보인다
+export const IconLinks = ({ links, className }) => links?.length > 0 && (
+  <p className={cx('flex flex-wrap items-center gap-1.5 mobile:gap-1', className)}>
+    {links.map(link => (
+      <a key={link.url} className={cx(text.meta, 'inline-flex items-center gap-1.5 rounded-sm border border-line bg-paper px-2 py-0.5 font-medium whitespace-nowrap text-secondary hover:border-strong-line hover:text-ink mobile:gap-1 mobile:px-1.5')} href={link.url} target="_blank" rel="noopener noreferrer">
+        <Icon name={link.icon} className="size-3 flex-none" />{link.label}
+      </a>
+    ))}
   </p>
 );
-
 /* ── 프로젝트 ── */
-// 이름·종류 한 줄 + 기간·역할 한 줄. 상세 보기 링크는 이름 줄 오른쪽 끝, 이름 글자 윗선에 맞춘다.
-// 서비스 링크는 화면에서는 기간·역할 아래 줄에 (상세 보기와 한 줄에 두면 너무 길다),
-// PDF에서는 이름 줄 오른쪽 끝에 둔다 (줄이 늘면 뒤 내용이 다음 쪽으로 밀리고, 상세 보기는 PDF에서 숨는다)
+// 이름·종류 한 줄 + 기간·역할 한 줄 + 서비스 링크 버튼 줄. 상세 보기 링크는 이름 줄 오른쪽 끝, 이름 글자 윗선에 맞춘다.
+// 버튼 줄은 화면과 PDF 모두 기간·역할 아래에 둔다 (자리가 문서마다 달라지지 않게)
 export const ProjectHeader = ({ project, href, large }) => (
   <header className="project-heading grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-baseline gap-x-3 mobile:grid-cols-[minmax(0,1fr)_auto] print:break-after-avoid">
-    {large ? <h1 className={text.display}>{project.name}</h1> : <h2 className={text.title}>{project.name}</h2>}
-    <p className={cx(text.lead, 'font-medium text-secondary mobile:col-span-full mobile:row-start-2 mobile:mt-1')}>{project.kind}</p>
+    {large ? <h1 className={text.display}>{project.name}</h1> : <h2 className={text.section}>{project.name}</h2>}
+    <p className={cx(text.body, 'text-secondary mobile:col-span-full mobile:row-start-2 mobile:mt-1')}>{project.kind}</p>
     {href && <TextLink href={href} className="col-start-4 row-start-1 mt-0.75 ml-2 self-start whitespace-nowrap mobile:col-start-2 mobile:mt-0.5 mobile:ml-0">프로젝트 상세 보기</TextLink>}
-    <div className={cx('project-meta', text.meta, 'col-span-full mt-1 flex flex-wrap gap-x-4.5 gap-y-0.75 text-muted mobile:row-start-3 print:flex-nowrap print:gap-x-3')}>
-      <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
+    {/* 기간 | 역할 — 이력서의 프로젝트 줄과 같은 모양 (구분선은 역할 쪽에 붙여 두 칸으로 유지한다) */}
+    <div className={cx('project-meta', text.detail, 'col-span-full mt-1.5 flex flex-wrap items-center gap-y-0.75 mobile:row-start-3 print:flex-nowrap')}>
+      <span className="tabular-nums whitespace-nowrap">{project.period}</span><span className="inline-flex items-center"><Bar />{project.role}</span>
     </div>
-    <ProjectLinks links={project.links} className="col-span-full mt-1.5 mobile:row-start-4 print:col-span-1 print:col-start-3 print:row-start-1 print:mt-0.75 print:self-start print:whitespace-nowrap" />
+    <IconLinks links={project.links} className="col-span-full mt-2.5 mobile:row-start-4" />
   </header>
 );
 
@@ -115,7 +126,7 @@ export const TechStack = ({ project }) => (
     ))}
   </div>
 );
-export const TechLine = ({ items }) => <Meta className="mt-3"><TechTokens items={items} /></Meta>;
+export const TechLine = ({ items }) => <p className={cx(text.meta, 'mt-3 text-secondary')}><TechTokens items={items} /></p>;
 
 // 프로젝트 안의 구역(주요 업무, 기술 스택, 문제 해결 등): 위 간격과 구분선
 export const SectionBlock = ({ id, title, children, rule, className }) => (
@@ -126,9 +137,9 @@ export const SectionBlock = ({ id, title, children, rule, className }) => (
 );
 
 export const CaseStudy = ({ study, id, children }) => (
-  <section id={id} className="case-study border-t border-line pt-6 first-of-type:border-t-0 first-of-type:pt-0 not-first-of-type:mt-5 print:not-first-of-type:mt-4">
+  <section id={id} className="case-study border-t border-line pt-6 first-of-type:border-t-0 first-of-type:pt-0 not-first-of-type:mt-5 print:pt-4 print:not-first-of-type:mt-3">
     <SubTitle>{study.title}</SubTitle>
-    {study.period && <Meta className="-mt-2 mb-3 tabular-nums">{study.period}</Meta>}
+    {study.period && <p className={cx(text.detail, '-mt-2 mb-3 tabular-nums')}>{study.period}</p>}
     <Paragraphs items={study.paragraphs} />
     {study.items && <div className="mt-3"><Bullets items={study.items} /></div>}
     {study.result && <ResultBox text={study.result} />}
@@ -199,9 +210,17 @@ export const PageIntro = ({ title, links, children }) => (
   <div className="pb-11 mobile:pb-8 print:pb-4">
     <PageTitle>{title}</PageTitle>
     <p className={cx(text.lead, 'mt-4 text-secondary')}>{children}</p>
+    {/* 링크 아이콘 + 밑줄 글자, 항목 사이는 구분선 */}
     {links && (
-      <div className={cx(text.meta, 'mt-4 hidden flex-wrap gap-x-5.5 gap-y-1.5 font-semibold text-accent print:flex')}>
-        {links.map(([href, label]) => <External key={href} href={href}>{label}</External>)}
+      <div className={cx(text.body, 'mt-4 hidden flex-wrap items-center text-secondary print:flex')}>
+        {links.map(([href, label], i) => (
+          <span key={href} className="inline-flex items-center">
+            {i > 0 && <Bar className="mx-3.5" />}
+            <a className="inline-flex items-center gap-1.5" href={href} target="_blank" rel="noopener noreferrer">
+              <Icon name="link" className="size-3.5 flex-none" /><span className="underline decoration-strong-line underline-offset-3">{label}</span>
+            </a>
+          </span>
+        ))}
       </div>
     )}
   </div>

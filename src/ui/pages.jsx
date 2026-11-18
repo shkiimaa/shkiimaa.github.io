@@ -3,8 +3,8 @@ import { profile, experiences, projects, skills } from '../content.mjs';
 import { portfolioMaterial } from '../portfolio-content.mjs';
 import { Document } from './layout.jsx';
 import {
-  Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, MeasurementNote, Meta, PageIntro, PageTitle,
-  Paragraphs, ProjectHeader, ProjectLinks, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, cx, text
+  Bar, Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, IconLinks, MeasurementNote, Meta, PageIntro, PageTitle,
+  Paragraphs, ProjectHeader, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, cx, text
 } from './components.jsx';
 
 export const projectHref = project => `/projects/${project.id}/`;
@@ -20,15 +20,40 @@ const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 
 const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
 
 /* ── 이력서 ── */
-const ResumeSection = ({ id, title, en, note, className, children }) => (
-  <section id={id} className={cx('mt-9 mobile:mt-8 print:mt-5', className)}>
-    <div className="flex items-baseline gap-2.5 border-b-2 border-ink pb-3 print:border-b print:border-[#333] print:pb-2">
-      <h2 className={text.section}>{title}</h2><Meta as="span">{en}</Meta>
-      {note && <span className={cx(text.body, 'ml-auto font-semibold tabular-nums')}>{note}</span>}
+// 구역 사이 간격은 여기 한 곳에서만 정한다 (소개 → 경력 → 스킬 → 학력이 모두 같은 간격)
+// 구역 제목 옆의 보조 정보(총 경력)는 제목 바로 옆에 옅게 둔다
+const ResumeSection = ({ id, title, note, className, children }) => (
+  <section id={id} className={cx('mt-14 mobile:mt-11 print:mt-10', className)}>
+    <div className="flex items-baseline gap-3 border-b-2 border-ink pb-3 print:border-b print:border-[#333] print:pb-2">
+      <h2 className={text.heading}>{title}</h2>
+      {note && <span className={cx(text.body, 'text-muted tabular-nums')}>{note}</span>}
     </div>
     {children}
   </section>
 );
+// 회사·학교 표시: 로고가 있으면 로고, 없으면 이름 첫 글자 ((주) 같은 법인 표기는 뺀다)
+// 크기는 이름 줄 글자 윗선부터 기간 줄 글자 아랫선까지의 높이에 맞춘다
+const Mark = ({ name, logo }) => (
+  <span className={cx('mt-1 flex aspect-square w-10 shrink-0 items-center justify-center self-start overflow-hidden rounded-sm border border-line', logo ? 'bg-paper' : 'bg-wash')} aria-hidden="true">
+    {logo
+      ? <img className="w-full object-contain p-1" src={`/assets/${logo}`} alt="" />
+      : <span className={cx(text.body, 'font-semibold text-secondary')}>{name.replace(/\(주\)/, '').trim()[0]}</span>}
+  </span>
+);
+// 표시 + 이름·보조 줄. 머리줄은 PDF에서 쪼개지지 않는다.
+// rule(아래에 프로젝트가 이어지는 회사 줄)일 때만 바로 뒤 내용과 같은 쪽에 묶는다 —
+// 뒤 내용이 없는 줄까지 묶으면 다음 구역 제목과 떨어지지 못해, 다음 구역이 쪽 사이에서 쪼개진다
+const MarkedHead = ({ name, logo, rule, children }) => (
+  <header className={cx('flex gap-x-4 mobile:gap-x-3 print:break-inside-avoid', rule && 'print:break-after-avoid')}>
+    <Mark name={name} logo={logo} />
+    <div className={cx('min-w-0 flex-1', rule && 'border-b border-line pb-3.5 print:pb-2.5')}>
+      <h3 className={text.item}>{name}</h3>
+      <p className={cx(text.lead, 'flex flex-wrap items-center leading-6 tabular-nums')}>{children}</p>
+    </div>
+  </header>
+);
+// 표시 너비 + 간격만큼의 들여쓰기: 프로젝트가 회사 이름과 같은 세로선에 맞는다
+const underMark = 'pl-14 mobile:pl-13';
 // breakable: 인쇄 시 줄 안에서 쪽이 나뉘어도 되는 경우 (여러 항목을 품는 묶음 —
 // 통째로 안 쪼개지게 두면 다음 쪽으로 밀려 앞쪽에 큰 빈칸이 생긴다)
 const Row = ({ as: Tag = 'article', className, id, meta, breakable, children }) => (
@@ -37,7 +62,6 @@ const Row = ({ as: Tag = 'article', className, id, meta, breakable, children }) 
     <div className="min-w-0">{children}</div>
   </Tag>
 );
-const RowTitle = ({ children }) => <h3 className={cx(text.heading, 'mb-1.5 mobile:mb-0 mobile:basis-full')}>{children}</h3>;
 
 // 개발 경력 합계: 회사 기간을 시작·종료 월을 포함해 더하고, '현재'·'재직 중'은 빌드 시점의 달까지 센다
 const devJobs = experiences.filter(job => ['daon', 'doit'].includes(job.id));
@@ -49,7 +73,7 @@ const jobMonths = job => {
   return last - monthIndex(start) + 1;
 };
 const formatMonths = months => [months >= 12 && `${Math.floor(months / 12)}년`, months % 12 && `${months % 12}개월`].filter(Boolean).join(' ');
-const careerTotal = jobs => `총 ${formatMonths(jobs.reduce((sum, job) => sum + jobMonths(job), 0))}`;
+const careerTotal = jobs => formatMonths(jobs.reduce((sum, job) => sum + jobMonths(job), 0));
 
 const pdfContacts = [
   ['전화번호', 'tel:+821099313175', profile.phone],
@@ -60,8 +84,8 @@ const pdfContacts = [
 function Resume() {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
-    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" toc={[['about', '소개'], ['experience', '경력'], ['skills', '기술'], ['education', '학력']]}>
-      <section id="about" className="pb-11 mobile:pb-6 print:pb-8">
+    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" htmlClass="resume-doc" toc={[['about', '소개'], ['experience', '경력'], ['skills', '스킬'], ['education', '학력']]}>
+      <section id="about">
         {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈)
             PDF는 연락처를 이름 아래로 내리고, 그 옆에만 증명사진을 둬서 소개 문단 폭은 그대로 쓴다 (웹 화면에는 사진 없음) */}
         <div className="mb-5 mobile:mb-4 print:mb-8 print:flex print:items-start print:justify-between print:gap-6">
@@ -86,55 +110,56 @@ function Resume() {
         <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
         <Paragraphs items={introDetails} muted={false} />
       </section>
-      {/* 회사는 왼쪽 칸에, 그 회사에서 한 프로젝트는 오른쪽 칸에 쌓는다 —
-          테두리·배경 없이 자리만으로 회사가 프로젝트를 묶는다 (학력·기술 구역과 같은 2단 구조) */}
-      <ResumeSection id="experience" title="경력" en="Experience" note={careerTotal(devJobs)}>
-        {devJobs.map(job => (
-          <Row key={job.id} as="section" className="experience-group" breakable meta={<>
-            <h3 className={cx(text.group, 'mb-1.5 mobile:mb-0 mobile:basis-full')}>{job.name}</h3>
-            {/* 직무는 문서 머리말에도 있는 보조 정보 — 오른쪽 프로젝트의 보조 줄과 같은 크기로 낮춘다 */}
-            <Meta>{job.role}</Meta>
-            {/* 재직 기간은 보조 정보 — 자리가 되면 같은 줄, 좁으면 괄호째 다음 줄로 넘어간다 */}
-            <p className={cx(text.meta, 'text-secondary tabular-nums')}>
-              <span className="whitespace-nowrap">{job.period}</span>{' '}
-              <span className="whitespace-nowrap">({formatMonths(jobMonths(job))})</span>
-            </p>
-          </>}>
+      {/* 한 단 구성: 회사 이름, 그 아래 '재직 기간 | 직무' 줄과 구분선, 이어서 그 회사의 프로젝트를 위에서 아래로 쌓는다.
+          프로젝트 사이는 선 없이 간격으로만 나누고, 글자는 보조 줄까지 본문색에 가깝게 써서 흐린 줄이 없게 한다 */}
+      <ResumeSection id="experience" title="경력" note={careerTotal(devJobs)}>
+        {/* 회사 사이는 프로젝트 사이보다 넓게 띄워, 회사 묶음이 먼저 눈에 들어오게 한다 */}
+        {devJobs.map((job, i) => (
+          <section key={job.id} className={cx('experience-group', i > 0 ? 'pt-16 mobile:pt-13 print:pt-14' : 'pt-7 mobile:pt-6 print:pt-5')}>
+            <MarkedHead name={job.name} logo={job.logo} rule>
+              <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.role}</span>
+            </MarkedHead>
+            <div className={underMark}>
             {/* 회사 안에서는 시작일이 아니라 content.mjs에 적은 순서(비중 순)로 둔다 */}
-            {projects.filter(project => project.category === 'work' && project.companyId === job.id).map((project, i) => (
-              <article key={project.id} id={`resume-${project.id}`} className={cx('resume-project', i > 0 && 'mt-6 border-t border-line pt-6 print:mt-4 print:pt-4', 'print:break-inside-avoid')}>
+            {/* 프로젝트 사이는 본문 줄 간격의 두 배 넘게 띄운다 — 좁으면 앞 프로젝트의 기술 줄과 다음 프로젝트 이름이 붙어 보인다 */}
+            {projects.filter(project => project.category === 'work' && project.companyId === job.id).map((project, n) => (
+              <article key={project.id} id={`resume-${project.id}`} className={cx('resume-project print:break-inside-avoid', n > 0 ? 'pt-11 mobile:pt-9 print:pt-10' : 'pt-6 print:pt-4')}>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  {/* 이름만 굵게, 서비스 종류는 보조 글씨로 — 굵은 글씨가 둘이면 어디가 제목인지 늦게 읽힌다 */}
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <h3 className={text.heading}><a href={projectHref(project)}>{project.name}</a></h3>
-                    <p className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</p>
+                    <h3 className={text.item}><a href={projectHref(project)}>{project.name}</a></h3>
+                    <p className={cx(text.body, 'text-secondary')}>{project.kind}</p>
                   </div>
-                  {/* 이름 줄 오른쪽 끝: 화면에서는 상세 보기 링크, PDF에서는 서비스 링크 (상세 보기는 PDF에서 숨는다)
-                      화면에서 둘을 한 줄에 두면 너무 길어져, 서비스 링크는 기간·역할 아래 줄로 내린다 */}
-                  <div className="ml-auto whitespace-nowrap">
-                    <div className="hidden print:block"><ProjectLinks links={project.links} /></div>
-                    <TextLink href={projectHref(project)}>프로젝트 상세 보기</TextLink>
-                  </div>
+                  {/* 상세 보기 링크는 잠시 꺼 둔다
+                  <TextLink href={projectHref(project)}>프로젝트 상세 보기</TextLink>
+                  */}
                 </div>
-                <Meta className="mt-1 mb-2.5 flex flex-wrap gap-x-4 gap-y-0.5">
-                  <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
-                </Meta>
-                {project.links && <div className="-mt-1 mb-2.5 print:hidden"><ProjectLinks links={project.links} /></div>}
-                <Bullets items={project.summary} />
-                <TechLine items={project.tech} />
+                <p className={cx(text.detail, 'mt-0.5 mb-3 flex flex-wrap items-center gap-y-0.5 print:mb-2.5')}>
+                  <span className="tabular-nums whitespace-nowrap">{project.period}</span><Bar /><span>{project.role}</span>
+                </p>
+                {/* 이름·기간 줄은 본문색, 내용과 기술 줄은 한 단계 옅게 — 색이 같으면 기간·역할 줄이 내용에 묻힌다 */}
+                <div className="text-secondary"><Bullets items={project.summary} /></div>
+                <p className={cx(text.meta, 'mt-5 text-secondary')}><TechTokens items={project.tech} /></p>
+                {/* 서비스 링크 버튼은 기술 줄 아래에 둔다 — 이름 줄을 비워 두고, 화면·PDF 모두 같은 자리에 온다 */}
+                <IconLinks links={project.links} className="mt-3" />
               </article>
             ))}
-          </Row>
+            </div>
+          </section>
         ))}
-        {/* 개발 이전 경력은 개발 경력과 같은 비중으로 두지 않고 이름·직함·기간 한 줄로만 */}
+        {/* 개발 이전 경력은 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다) */}
         {experiences.filter(job => job.id === 'founder').map(job => (
-          <Row key={job.id} className="experience-row" meta={<Meta>이전 경력</Meta>}>
-            <p className={cx(text.body, 'font-semibold')}>{job.name}<span className="font-normal text-secondary"> · {job.role} · <span className="tabular-nums">{job.period}</span></span></p>
-          </Row>
+          <section key={job.id} className="experience-group pt-16 mobile:pt-13 print:pt-14">
+            <MarkedHead name={job.name} logo={job.logo}>
+              <span className="whitespace-nowrap">{job.period}</span><Bar /><span>{job.role}</span><Bar /><span className="text-secondary">개발 이전 경력</span>
+            </MarkedHead>
+          </section>
         ))}
       </ResumeSection>
       {/* 기술 표는 PDF에서 페이지 사이에 나뉘지 않게 한 덩어리로 둔다 */}
-      <ResumeSection id="skills" title="기술" en="Skills" className="print:break-inside-avoid">
-        <dl>
+      <ResumeSection id="skills" title="스킬" className="print:break-inside-avoid">
+        {/* 첫 줄 위 간격을 다른 구역(제목 선 아래 pt-7)과 같게 맞춘다 */}
+        <dl className="print:pt-1.5">
           {skills.map(group => (
             <Row key={group.label} as="div" meta={<dt className={cx(text.body, 'font-semibold')}>{group.label}</dt>} className="py-5 mobile:gap-1.5 mobile:py-4 print:py-2">
               <dd className={cx(text.body, 'text-secondary')}><TechTokens items={group.items} /></dd>
@@ -142,20 +167,22 @@ function Resume() {
           ))}
         </dl>
       </ResumeSection>
-      <ResumeSection id="education" title="학력" en="Education">
-        <div className="flex justify-between gap-6 pt-6 mobile:block print:pt-4">
-          <div><RowTitle>{profile.education.school}</RowTitle><p className={cx(text.detail, 'text-secondary')}>{profile.education.department}</p></div>
-          <p className={cx(text.detail, 'text-right text-secondary tabular-nums mobile:mt-3 mobile:text-left')}>{profile.education.period}<br className="mobile:hidden" /><span className="mobile:ml-2">{profile.education.status}</span></p>
+      <ResumeSection id="education" title="학력" className="print:break-inside-avoid">
+        <div className="pt-7 mobile:pt-6 print:pt-5">
+          <MarkedHead name={profile.education.school}>
+            <span className="whitespace-nowrap">{profile.education.period}</span><Bar /><span>{profile.education.status}</span><Bar /><span>{profile.education.department}</span>
+          </MarkedHead>
         </div>
       </ResumeSection>
-      <DocumentNext label="담당 업무와 문제 해결 과정을 더 자세히" href="/career/">경력기술서 읽기</DocumentNext>
+      <DocumentNext label="담당 업무와 문제 해결 과정을 더 자세히" href="/portfolio-detail/">포트폴리오 보기</DocumentNext>
     </Document>
   );
 }
 
 /* ── 프로젝트 공통 구역 ── */
 const ProjectIntro = ({ project, items }) => (
-  <div className="mt-3 max-w-180"><Paragraphs items={items} /></div>
+  // 머리줄(이름·기간·링크)과 소개 문단은 다른 덩어리 — 머리줄 안쪽 간격보다 넓게 띄운다
+  <div className="mt-6 max-w-180 print:mt-5"><Paragraphs items={items} /></div>
 );
 const Results = ({ project }) => <>{project.insight && <ResultBox text={project.insight} />}{project.result && <ResultBox text={project.result} />}</>;
 
@@ -239,8 +266,9 @@ const CareerProject = ({ project }) => (
   <article id={project.id} className="career-project border-b border-line py-9 last:border-b-0 last:pb-0 mobile:py-7 print:py-6">
     <ProjectHeader project={project} href={projectHref(project)} />
     <ProjectIntro project={project} items={[project.description]} />
-    <SectionBlock title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-    <SectionBlock title="기술 스택" className="print:break-inside-avoid"><TechStack project={project} /></SectionBlock>
+    {/* 모든 구역은 같은 방식(구분선 + 간격)으로 나눈다 */}
+    <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
+    <SectionBlock title="기술 스택" rule className="print:break-inside-avoid"><TechStack project={project} /></SectionBlock>
     {project.cases?.length > 0 && (
       <SectionBlock title="문제 해결과 개선" rule>
         {project.cases.map(study => <CaseStudy key={study.id} study={study} id={`${project.id}-${study.id}`} />)}
@@ -256,8 +284,13 @@ function Career() {
       {experiences.slice(0, 2).map((job, j) => (
         <section key={job.id} id={job.id} className={j ? 'mt-17.5 mobile:mt-12 print:mt-7' : 'mt-7.5 mobile:mt-5 print:mt-4'}>
           <header className="flex items-start justify-between gap-5 border-t-2 border-b border-t-ink border-b-strong-line pt-5 pb-6 mobile:block mobile:py-4.5 print:items-baseline print:border-t-0 print:border-b-[#333] print:py-2.5 print:break-after-avoid">
-            <div><h2 className={text.section}>{job.name}</h2><Meta className="mt-1 mobile:hidden print:hidden">{job.role}</Meta></div>
-            <Meta className="tabular-nums whitespace-nowrap mobile:mt-2">{job.period}</Meta>
+            {/* 이력서의 회사 줄과 같은 모양: 이름, 그 아래 재직 기간 | 직무 */}
+            <div>
+              <h2 className={text.section}>{job.name}</h2>
+              <p className={cx(text.lead, 'mt-1 flex flex-wrap items-center leading-6 tabular-nums')}>
+                <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.role}</span>
+              </p>
+            </div>
           </header>
           {workProjects.filter(p => p.companyId === job.id).map(project => <CareerProject key={project.id} project={project} />)}
         </section>
@@ -316,12 +349,12 @@ function PortfolioDetail() {
     <Document title="포트폴리오 상세" description="김수환의 프로젝트 담당 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
         <PageIntro title="김수환 포트폴리오" links={detailWebLinks}>프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
-        <Toolbar count="6개 프로젝트" links={[['/portfolio/', '기본 버전으로 보기'], ['/projects/', '프로젝트별로 보기']]} />
+        <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
             <ProjectIntro project={project} items={[portfolioIntro(project)]} />
-            <SectionBlock title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
+            <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
             <Implementation project={project} prefix={`${project.id}-`} />
             {project.cases?.length > 0 && (
               <SectionBlock title="문제 해결과 개선" rule>
@@ -345,18 +378,18 @@ const thumbnail = project => material(project).webImages?.[0] || project.images?
 
 function ProjectIndex() {
   return (
-    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio" toc={[['main', '전체 프로젝트']]}>
+    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio-detail" toc={[['main', '전체 프로젝트']]}>
       <PageIntro title="프로젝트">직접 개발한 6개 프로젝트의<br className="hidden mobile:inline" /> 담당 업무와 구현 사례입니다.</PageIntro>
-      <Toolbar count="6개 프로젝트" links={[['/portfolio/', '한 페이지로 모두 보기']]} />
+      <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '한 페이지로 모두 보기']]} />
       <div>
         {orderedProjects.map(p => (
           <article key={p.id} data-category={p.category} className={cx('project-index-row group relative border-b border-line py-8 mobile:py-6 print:break-inside-avoid', thumbnail(p) && 'grid grid-cols-[minmax(0,1fr)_14.25rem] items-center gap-7 tablet:grid-cols-[minmax(0,1fr)_10.5rem] tablet:gap-5.5 mobile:grid-cols-1 mobile:gap-4')}>
             <div>
-              <Meta className="mb-2">{p.company} <span className="mx-1.5 text-strong-line" aria-hidden="true">/</span> <span className="tabular-nums">{p.period}</span></Meta>
-              <h2 className={text.title}>
+              <p className={cx(text.detail, 'mb-2 flex flex-wrap items-center')}>{p.company}<Bar /><span className="tabular-nums">{p.period}</span></p>
+              <h2 className={text.section}>
                 <a className="inline-flex items-center gap-3 group-hover:text-accent after:absolute after:inset-0 after:content-['']" href={projectHref(p)}>{p.name}<ArrowIcon className="size-4.5 text-accent" /></a>
               </h2>
-              <p className={cx(text.lead, 'mt-1 font-semibold')}>{p.kind}</p>
+              <p className={cx(text.body, 'mt-1 text-secondary')}>{p.kind}</p>
               <Prose as="p" text={p.description} className={cx(text.body, 'mt-3 max-w-162 text-secondary')} />
               <TechLine items={p.tech} />
             </div>
@@ -386,11 +419,11 @@ function ProjectDetail({ project, index }) {
     <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio-detail" toc={toc}>
       <a className={cx(text.meta, 'mb-8 inline-flex gap-2 text-muted mobile:mb-6 print:hidden')} href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a>
       <section id="overview">
-        <Meta className="mb-3.5">{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</Meta>
+        <p className={cx(text.detail, 'mb-3.5 text-secondary')}>{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</p>
         <ProjectHeader project={project} large />
         <ProjectIntro project={project} items={[portfolioIntro(project)]} />
       </section>
-      <SectionBlock id="tasks" title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
+      <SectionBlock id="tasks" title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
       <Implementation project={project} />
       {project.cases?.length > 0 && (
         <SectionBlock id="measurements" title="문제 해결과 개선" rule>

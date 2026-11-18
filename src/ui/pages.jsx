@@ -17,7 +17,7 @@ const material = project => portfolioMaterial[project.id] || {};
 const webLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
 // 포트폴리오 상세는 경력기술서 내용을 담고 있어 웹 경력기술서 링크를 빼고, '웹 포트폴리오'는 웹 포트폴리오 상세 페이지로 연결한다
 const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 포트폴리오']];
-const portfolioIntro = project => `${material(project).overview} ${material(project).scope}`;
+const portfolioIntro = project => [material(project).overview, material(project).scope].filter(Boolean).join(' ');
 
 /* ── 이력서 ── */
 // 구역 사이 간격은 여기 한 곳에서만 정한다 (소개 → 경력 → 스킬 → 학력이 모두 같은 간격)
@@ -174,7 +174,7 @@ function Resume() {
           </MarkedHead>
         </div>
       </ResumeSection>
-      <DocumentNext label="담당 업무와 문제 해결 과정을 더 자세히" href="/portfolio-detail/">포트폴리오 보기</DocumentNext>
+      <DocumentNext label="주요 업무와 문제 해결 과정을 더 자세히" href="/portfolio-detail/">포트폴리오 보기</DocumentNext>
     </Document>
   );
 }
@@ -182,13 +182,17 @@ function Resume() {
 /* ── 프로젝트 공통 구역 ── */
 const ProjectIntro = ({ project, items }) => (
   // 머리줄(이름·기간·링크)과 소개 문단은 다른 덩어리 — 머리줄 안쪽 간격보다 넓게 띄운다
-  <div className="mt-6 max-w-180 print:mt-5"><Paragraphs items={items} /></div>
+  <div className="mt-6 max-w-180 print:mt-4"><Paragraphs items={items} /></div>
 );
 const Results = ({ project }) => <>{project.insight && <ResultBox text={project.insight} />}{project.result && <ResultBox text={project.result} />}</>;
 
-const Implementation = ({ project, prefix = '' }) => {
-  const sections = material(project).sections;
-  if (!sections?.length) return null;
+// detail: 주요 업무와 문제 해결 전문을 함께 싣는 문서 — 거기서 겹치는 구역·문단은 뺀다 (portfolio-content.mjs의 skipInDetail·detailParagraphs)
+const sectionsFor = (project, detail) => (material(project).sections || [])
+  .filter(section => !(detail && section.skipInDetail))
+  .map(section => detail && section.detailParagraphs ? { ...section, title: section.detailTitle || section.title, paragraphs: section.detailParagraphs } : section);
+const Implementation = ({ project, prefix = '', detail }) => {
+  const sections = sectionsFor(project, detail);
+  if (!sections.length) return null;
   return (
     <SectionBlock id={`${prefix}implementation`} title="구현 구조와 설계" rule>
       {sections.map(section => (
@@ -255,20 +259,21 @@ const Screens = ({ project, id }) => {
   return (
     <SectionBlock id={id} title="프로젝트 화면" rule className={cx('screens-section', web.length > 0 && images.length > 0 && 'print:break-before-page')}>
       <Gallery images={web} />
-      <Gallery images={images} className={web.length ? 'mt-6 print:mt-3' : ''} printRow={web.length > 0} />
+      <Gallery images={images} className={web.length ? 'mt-6 print:mt-3' : ''} printRow={web.length > 0} printCompact />
     </SectionBlock>
   );
 };
-const Technology = ({ project, id }) => <SectionBlock id={id} title="기술 스택" rule className="print:break-inside-avoid"><TechStack project={project} /></SectionBlock>;
+// PDF에서는 위 간격을 줄인다 — 두 줄짜리 기술 스택만 다음 쪽으로 넘어가 홀로 남지 않게
+const Technology = ({ project, id }) => <SectionBlock id={id} title="기술 스택" rule className="print:mt-4 print:break-inside-avoid print:pt-3"><TechStack project={project} /></SectionBlock>;
 
 /* ── 경력기술서 ── */
 const CareerProject = ({ project }) => (
-  <article id={project.id} className="career-project border-b border-line py-9 last:border-b-0 last:pb-0 mobile:py-7 print:py-6">
+  <article id={project.id} className="career-project border-b border-line py-9 last:border-b-0 last:pb-0 mobile:py-7 print:py-5">
     <ProjectHeader project={project} href={projectHref(project)} />
     <ProjectIntro project={project} items={[project.description]} />
     {/* 모든 구역은 같은 방식(구분선 + 간격)으로 나눈다 */}
     <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-    <SectionBlock title="기술 스택" rule className="print:break-inside-avoid"><TechStack project={project} /></SectionBlock>
+    <SectionBlock title="기술 스택" rule className="print:mt-4 print:break-inside-avoid print:pt-3"><TechStack project={project} /></SectionBlock>
     {project.cases?.length > 0 && (
       <SectionBlock title="문제 해결과 개선" rule>
         {project.cases.map(study => <CaseStudy key={study.id} study={study} id={`${project.id}-${study.id}`} />)}
@@ -280,7 +285,7 @@ const CareerProject = ({ project }) => (
 function Career() {
   return (
     <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결·개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" toc={workProjects.map(p => [p.id, p.name])}>
-      <PageIntro title="김수환 경력기술서" links={webLinks}>개발한 서비스, 담당한 역할,<br className="hidden mobile:inline" /> 그리고 문제를 해결한 과정입니다.</PageIntro>
+      <PageIntro title="김수환 경력기술서" links={webLinks}>개발한 서비스와 역할,<br className="hidden mobile:inline" /> 그리고 문제를 해결한 과정입니다.</PageIntro>
       {experiences.slice(0, 2).map((job, j) => (
         <section key={job.id} id={job.id} className={j ? 'mt-17.5 mobile:mt-12 print:mt-7' : 'mt-7.5 mobile:mt-5 print:mt-4'}>
           <header className="flex items-start justify-between gap-5 border-t-2 border-b border-t-ink border-b-strong-line pt-5 pb-6 mobile:block mobile:py-4.5 print:items-baseline print:border-t-0 print:border-b-[#333] print:py-2.5 print:break-after-avoid">
@@ -304,7 +309,7 @@ function Career() {
 const PortfolioList = ({ children }) => <div className="portfolio-document">{children}</div>;
 const PortfolioProject = ({ index, children }) => (
   <div className={cx('portfolio-project', index > 0 ? 'mt-27.5 border-t-2 border-ink mobile:mt-18 print:mt-0 print:break-before-page print:border-t-0' : 'print:border-t print:border-[#333]')}>
-    <article className="career-project pt-8 mobile:pt-6 print:pt-4">{children}</article>
+    <article className="career-project pt-8 mobile:pt-6 print:pt-3">{children}</article>
   </div>
 );
 
@@ -346,16 +351,16 @@ const CaseEvidence = ({ project, study }) => {
 
 function PortfolioDetail() {
   return (
-    <Document title="포트폴리오 상세" description="김수환의 프로젝트 담당 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
+    <Document title="포트폴리오 상세" description="김수환의 프로젝트 주요 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={detailWebLinks}>프로젝트별 담당 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
+        <PageIntro title="김수환 포트폴리오" links={detailWebLinks}>프로젝트별 주요 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
         <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
             <ProjectIntro project={project} items={[portfolioIntro(project)]} />
             <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-            <Implementation project={project} prefix={`${project.id}-`} />
+            <Implementation project={project} prefix={`${project.id}-`} detail />
             {project.cases?.length > 0 && (
               <SectionBlock title="문제 해결과 개선" rule>
                 {project.cases.map(study => (
@@ -379,7 +384,7 @@ const thumbnail = project => material(project).webImages?.[0] || project.images?
 function ProjectIndex() {
   return (
     <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio-detail" toc={[['main', '전체 프로젝트']]}>
-      <PageIntro title="프로젝트">직접 개발한 6개 프로젝트의<br className="hidden mobile:inline" /> 담당 업무와 구현 사례입니다.</PageIntro>
+      <PageIntro title="프로젝트">직접 개발한 6개 프로젝트의<br className="hidden mobile:inline" /> 주요 업무와 구현 사례입니다.</PageIntro>
       <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '한 페이지로 모두 보기']]} />
       <div>
         {orderedProjects.map(p => (
@@ -410,7 +415,7 @@ function ProjectIndex() {
 function ProjectDetail({ project, index }) {
   const m = material(project);
   const toc = [['overview', '프로젝트 소개'], ['tasks', '주요 업무']];
-  if (m.sections?.length) toc.push(['implementation', '구현 구조와 설계']);
+  if (sectionsFor(project, true).length) toc.push(['implementation', '구현 구조와 설계']);
   if (project.cases?.length) toc.push(['measurements', '문제 해결과 개선']);
   if (project.images?.length || m.images?.length) toc.push(['screens', '프로젝트 화면']);
   toc.push(['technology', '기술 스택']);
@@ -424,7 +429,7 @@ function ProjectDetail({ project, index }) {
         <ProjectIntro project={project} items={[portfolioIntro(project)]} />
       </section>
       <SectionBlock id="tasks" title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-      <Implementation project={project} />
+      <Implementation project={project} detail />
       {project.cases?.length > 0 && (
         <SectionBlock id="measurements" title="문제 해결과 개선" rule>
           {project.cases.map(study => (

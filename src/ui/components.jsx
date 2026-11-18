@@ -36,8 +36,8 @@ export const text = {
 export const PageTitle = ({ children }) => <h1 className={text.display}>{children}</h1>;
 // 구역 제목: 위 간격은 놓이는 자리(SectionBlock)에서, 아래 간격은 여기서
 // 크기 단계를 좁게 쓴다: 프로젝트 이름(section) > 구역 제목(group) > 소제목(heading) > 본문
-export const SectionTitle = ({ as: Tag = 'h2', children, className }) => <Tag className={cx(text.group, 'mb-4 print:break-after-avoid', className)}>{children}</Tag>;
-export const SubTitle = ({ children }) => <h3 className={cx(text.item, 'mb-3 print:break-after-avoid')}>{children}</h3>;
+export const SectionTitle = ({ as: Tag = 'h2', children, className }) => <Tag className={cx(text.group, 'mb-4 print:mb-3 print:break-after-avoid', className)}>{children}</Tag>;
+export const SubTitle = ({ children }) => <h3 className={cx(text.item, 'mb-3 print:mb-2 print:break-after-avoid')}>{children}</h3>;
 // 한 줄 안의 항목 구분선 (기간 | 역할, 기간 | 상태 | 학과)
 // 모바일에서는 선을 감추고 간격만 남긴다 — 좁은 폭에서 뒤 항목이 다음 줄로 넘어가면 선이 줄 끝에 홀로 남는다
 export const Bar = ({ className }) => <span className={cx('mx-2.5 inline-block h-3 w-px bg-strong-line mobile:bg-transparent', className)} aria-hidden="true" />;
@@ -53,7 +53,7 @@ export const Bullets = ({ items }) => (
 );
 
 export const ResultBox = ({ text: copy, raw }) => (
-  <div className={cx('result', text.body, 'mt-5 border-l-2 border-accent bg-wash px-5 py-4 text-ink mobile:px-4 mobile:py-3 print:break-inside-avoid')}>
+  <div className={cx('result', text.body, 'mt-5 border-l-2 border-accent bg-wash px-5 py-4 text-ink mobile:px-4 mobile:py-3 print:mt-3 print:break-inside-avoid print:py-3')}>
     {raw ? <p>{copy}</p> : <Prose as="p" text={copy} />}
   </div>
 );
@@ -102,9 +102,15 @@ export const ProjectHeader = ({ project, href, large }) => (
   </header>
 );
 
-export const TaskList = ({ tasks }) => (
-  <dl className="task-list grid gap-3 mobile:gap-3.5">
-    {tasks.map(([label, copy]) => (
+const TaskRows = ({ tasks }) => (
+  <dl className="task-list grid content-start gap-1.5">
+    {tasks.map(([label, copy]) => label === '#' ? (
+      // 묶음 제목: 아래 항목들이 어느 쪽 일인지 구분한다
+      <dt key={copy} className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>{copy}</dt>
+    ) : !label ? (
+      // 이름표 없는 줄: 불릿 한 줄에 한 가지
+      <dd key={copy} className={cx(text.body, "relative pl-4 text-secondary before:absolute before:left-0.5 before:text-muted before:content-['•'] print:break-inside-avoid")}>{copy}</dd>
+    ) : (
       <div key={label} className="grid grid-cols-[5.75rem_minmax(0,1fr)] items-baseline gap-x-5 mobile:block print:break-inside-avoid">
         <dt className={cx(text.body, 'font-semibold text-ink mobile:mb-1')}>{label}</dt>
         <Prose as="dd" text={copy} className={cx(text.body, 'text-secondary')} />
@@ -112,6 +118,17 @@ export const TaskList = ({ tasks }) => (
     ))}
   </dl>
 );
+// '#' 줄로 묶음이 둘 이상 나뉘면 좌우로 나란히 둔다 (모바일은 위아래)
+export const TaskList = ({ tasks }) => {
+  const groups = [];
+  for (const row of tasks) { if (row[0] === '#' || !groups.length) groups.push([]); groups.at(-1).push(row); }
+  if (groups.length < 2) return <TaskRows tasks={tasks} />;
+  return (
+    <div className="grid grid-cols-2 gap-x-10 gap-y-6 mobile:grid-cols-1 print:gap-x-8 print:break-inside-avoid">
+      {groups.map(group => <TaskRows key={group[0][1]} tasks={group} />)}
+    </div>
+  );
+};
 
 export const TechTokens = ({ items }) => items.map((item, i) => (
   <span key={item} className="inline-block whitespace-nowrap">{item}{i < items.length - 1 && <span aria-hidden="true">&nbsp;·&nbsp;</span>}</span>
@@ -130,7 +147,7 @@ export const TechLine = ({ items }) => <p className={cx(text.meta, 'mt-3 text-se
 
 // 프로젝트 안의 구역(주요 업무, 기술 스택, 문제 해결 등): 위 간격과 구분선
 export const SectionBlock = ({ id, title, children, rule, className }) => (
-  <section id={id} className={cx(rule ? 'detail-section mt-10 border-t border-line pt-10 mobile:mt-7.5 mobile:pt-7.5 print:mt-6 print:pt-4' : 'mt-10 mobile:mt-8 print:mt-6', className)}>
+  <section id={id} className={cx(rule ? 'detail-section mt-10 border-t border-line pt-10 mobile:mt-7.5 mobile:pt-7.5 print:mt-5 print:pt-4' : 'mt-10 mobile:mt-8 print:mt-6', className)}>
     <SectionTitle>{title}</SectionTitle>
     {children}
   </section>
@@ -165,19 +182,20 @@ const imageSize = src => {
 
 const ratio = src => { const { width, height } = imageSize(src); return (width / height).toFixed(4); };
 
-export const Gallery = ({ images, className, printRow, single }) => {
+// printCompact: PDF에서 화면 캡처를 더 낮게 (프로젝트 화면 구역 — 작은 프로젝트가 한 쪽에 들어가게)
+export const Gallery = ({ images, className, printRow, single, printCompact }) => {
   if (!images?.length) return null;
   const phone = images.every(image => image.phone), screen = images.every(image => image.screen);
   // 일반 화면 캡처: PDF에서는 한 줄 2장, 높이 제한 (측정 캡처처럼 한 장을 크게 보여줄 때는 single)
   const plain = !phone && !screen && !single;
   return (
-    <div className={cx('project-gallery grid gap-6', phone && 'phone-gallery grid-cols-2 gap-x-6 mobile:grid-cols-1', phone && printRow && 'print:grid-cols-4 print:gap-x-3', screen && 'screen-gallery grid-cols-2 mobile:grid-cols-1', plain && 'print:grid-cols-2 print:gap-3', className)}>
+    <div className={cx('project-gallery grid gap-6 print:gap-4', phone && 'phone-gallery grid-cols-2 gap-x-6 mobile:grid-cols-1', phone && printRow && 'print:grid-cols-4 print:gap-x-3', screen && 'screen-gallery grid-cols-2 mobile:grid-cols-1', plain && (printCompact && images.length === 3 ? 'print:grid-cols-3 print:gap-3' : 'print:grid-cols-2 print:gap-3'), className)}>
       {images.map(image => (
         <figure key={image.src} className="min-w-0 break-inside-avoid">
           <button className={cx('image-expand relative block w-full overflow-hidden rounded-sm after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:shadow-[inset_0_0_0_1px_var(--color-strong-line)] after:content-[\'\']', phone && 'bg-wash p-6 print:p-3', phone && printRow && 'print:p-1.5')} type="button" data-image={`/assets/${image.src}`} data-caption={image.alt} aria-label={`${image.alt} 확대`}>
             {/* 휴대폰 캡처: 높이 상한(화면 32.5rem, PDF 16·22.5rem)을 원본 비율로 너비 상한으로 바꿔 둔다.
                 w-auto + max-h는 로드 전 높이가 0이라 목차 이동 위치가 밀리고, w-full + max-h는 옆으로 늘어난다. */}
-            <img className={cx('block w-full', phone ? cx('mx-auto max-w-[calc(32.5rem*var(--ratio))]', printRow ? 'print:max-w-[calc(16rem*var(--ratio))]' : 'print:max-w-[calc(22.5rem*var(--ratio))]') : screen ? 'aspect-16/10 object-cover object-top' : single ? 'object-contain' : 'max-h-115 object-contain mobile:max-h-82 print:max-h-50')} style={phone ? { '--ratio': ratio(image.src) } : undefined} src={`/assets/${image.src}`} {...imageSize(image.src)} alt={image.alt} loading="lazy" decoding="async" />
+            <img className={cx('block w-full', phone ? cx('mx-auto max-w-[calc(32.5rem*var(--ratio))]', printRow ? 'print:max-w-[calc(16rem*var(--ratio))]' : 'print:max-w-[calc(22.5rem*var(--ratio))]') : screen ? cx('aspect-16/10 object-cover object-top', printCompact && 'print:aspect-16/9') : single ? 'object-contain' : cx('max-h-115 object-contain mobile:max-h-82', printCompact ? 'print:max-h-32' : 'print:max-h-50'))} style={phone ? { '--ratio': ratio(image.src) } : undefined} src={`/assets/${image.src}`} {...imageSize(image.src)} alt={image.alt} loading="lazy" decoding="async" />
             <span className={cx(text.meta, 'absolute right-2 bottom-2 rounded-sm bg-white/90 px-2 py-0.5 text-muted print:hidden')}>화면 확대</span>
           </button>
           <Meta as="figcaption" className="mt-2">{image.alt}</Meta>
@@ -189,8 +207,8 @@ export const Gallery = ({ images, className, printRow, single }) => {
 
 const svg = name => readFileSync(path.join(root, 'public/assets/diagrams', `${name}.svg`), 'utf8');
 export const Diagram = ({ name, caption, className }) => (
-  <figure className={cx('architecture-diagram mt-5 break-inside-avoid', className)}>
-    <div className="overflow-x-auto border border-line bg-white px-3 py-5 mobile:px-2 mobile:py-4 print:overflow-visible print:border-transparent print:p-3 print:shadow-[inset_0_0_0_1px_var(--color-line)] [&_svg]:mx-auto [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg]:min-w-145 print:[&_svg]:max-h-80 print:[&_svg]:min-w-0" role="region" aria-label={caption} tabIndex={0} dangerouslySetInnerHTML={{ __html: svg(name) }} />
+  <figure className={cx('architecture-diagram mt-5 break-inside-avoid print:mt-3', className)}>
+    <div className="overflow-x-auto border border-line bg-white px-3 py-5 mobile:px-2 mobile:py-4 print:overflow-visible print:border-transparent print:px-3 print:py-2 print:shadow-[inset_0_0_0_1px_var(--color-line)] [&_svg]:mx-auto [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg]:min-w-145 print:[&_svg]:max-h-80 print:[&_svg]:min-w-0" role="region" aria-label={caption} tabIndex={0} dangerouslySetInnerHTML={{ __html: svg(name) }} />
     <Meta as="figcaption" className="mt-2">{caption}</Meta>
   </figure>
 );

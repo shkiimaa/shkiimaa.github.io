@@ -14,7 +14,7 @@ export const experiences = [
 
 export const skills = [
   { label: 'Front-End', items: ['TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'styled-components', 'Zustand', 'TanStack Query', 'SWR', 'Capacitor', 'Electron'] },
-  { label: 'Back-End', items: ['Node.js', 'Express', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ'] },
+  { label: 'Back-End', items: ['Express', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ'] },
   { label: 'Infra', items: ['AWS(EC2)', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions'] }
 ];
 
@@ -26,7 +26,7 @@ export const projects = [
     // 링크 이름에 주소(bitria.com)를 쓰면 macOS 미리보기가 글자를 주소로 감지해 클릭 영역을 넓게 덧씌운다
     // 옆의 App Store·Google Play와 글자 모양이 맞도록 영문으로 쓴다 (한글이 섞이면 한 칸만 내려앉아 보인다)
     links: [{ label: 'Website', icon: 'world', url: 'https://bitria.com' }, { label: 'App Store', icon: 'apple', url: 'https://apps.apple.com/kr/app/bitria/id6775212278' }, { label: 'Google Play', icon: 'googleplay', url: 'https://play.google.com/store/apps/details?id=com.bitria.app' }],
-    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s 배포·운영을 맡았습니다.',
+    description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s로 배포·운영하고 있습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트, 주문·자산·인증·KYC 등 화면 및 API 서버 개발',
       '렌더 계측으로 비활성 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 70% 감소',
@@ -34,17 +34,24 @@ export const projects = [
       '운영 로그로 TradingView 캐시 버그·심볼 전환 경쟁 상태 등 차트 로딩 실패 원인을 특정해 해결',
       'iOS 앱 복귀 시 이전 데이터 표시, 비영어 기기의 Safari 열림 등 앱 전용 문제를 원인 특정 후 해결'
     ],
+    // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
-      ['공통 구조', 'FSD(Feature-Sliced Design) 구조와 시맨틱 디자인 토큰 설계, 다크·라이트 테마, 브랜드 2종, 로케일 6종 지원, 웹·앱별 코드 분리 및 컴포넌트 API 기준 문서화'],
-      ['거래 화면', 'TradingView 차트, 실시간 시세·호가·체결, 현물·선물·마진 주문 및 포지션·체결 내역 구현'],
-      ['빌드·성능', 'Next.js 16.4·Turbopack 전환, 번들·폰트 최적화, 실시간 화면 리렌더 격리'],
-      ['멀티 플랫폼', '하나의 코드베이스로 웹·iOS·Android·데스크톱(Electron) 앱 빌드, 모바일 앱 스토어 출시, 네이티브 푸시·소셜 로그인·기기 식별 연동'],
-      ['인증·보안', '회원가입·소셜 로그인, 2단계 인증(2FA)·패스키·신뢰 기기·세션·계정 복구 개발, 고객확인(KYC, Sumsub)·입출금 연동 및 API 키 관리 구현'],
-      ['백엔드 API', '주문 API(요청 검증·권한 확인·주문 처리 서비스 연동), 자산 API(계좌별 자산·USDT 환산·스냅샷·일별 손익), 시세 조회 API 구현'],
-      ['서비스 운영', '가격 조건별 알림·클라이언트 오류 수집·앱 버전 정책·고객 문의(CS) API 개발, K3s 프로덕션 배포·운영 및 장애 대응']
+      ['#', '프론트엔드 (웹·iOS·Android·데스크톱)'],
+      ['', 'FSD(Feature-Sliced Design) 구조와 디자인 토큰 설계'],
+      ['', '하나의 코드베이스로 4개 플랫폼 앱 빌드 및 스토어 출시'],
+      ['', 'TradingView 차트와 실시간 시세·호가·주문 화면 구현'],
+      ['', '회원가입·로그인, 보안 설정, KYC, 입출금, 자산 화면 구현'],
+      ['', 'Turbopack 빌드 전환, 번들·폰트 최적화'],
+      ['#', '백엔드 API'],
+      ['', '회원가입·로그인, 소셜 로그인(Google·Apple·Telegram) API 개발'],
+      ['', '2단계 인증·패스키·신뢰 기기 등 계정 보안 API 개발'],
+      ['', '자산·입출금·포지션·시세 조회 API 개발'],
+      ['', 'Sumsub 고객확인(KYC) 연동'],
+      ['', '가격 알림·푸시·고객 문의 API 개발'],
+      ['', 'K3s 프로덕션 배포·운영'],
     ],
     tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Express', 'TimescaleDB', 'Redis', 'Socket.IO'],
-    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Node.js', 'Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'AWS(EC2)', 'Docker', 'Kubernetes(K3s)']]],
+    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'AWS(EC2)', 'Docker', 'Kubernetes(K3s)']]],
     outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '30%', detail: '417 → 292.5ms · 로컬 프로덕션 빌드·5회 중앙값' }],
     cases: [
       { id: 'mobile-performance', title: '배럴 import의 불필요한 모듈 유입 개선', highlight: '배럴 import 136곳을 직접 참조로 바꿔 모바일 홈 TBT 30% 감소(417 → 292.5ms)', paragraphs: [
@@ -81,27 +88,27 @@ export const projects = [
   {
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드 전담 · 백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
     links: [{ label: 'Website', icon: 'world', url: 'https://gobit.kr' }],
-    description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트 대부분과 백엔드 API 서버를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
+    description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트와 백엔드 API 서버, 채팅·스케줄러 서버를 개발했습니다.',
     summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리하고, 가상화 리스트로 화면에 보이는 코인만 구독', '코인 상세 중복 요청 제거·구간별 스켈레톤 등 화면 개선, 채팅·스케줄러 서버 개발'],
+    // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
-      ['웹 클라이언트', 'React(2024.10 – 2025.07)와 Next.js 15 재구축(2025.07 – 2025.08), 마켓·코인 상세·뉴스·모의투자·랭킹·채팅·분석 화면, TradingView 차트 연동'],
-      ['실시간 데이터', '바이낸스·바이빗·OKX·Gate.io WebSocket 연동, Socket.IO 재연결·헬스체크 개선, 조회 데이터는 SWR로 관리'],
-      ['서비스 기능', '회원 인증·휴대폰 인증·출석·레퍼럴·차단·1:1 문의·쪽지 기능과 API, 유료 구독 계정 공유를 막는 중복 로그인 차단(서버·클라이언트), USDT 결제·기프티콘 구매 화면'],
-      ['모의투자', '포지션·포인트 내역·대회 랭킹 API와 화면'],
-      ['서버 운영', '채팅 서버(Socket.IO, Redis 대화 기록, 비속어 필터) 개발, 스케줄러 서버 분리, 바이낸스 WebSocket 무응답 감시·주기 재연결'],
-      ['운영 개선', '코인 상세 서버 요청 중복 제거·구간별 스켈레톤·폰트 교체, coinlns → Gobit 리브랜딩, 점검 모드·회원 탈퇴']
+      ['', 'React로 구축 후 Next.js 15로 재구축'],
+      ['', '마켓·코인 상세·뉴스·모의투자·랭킹·채팅 화면 구현'],
+      ['', 'Binance·Bybit·OKX·Gate.io 실시간 시세 연동'],
+      ['', '회원 인증·모의투자·결제 등 백엔드 API 개발'],
+      ['', '채팅 서버와 스케줄러 서버 개발'],
     ],
     tech: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Express', 'MariaDB', 'Redis', 'Socket.IO'],
-    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS']], ['백엔드', ['Node.js', 'Express', 'MariaDB', 'Redis', 'Socket.IO']]],
+    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS']], ['백엔드', ['Express', 'MariaDB', 'Redis', 'Socket.IO']]],
     cases: [{ id: 'nextjs-seo', title: 'SPA 검색 노출 한계로 Next.js 재구축', highlight: 'SPA 사전 렌더링의 한계를 확인하고 Next.js로 재구축해 코인·게시글 상세를 서버 렌더링', period: '2025.07 – 2025.08 · 이후 성능 개선', paragraphs: [
       'React SPA는 빈 HTML을 먼저 내려보내, 코인·뉴스·게시글 내용과 메타 정보가 검색 결과와 링크 미리보기에 잡히지 않았습니다. react-helmet-async로 페이지 제목을 바꾸고, 빌드할 때 Puppeteer로 페이지를 미리 렌더링하는 prerender를 적용했습니다.',
       '하지만 prerender는 빌드 설정에 적어 둔 고정 경로 26개를 0.5초 기다린 뒤 저장하는 방식이라, 계속 늘어나는 게시글 상세나 페이지 번호가 붙는 뉴스 목록은 대상에 넣을 수 없었습니다. 저장한 시점의 시세와 뉴스가 그대로 고정되는 문제도 있었습니다.',
       'Next.js 15 App Router로 재구축해 코인 상세(`/market/[symbol]`)와 게시글 상세(`/community/[id]`)를 서버에서 렌더링하고 페이지별 메타데이터를 생성했습니다. JSON-LD에 들어가는 값은 `<`를 이스케이프해 스크립트 주입을 막았습니다.',
       '이후 코인 상세 페이지에서 메타데이터와 본문이 같은 데이터를 따로 요청하던 것을 React `cache()`로 합치고, 전체 로딩 화면 대신 구간별 스켈레톤을 넣었습니다. 모든 페이지에서 미리 불러오던 TradingView 스크립트는 차트에서만 불러오도록 옮기고, 화면 크기별로 두 번 그리던 영역은 CSS 순서 조정으로 하나로 합쳤습니다. Pretendard 정적 폰트 9개는 가변 폰트 1개로 교체했습니다.'
     ], result: '코인별·게시글별 상세 페이지가 고유 주소와 메타데이터를 가진 서버 렌더링 페이지로 제공됩니다.' }, { id: 'exchange-sockets', title: '4개 거래소 실시간 시세 연결 구조 정리', highlight: '호출마다 열리던 WebSocket을 거래소별 단일 연결로 정리하고, 목록은 화면에 보이는 코인만 구독', period: '2024.11 – 2024.12', paragraphs: [
-      '바이낸스·바이빗·OKX·Gate.io 시세를 연동하면서, 공통 WebSocket 훅이 호출될 때마다 새 연결을 열고 있었습니다. 바이낸스 하나에만 시세 목록·차트·보조 차트용 연결이 4개 이상 열렸고, 거래소마다 구독 메시지와 캔들 형식도 달랐습니다.',
+      'Binance·Bybit·OKX·Gate.io 시세를 연동하면서, 공통 WebSocket 훅이 호출될 때마다 새 연결을 열고 있었습니다. Binance 하나에만 시세 목록·차트·보조 차트용 연결이 4개 이상 열렸고, 거래소마다 구독 메시지와 캔들 형식도 달랐습니다.',
       '거래소마다 연결 하나를 가진 스토어를 두고, 구독 중인 스트림 목록으로 중복 구독을 막고 재연결 시 다시 구독하도록 했습니다. 거래소별 메시지는 공통 캔들 형식으로 변환해, TradingView 데이터 소스 하나가 선택된 거래소에 맞춰 과거·실시간 데이터를 가져오도록 정리했습니다.',
-      '코인 목록을 가상화 리스트(@tanstack/react-virtual)로 구현해, 화면에 렌더링되는 행의 심볼만 구독하고, 스크롤에서 벗어난 심볼은 구독을 해제했습니다. 바이낸스는 전체 시세 스트림 대신 화면에 보이는 심볼의 스트림만 받도록 바꿨습니다.'
+      '코인 목록을 가상화 리스트(@tanstack/react-virtual)로 구현해, 화면에 렌더링되는 행의 심볼만 구독하고, 스크롤에서 벗어난 심볼은 구독을 해제했습니다. Binance는 전체 시세 스트림 대신 화면에 보이는 심볼의 스트림만 받도록 바꿨습니다.'
     ], result: '거래소마다 연결 하나로 시세 목록과 차트를 함께 처리하고, 목록은 화면에 보이는 코인만 구독합니다.' }, { id: 'platform-migration', title: '레거시 플랫폼 통합과 Kubernetes 이전', highlight: '서버 5대에 흩어진 14개 서비스를 K3s로 통합하고, 소스가 유실된 .NET 수집기를 Node.js로 재작성', period: '2026.07 – 2026.08 · 이전 후 유지보수', paragraphs: [
       'Gobit, 그리고 다른 개발자가 만든 별도 모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 흩어져 있었습니다. 레거시 서비스의 소스 코드가 유실돼, 핵심 시세 수집기는 .NET 바이너리만 남아 있었습니다. 유지보수와 배포를 이어갈 수 있도록 서비스를 모노레포로 통합하고 Kubernetes 환경으로 이전했습니다.'
     ], items: [
@@ -113,27 +120,30 @@ export const projects = [
   },
   {
     id: 'doit-uikit', name: 'Doit UI Kit', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 전담', kind: '사내 공통 UI 라이브러리',
+    links: [{ label: 'npm', icon: 'npm', url: 'https://www.npmjs.com/package/doit-uikit' }],
     description: '프로젝트마다 반복 구현하던 UI를 공통 라이브러리로 만들고, React 개발 규칙을 팀에 공유했습니다.',
     summary: ['Atomic Design 기반 UI 컴포넌트 24종 개발 및 npm 배포', '타입 선언 자동 생성·React 외부화 등 패키징 구성', 'Storybook·Chromatic 문서화 및 사내 프로젝트 2곳에 도입'],
+    // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
-      ['컴포넌트', 'Atomic Design 기반 UI 컴포넌트 24종 개발(기본 12종, 차트 5종 포함 복합 12종)'],
-      ['패키징', 'React·React DOM을 peer dependency로 분리하고 vite-plugin-dts로 타입 선언을 자동 생성해 npm 배포'],
-      ['문서화', 'Storybook·Chromatic으로 사용법·Props·상태별 UI 문서화'],
-      ['팀 표준', '디렉토리 구조·디자인 패턴·라이브러리 선정 기준 정립, ESLint·Prettier 설정 및 팀 온보딩 교육']
+      ['', 'Atomic Design 기반 UI 컴포넌트 24종 개발'],
+      ['', '타입 선언을 포함한 npm 패키지 배포'],
+      ['', 'Storybook·Chromatic 문서화'],
+      ['', '팀 개발 규칙 정립 및 온보딩 교육'],
     ],
-    result: 'D.A.X와 두잇 홈페이지가 같은 컴포넌트와 개발 규칙을 사용하게 됐습니다. 두 프로젝트에서 나온 요구사항은 라이브러리에 반영해 다시 배포했습니다.',
+    result: 'D.A.X와 두잇 홈페이지에 같은 컴포넌트와 개발 규칙을 적용했습니다. 두 프로젝트에서 나온 요구사항은 라이브러리에 반영해 다시 배포했습니다.',
     tech: ['TypeScript', 'React', 'styled-components', 'Storybook'],
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'Storybook']]],
     images: [{ src: 'uikit-storybook.png', alt: 'Doit UI Kit 컴포넌트의 Storybook 문서와 Props 설정 화면' }]
   },
   {
-    id: 'dax', name: 'D.A.X', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.01 – 2024.06', role: '프론트엔드 전담', kind: 'AI 모델 학습·운영 플랫폼',
+    id: 'dax', name: 'D.A.X', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.01 – 2024.06', role: '프론트엔드 전담', kind: 'AI 모델 학습 플랫폼',
     description: '데이터 관리·라벨링부터 모델 학습·추론까지 지원하는 사내 AI 플랫폼입니다. 백엔드 개발자 1명과 협업해 프론트엔드 전 화면을 개발했습니다.',
     summary: ['데이터 관리·모델 학습·추론·대시보드 화면 구현', '원본↔화면 좌표 변환을 적용한 캔버스 라벨링 도구 개발', '이미지 업로드·컬렉션 ZIP 다운로드 구현 및 사내 UI 라이브러리 적용'],
+    // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
-      ['플랫폼 화면', '프로젝트·대시보드·클래스·컬렉션·라벨링·모델 학습·추론 화면 구현'],
-      ['데이터 도구', '캔버스 기반 바운딩 박스 라벨링, 이미지·폴더 업로드, 컬렉션 ZIP 다운로드 기능 개발'],
-      ['공통 구조', '검색 조건·페이지네이션·로딩 상태 처리, 사내 표준 구조와 Doit UI Kit 적용']
+      ['', '프로젝트·대시보드·라벨링·모델 학습·추론 화면 구현'],
+      ['', '캔버스 기반 바운딩 박스 라벨링 도구 개발'],
+      ['', '이미지·폴더 업로드와 컬렉션 ZIP 다운로드 구현'],
     ],
     insight: '라벨링 이미지는 화면 크기에 맞춰 축소되지만 학습용 좌표는 원본 해상도로 저장해야 했습니다. 원본↔화면 좌표의 양방향 변환을 전용 훅으로 분리해 그리기·저장·재표시가 같은 규칙을 사용하도록 구현했습니다.',
     result: '축소 화면에서 그린 라벨이 원본 해상도 좌표로 저장돼 학습 데이터로 바로 사용됩니다.',
@@ -144,30 +154,32 @@ export const projects = [
   {
     id: 'doit-homepage', name: '두잇 홈페이지 리뉴얼', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.05 – 2024.07', role: '프론트엔드 전담', kind: '회사 홈페이지 React 마이그레이션',
     description: '사내 React 도입에 맞춰 jQuery 기반 회사 홈페이지를 React로 재작성해 한국어·영어를 지원하는 반응형 화면을 구현했습니다.',
-    summary: ['주요 5개 페이지를 React로 재작성하고 공통 UI를 Doit UI Kit으로 통일', 'i18next 기반 한국어·영어 및 반응형 화면 구현'],
+    summary: ['jQuery로 작성돼 있던 회사 홈페이지를 React로 재작성하고 공통 UI를 Doit UI Kit으로 통일', 'i18next 기반 한국어·영어 및 반응형 화면 구현'],
+    // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
-      ['마이그레이션', '메인·회사소개·서비스·인증·파트너 5개 페이지를 컴포넌트 구조로 재작성'],
-      ['UI 재사용', '사내 UI 라이브러리 Doit UI Kit을 적용해 색상·타이포·레이아웃 등 공통 요소 재사용'],
-      ['다국어', 'i18next로 한국어·영어를 지원하고 번역 리소스를 페이지별 네임스페이스로 분리'],
-      ['반응형', 'CSS·JavaScript 브레이크포인트 통일, 화면 크기 변화는 CSS로 처리하고 모바일에서 불필요한 영역은 렌더링 제외']
+      ['', 'jQuery로 작성돼 있던 회사 홈페이지를 React로 재작성'],
+      ['', '사내 UI 라이브러리 Doit UI Kit 적용'],
+      ['', 'i18next 기반 한국어·영어 지원'],
+      ['', '반응형 화면 구현'],
     ],
-    result: 'jQuery 페이지가 컴포넌트 구조로 바뀌어 한국어·영어 콘텐츠를 페이지 단위로 관리하게 됐습니다.',
+    result: 'jQuery로 작성돼 있던 회사 홈페이지를 React로 재작성했고, 한국어·영어 번역은 페이지별로 나눠 관리합니다.',
     tech: ['TypeScript', 'React', 'styled-components', 'i18next'],
     techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components', 'i18next']]]
   },
   {
     id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드 · 백엔드 전담', kind: 'XR·GIS 원격 협업 서비스 백오피스',
-    description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express API를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
-    summary: ['사용자·팀·파일 관리 화면 및 Express API 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 인증 및 팀별 파일 접근 권한 적용'],
+    description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express 기반 API 서버를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
+    summary: ['사용자·팀·파일 관리 화면 및 API 서버 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 세션 인증 및 팀 단위 파일 저장·조회'],
+    // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
-      ['풀스택 개발', 'React 기반 사용자·팀·파일 관리 화면과 Express API 개발'],
-      ['파일 처리', 'MongoDB GridFS 기반 대용량 파일 업로드, archiver 기반 ZIP 일괄 다운로드 구현'],
-      ['인증·권한', '사내 공통 관리자 계정의 세션 인증과 팀 소속에 따른 파일 다운로드 권한 적용'],
-      ['상태·피드백', '서버 상태는 TanStack Query, UI 상태는 Recoil로 분리하고 API 결과를 Toast로 안내']
+      ['', '사용자·팀·파일 관리 화면 개발 (React)'],
+      ['', '회원·팀·팀원·파일·로그 API 서버 개발 (Express)'],
+      ['', 'MongoDB GridFS 기반 대용량 파일 업로드, ZIP 일괄 다운로드 구현'],
+      ['', '사내 공통 관리자 계정 세션 인증 연동'],
     ],
     insight: 'MongoDB에 파일을 저장해야 하는 요구사항에 맞춰, 일반 문서의 16MB 제한에 걸리는 OBJ·영상 등을 GridFS의 청크 분할 저장으로 처리했습니다. 같은 관리자 계정을 사용하는 사내 서비스와는 MariaDB 기반 세션 저장소를 통해 인증 체계를 맞췄습니다.',
-    result: '팀 소속에 따라 파일 접근이 제한되고, OBJ·영상 대용량 파일을 ZIP으로 일괄 내려받을 수 있게 됐습니다.',
+    result: '파일이 팀 단위로 관리되고, OBJ·영상 대용량 파일을 ZIP으로 일괄 내려받을 수 있게 됐습니다.',
     tech: ['TypeScript', 'React', 'styled-components', 'Express', 'MongoDB(GridFS)', 'MariaDB'],
-    techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components']], ['백엔드', ['Node.js', 'Express', 'MongoDB(GridFS)', 'MariaDB']]]
+    techGroups: [['프론트엔드', ['TypeScript', 'React', 'styled-components']], ['백엔드', ['Express', 'MongoDB(GridFS)', 'MariaDB']]]
   },
 ];

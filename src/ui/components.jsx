@@ -58,13 +58,14 @@ export const MeasurementNote = ({ text: copy, raw }) => raw
 export const ArrowIcon = ({ className }) => (
   <svg className={cx('size-3.5 flex-none', className)} width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
 );
-export const TextLink = ({ href, children, className, external }) => (
-  <a className={cx(text.meta, 'group inline-flex items-center gap-1.5 font-semibold text-accent print:hidden', className)} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-    <span className="group-hover:underline group-hover:underline-offset-3">{children}</span>{external ? <span aria-hidden="true">↗</span> : <ArrowIcon />}
+export const TextLink = ({ href, children, className }) => (
+  <a className={cx(text.meta, 'group inline-flex items-center gap-1.5 font-semibold text-accent print:hidden', className)} href={href}>
+    <span className="group-hover:underline group-hover:underline-offset-3">{children}</span><ArrowIcon />
   </a>
 );
+// 외부 링크: 화살표 없이 글자만 둔다 — 링크 표시는 놓이는 자리의 강조색·굵기로 한다
 export const External = ({ href, children, className }) => (
-  <a className={className} href={href} target="_blank" rel="noopener noreferrer">{children}<span aria-hidden="true"> ↗</span></a>
+  <a className={className} href={href} target="_blank" rel="noopener noreferrer">{children}</a>
 );
 
 // 서비스 주소·스토어 링크: TextLink와 달리 PDF에서도 보이고 눌린다
@@ -75,17 +76,18 @@ export const ProjectLinks = ({ links, className }) => links?.length > 0 && (
 );
 
 /* ── 프로젝트 ── */
-// 이름·종류 한 줄 + 기간·역할 한 줄. 서비스 링크와 상세 보기 링크는 이름 줄 오른쪽 끝, 이름 글자 윗선에 맞춘다.
-// 서비스 링크를 따로 한 줄로 두면 PDF에서 뒤 내용이 다음 쪽으로 밀린다 (좁은 모바일만 기간·역할 아래로 내린다)
+// 이름·종류 한 줄 + 기간·역할 한 줄. 상세 보기 링크는 이름 줄 오른쪽 끝, 이름 글자 윗선에 맞춘다.
+// 서비스 링크는 화면에서는 기간·역할 아래 줄에 (상세 보기와 한 줄에 두면 너무 길다),
+// PDF에서는 이름 줄 오른쪽 끝에 둔다 (줄이 늘면 뒤 내용이 다음 쪽으로 밀리고, 상세 보기는 PDF에서 숨는다)
 export const ProjectHeader = ({ project, href, large }) => (
   <header className="project-heading grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-baseline gap-x-3 mobile:grid-cols-[minmax(0,1fr)_auto] print:break-after-avoid">
     {large ? <h1 className={text.display}>{project.name}</h1> : <h2 className={text.title}>{project.name}</h2>}
     <p className={cx(text.lead, 'font-medium text-secondary mobile:col-span-full mobile:row-start-2 mobile:mt-1')}>{project.kind}</p>
-    <ProjectLinks links={project.links} className="col-start-3 row-start-1 mt-0.75 self-start whitespace-nowrap mobile:col-span-full mobile:row-start-4 mobile:mt-1.5" />
     {href && <TextLink href={href} className="col-start-4 row-start-1 mt-0.75 ml-2 self-start whitespace-nowrap mobile:col-start-2 mobile:mt-0.5 mobile:ml-0">프로젝트 상세 보기</TextLink>}
     <div className={cx('project-meta', text.meta, 'col-span-full mt-1 flex flex-wrap gap-x-4.5 gap-y-0.75 text-muted mobile:row-start-3 print:flex-nowrap print:gap-x-3')}>
       <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
     </div>
+    <ProjectLinks links={project.links} className="col-span-full mt-1.5 mobile:row-start-4 print:col-span-1 print:col-start-3 print:row-start-1 print:mt-0.75 print:self-start print:whitespace-nowrap" />
   </header>
 );
 
@@ -165,7 +167,7 @@ export const Gallery = ({ images, className, printRow, single }) => {
             {/* 휴대폰 캡처: 높이 상한(화면 32.5rem, PDF 16·22.5rem)을 원본 비율로 너비 상한으로 바꿔 둔다.
                 w-auto + max-h는 로드 전 높이가 0이라 목차 이동 위치가 밀리고, w-full + max-h는 옆으로 늘어난다. */}
             <img className={cx('block w-full', phone ? cx('mx-auto max-w-[calc(32.5rem*var(--ratio))]', printRow ? 'print:max-w-[calc(16rem*var(--ratio))]' : 'print:max-w-[calc(22.5rem*var(--ratio))]') : screen ? 'aspect-16/10 object-cover object-top' : single ? 'object-contain' : 'max-h-115 object-contain mobile:max-h-82 print:max-h-50')} style={phone ? { '--ratio': ratio(image.src) } : undefined} src={`/assets/${image.src}`} {...imageSize(image.src)} alt={image.alt} loading="lazy" decoding="async" />
-            <span className={cx(text.meta, 'absolute right-2 bottom-2 rounded-sm bg-white/90 px-2 py-0.5 text-muted print:hidden')}>화면 확대 <span aria-hidden="true">↗</span></span>
+            <span className={cx(text.meta, 'absolute right-2 bottom-2 rounded-sm bg-white/90 px-2 py-0.5 text-muted print:hidden')}>화면 확대</span>
           </button>
           <Meta as="figcaption" className="mt-2">{image.alt}</Meta>
         </figure>
@@ -198,7 +200,7 @@ export const PageIntro = ({ title, links, children }) => (
     <PageTitle>{title}</PageTitle>
     <p className={cx(text.lead, 'mt-4 text-secondary')}>{children}</p>
     {links && (
-      <div className={cx(text.meta, 'mt-4 hidden flex-wrap gap-x-5.5 gap-y-1.5 text-secondary print:flex')}>
+      <div className={cx(text.meta, 'mt-4 hidden flex-wrap gap-x-5.5 gap-y-1.5 font-semibold text-accent print:flex')}>
         {links.map(([href, label]) => <External key={href} href={href}>{label}</External>)}
       </div>
     )}

@@ -108,17 +108,17 @@ function Resume() {
                     <h3 className={text.heading}><a href={projectHref(project)}>{project.name}</a></h3>
                     <p className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</p>
                   </div>
-                  {/* 서비스 링크는 상세 보기 링크와 같이 이름 줄 오른쪽 끝에 (상세 보기는 PDF에서 숨는다)
-                      좁은 모바일에서는 둘이 섞여 줄바꿈되므로 서비스 링크만 기간·역할 아래로 내린다 */}
-                  <div className="ml-auto flex items-baseline gap-x-6 whitespace-nowrap">
-                    <ProjectLinks links={project.links} className="mobile:hidden" />
+                  {/* 이름 줄 오른쪽 끝: 화면에서는 상세 보기 링크, PDF에서는 서비스 링크 (상세 보기는 PDF에서 숨는다)
+                      화면에서 둘을 한 줄에 두면 너무 길어져, 서비스 링크는 기간·역할 아래 줄로 내린다 */}
+                  <div className="ml-auto whitespace-nowrap">
+                    <div className="hidden print:block"><ProjectLinks links={project.links} /></div>
                     <TextLink href={projectHref(project)}>프로젝트 상세 보기</TextLink>
                   </div>
                 </div>
                 <Meta className="mt-1 mb-2.5 flex flex-wrap gap-x-4 gap-y-0.5">
                   <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
                 </Meta>
-                {project.links && <div className="-mt-1 mb-2.5 hidden mobile:block"><ProjectLinks links={project.links} /></div>}
+                {project.links && <div className="-mt-1 mb-2.5 print:hidden"><ProjectLinks links={project.links} /></div>}
                 <Bullets items={project.summary} />
                 <TechLine items={project.tech} />
               </article>

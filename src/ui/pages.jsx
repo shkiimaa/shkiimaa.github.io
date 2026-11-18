@@ -117,7 +117,7 @@ function Resume() {
         {devJobs.map((job, i) => (
           <section key={job.id} className={cx('experience-group', i > 0 ? 'pt-16 mobile:pt-13 print:pt-14' : 'pt-7 mobile:pt-6 print:pt-5')}>
             <MarkedHead name={job.name} logo={job.logo} rule>
-              <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.role}</span>
+              <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.employment}</span><Bar /><span>{job.role}</span>
             </MarkedHead>
             <div className={underMark}>
             {/* 회사 안에서는 시작일이 아니라 content.mjs에 적은 순서(비중 순)로 둔다 */}
@@ -288,7 +288,7 @@ function Career() {
             <div>
               <h2 className={text.section}>{job.name}</h2>
               <p className={cx(text.lead, 'mt-1 flex flex-wrap items-center leading-6 tabular-nums')}>
-                <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.role}</span>
+                <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.employment}</span><Bar /><span>{job.role}</span>
               </p>
             </div>
           </header>

@@ -6,8 +6,8 @@ export const profile = {
 };
 
 export const experiences = [
-  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', period: '2024.08 – 재직 중' },
-  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', period: '2023.08 – 2024.07', logo: 'logos/doit.svg' },
+  { id: 'daon', name: '(주)다온소프트랩', role: 'Frontend Developer', employment: '정규직', period: '2024.08 – 재직 중' },
+  { id: 'doit', name: '(주)두잇', role: 'Frontend Developer', employment: '정규직', period: '2023.08 – 2024.07', logo: 'logos/doit.svg' },
   { id: 'founder', name: '개인 사업 (온라인 커머스)', role: '대표', period: '2019.09 – 2022.06', items: ['국내 작가와 협업한 굿즈 제작·판매 및 작품 판매 중개'] },
   { id: 'designer', name: '프리랜서', role: 'Designer', period: '2017.10 – 2019.08', items: ['상세페이지·BX/BI·편집 디자인'] }
 ];

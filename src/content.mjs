@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Developer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '기획부터 운영까지 경험한 개발자로, 문제는 측정으로 확인하고 구조로 해결합니다.\n\n온라인 커머스를 약 3년간 직접 운영하며 사업 전반을 경험한 뒤 개발자로 전환했습니다. 실시간 시세·주문·자산을 다루는 암호화폐 거래 플랫폼의 웹·iOS·Android·데스크톱 프론트엔드를 전담해 앱 스토어 출시까지 이끌었고,\nAPI 서버 개발과 K3s 배포·운영을 맡았습니다. AI 코딩 에이전트에 아키텍처·디자인 규칙 문서를 적용해, 빠르게 만들면서도 코드의 일관성을 유지합니다.',
+  introduction: '하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한 프론트엔드 개발자입니다.\n\n암호화폐 거래 플랫폼 Bitria의 프론트엔드를 초기 구축부터 전담해 App Store와 Google Play에 출시했습니다. 성능 문제는 계측으로 원인부터 찾아, 거래 화면의 렌더 작업을 70%, 모바일 TBT를 30% 줄였습니다. 이 밖에 코인 정보 플랫폼, AI 모델 학습 플랫폼, 사내 UI 라이브러리를 개발했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열) · 재직자 전형', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
@@ -21,7 +21,10 @@ export const skills = [
 export const projects = [
   {
     id: 'bitria', name: 'Bitria', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2025.11 – 현재',
-    kind: '암호화폐 거래 플랫폼', role: '웹·iOS·Android·데스크톱 프론트엔드(앱 스토어 출시)·백엔드 API 전담',
+    kind: '암호화폐 거래 플랫폼', role: '프론트엔드 전담(웹·iOS·Android·데스크톱, 앱 스토어 출시)·백엔드 API 개발',
+    // 링크 이름에 주소(bitria.com)를 쓰면 macOS 미리보기가 글자를 주소로 감지해 클릭 영역을 넓게 덧씌운다
+    // 옆의 App Store·Google Play와 글자 모양이 맞도록 영문으로 쓴다 (한글이 섞이면 한 칸만 내려앉아 보인다)
+    links: [{ label: 'Website', url: 'https://bitria.com' }, { label: 'App Store', url: 'https://apps.apple.com/kr/app/bitria/id6775212278' }, { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.bitria.app' }],
     description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s 배포·운영을 맡았습니다.',
     summary: [
     '실시간 시세·호가·TradingView 차트, 주문·자산·인증·KYC 등 화면 및 API 서버 개발',
@@ -77,7 +80,7 @@ export const projects = [
   {
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12', role: '프론트엔드 전담·백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트 대부분과 백엔드 API 서버를 개발하고, 채팅·스케줄러 서버를 맡았습니다.',
-    summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리, 채팅·스케줄러 서버 개발', '종료 후 서버 5대의 14개 서비스 K3s 통합, .NET 수집기 Node.js 재작성(2026.07 – 08)'],
+    summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리하고, 가상화 리스트로 화면에 보이는 코인만 구독', '코인 상세 중복 요청 제거·구간별 스켈레톤 등 화면 개선, 채팅·스케줄러 서버 개발'],
     tasks: [
       ['웹 클라이언트', 'React(2024.10 – 2025.07)와 Next.js 15 재구축(2025.07 – 2025.08), 마켓·코인 상세·뉴스·모의투자·랭킹·채팅·분석 화면, TradingView 차트 연동'],
       ['실시간 데이터', '바이낸스·바이빗·OKX·Gate.io WebSocket 연동, Socket.IO 재연결·헬스체크 개선, 조회 데이터는 SWR로 관리'],

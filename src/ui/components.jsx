@@ -67,13 +67,22 @@ export const External = ({ href, children, className }) => (
   <a className={className} href={href} target="_blank" rel="noopener noreferrer">{children}<span aria-hidden="true"> ↗</span></a>
 );
 
+// 서비스 주소·스토어 링크: TextLink와 달리 PDF에서도 보이고 눌린다
+export const ProjectLinks = ({ links, className }) => links?.length > 0 && (
+  <p className={cx(text.meta, 'flex flex-wrap gap-x-4 gap-y-0.5 font-semibold text-accent', className)}>
+    {links.map(link => <External key={link.url} href={link.url}>{link.label}</External>)}
+  </p>
+);
+
 /* ── 프로젝트 ── */
-// 이름·종류 한 줄 + 기간·역할 한 줄. 상세 보기 링크는 이름 글자 윗선에 맞춘다.
+// 이름·종류 한 줄 + 기간·역할 한 줄. 서비스 링크와 상세 보기 링크는 이름 줄 오른쪽 끝, 이름 글자 윗선에 맞춘다.
+// 서비스 링크를 따로 한 줄로 두면 PDF에서 뒤 내용이 다음 쪽으로 밀린다 (좁은 모바일만 기간·역할 아래로 내린다)
 export const ProjectHeader = ({ project, href, large }) => (
-  <header className="project-heading grid grid-cols-[auto_minmax(0,1fr)_auto] items-baseline gap-x-3 mobile:grid-cols-[minmax(0,1fr)_auto] print:break-after-avoid">
+  <header className="project-heading grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-baseline gap-x-3 mobile:grid-cols-[minmax(0,1fr)_auto] print:break-after-avoid">
     {large ? <h1 className={text.display}>{project.name}</h1> : <h2 className={text.title}>{project.name}</h2>}
     <p className={cx(text.lead, 'font-medium text-secondary mobile:col-span-full mobile:row-start-2 mobile:mt-1')}>{project.kind}</p>
-    {href && <TextLink href={href} className="col-start-3 row-start-1 mt-0.75 self-start whitespace-nowrap mobile:col-start-2 mobile:mt-0.5">프로젝트 상세 보기</TextLink>}
+    <ProjectLinks links={project.links} className="col-start-3 row-start-1 mt-0.75 self-start whitespace-nowrap mobile:col-span-full mobile:row-start-4 mobile:mt-1.5" />
+    {href && <TextLink href={href} className="col-start-4 row-start-1 mt-0.75 ml-2 self-start whitespace-nowrap mobile:col-start-2 mobile:mt-0.5 mobile:ml-0">프로젝트 상세 보기</TextLink>}
     <div className={cx('project-meta', text.meta, 'col-span-full mt-1 flex flex-wrap gap-x-4.5 gap-y-0.75 text-muted mobile:row-start-3 print:flex-nowrap print:gap-x-3')}>
       <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
     </div>

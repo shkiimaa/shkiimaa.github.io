@@ -1,6 +1,6 @@
 // 페이지 틀: 머리말(메뉴·PDF 다운로드), 목차, 바닥글, 이미지 확대 창
 import { profile } from '../content.mjs';
-import { ArrowIcon, External, cx, text } from './components.jsx';
+import { ArrowIcon, cx, text } from './components.jsx';
 
 const origin = 'https://shkiimaa.github.io';
 const nav = [['/', '이력서', 'resume'], ['/career/', '경력기술서', 'career'], ['/projects/', '프로젝트', 'projects'], ['/portfolio/', '포트폴리오', 'portfolio']];
@@ -57,7 +57,6 @@ const Sidebar = ({ items, title }) => (
       <div className={cx(text.meta, 'mt-11 flex flex-col items-start gap-1 border-t border-line pt-5 text-muted')}>
         <span className="mb-0.5 font-semibold">Contact</span>
         <a className="break-all" href={`mailto:${profile.email}`}>{profile.email}</a>
-        <External href={profile.github}>GitHub</External>
       </div>
     </div>
   </aside>

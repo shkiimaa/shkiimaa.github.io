@@ -3,8 +3,8 @@ import { profile, experiences, projects, skills } from '../content.mjs';
 import { portfolioMaterial } from '../portfolio-content.mjs';
 import { Document } from './layout.jsx';
 import {
-  Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, External, Gallery, MeasurementNote, Meta, PageIntro, PageTitle,
-  Paragraphs, ProjectHeader, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, cx, text
+  Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, MeasurementNote, Meta, PageIntro, PageTitle,
+  Paragraphs, ProjectHeader, ProjectLinks, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, cx, text
 } from './components.jsx';
 
 export const projectHref = project => `/projects/${project.id}/`;
@@ -54,7 +54,6 @@ const careerTotal = jobs => `총 ${formatMonths(jobs.reduce((sum, job) => sum + 
 const pdfContacts = [
   ['전화번호', 'tel:+821099313175', profile.phone],
   ['이메일', `mailto:${profile.email}`, profile.email],
-  ['GitHub', profile.github, profile.github.replace('https://', '')],
   ['포트폴리오', `${profile.site}/portfolio-detail/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
 ];
 
@@ -72,7 +71,6 @@ function Resume() {
               <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
                 <a href={`mailto:${profile.email}`}>{profile.email}</a>
                 <a href="tel:+821099313175">{profile.phone}</a>
-                <External href={profile.github}>GitHub</External>
               </div>
             </div>
             {/* PDF 연락처: 이름 아래에 항목 이름을 붙여 세로로 나열하고, 출력해도 읽히게 주소를 보여준다 */}
@@ -85,7 +83,7 @@ function Resume() {
           {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기 */}
           <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile.jpg" alt="김수환 증명사진" loading="lazy" />
         </div>
-        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">기획부터 운영까지 경험한 개발자로,<br className="mobile:hidden print:hidden" /> 문제는 측정으로 확인하고 구조로 해결합니다.</p>
+        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
         <Paragraphs items={introDetails} muted={false} />
       </section>
       {/* 회사는 왼쪽 칸에, 그 회사에서 한 프로젝트는 오른쪽 칸에 쌓는다 —
@@ -102,18 +100,25 @@ function Resume() {
               <span className="whitespace-nowrap">({formatMonths(jobMonths(job))})</span>
             </p>
           </>}>
-            {workProjects.filter(project => project.companyId === job.id).map((project, i) => (
+            {/* 회사 안에서는 시작일이 아니라 content.mjs에 적은 순서(비중 순)로 둔다 */}
+            {projects.filter(project => project.category === 'work' && project.companyId === job.id).map((project, i) => (
               <article key={project.id} id={`resume-${project.id}`} className={cx('resume-project', i > 0 && 'mt-6 border-t border-line pt-6 print:mt-4 print:pt-4', 'print:break-inside-avoid')}>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <h3 className={text.heading}><a href={projectHref(project)}>{project.name}</a></h3>
                     <p className={cx(text.lead, 'font-bold tracking-tight')}>{project.kind}</p>
                   </div>
-                  <TextLink href={projectHref(project)} className="ml-auto whitespace-nowrap">프로젝트 상세 보기</TextLink>
+                  {/* 서비스 링크는 상세 보기 링크와 같이 이름 줄 오른쪽 끝에 (상세 보기는 PDF에서 숨는다)
+                      좁은 모바일에서는 둘이 섞여 줄바꿈되므로 서비스 링크만 기간·역할 아래로 내린다 */}
+                  <div className="ml-auto flex items-baseline gap-x-6 whitespace-nowrap">
+                    <ProjectLinks links={project.links} className="mobile:hidden" />
+                    <TextLink href={projectHref(project)}>프로젝트 상세 보기</TextLink>
+                  </div>
                 </div>
                 <Meta className="mt-1 mb-2.5 flex flex-wrap gap-x-4 gap-y-0.5">
                   <span className="tabular-nums">{project.period}</span><span>{project.role}</span>
                 </Meta>
+                {project.links && <div className="-mt-1 mb-2.5 hidden mobile:block"><ProjectLinks links={project.links} /></div>}
                 <Bullets items={project.summary} />
                 <TechLine items={project.tech} />
               </article>
@@ -284,7 +289,6 @@ function Portfolio() {
             <Highlights project={project} prefix={`${project.id}-`} />
             <Screens project={project} />
             <Technology project={project} />
-            {project.links?.length > 0 && <div className="mt-4.5 flex flex-wrap gap-5">{project.links.map(link => <TextLink key={link.url} href={link.url} external>{link.label}</TextLink>)}</div>}
           </PortfolioProject>
         ))}
       </PortfolioList>
@@ -385,7 +389,6 @@ function ProjectDetail({ project, index }) {
         <Meta className="mb-3.5">{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</Meta>
         <ProjectHeader project={project} large />
         <ProjectIntro project={project} items={[portfolioIntro(project)]} />
-        {project.links?.length > 0 && <div className="mt-4 flex gap-5">{project.links.map(link => <TextLink key={link.url} href={link.url} external>{link.label}</TextLink>)}</div>}
       </section>
       <SectionBlock id="tasks" title="주요 업무"><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
       <Implementation project={project} />

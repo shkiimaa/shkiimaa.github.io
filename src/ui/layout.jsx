@@ -3,15 +3,13 @@ import { profile } from '../content.mjs';
 import { ArrowIcon, cx, text } from './components.jsx';
 
 const origin = 'https://shkiimaa.github.io';
-// 사이트에서 보이는 문서는 이력서·프로젝트·포트폴리오 상세 세 가지다.
-// 경력기술서와 포트폴리오(기본)는 PDF 다운로드용으로만 두고, 사이트 안에서는 링크하지 않는다 (PDF를 만드는 페이지는 주소로만 남는다)
-const nav = [['/', '이력서', 'resume'], ['/projects/', '프로젝트', 'projects'], ['/portfolio-detail/', '포트폴리오', 'portfolio']];
-// 헤더 PDF 다운로드 메뉴: 어느 페이지에서든 네 문서를 받을 수 있게 한다
+// 이력서·프로젝트·통합 포트폴리오를 탐색 메뉴에 표시한다.
+const nav = [['/', '이력서', 'resume'], ['/projects/', '프로젝트', 'projects'], ['/portfolio/', '포트폴리오', 'portfolio']];
+// 헤더 PDF 다운로드 메뉴: 어느 페이지에서든 세 문서를 받을 수 있게 한다
 const downloads = [
   ['resume', '이력서', '경력과 프로젝트 요약'],
   ['career', '경력기술서', '주요 업무와 문제 해결 과정'],
-  ['portfolio', '포트폴리오', '구조도, 측정 근거, 서비스 화면'],
-  ['portfolio-detail', '포트폴리오 상세', '경력기술서 설명까지 담은 단독 제출용']
+  ['portfolio', '포트폴리오', '주요 업무, 설계 구조, 문제 해결 및 구현 근거']
 ];
 
 const Header = ({ active, pdf }) => (

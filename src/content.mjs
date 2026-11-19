@@ -28,11 +28,12 @@ export const projects = [
     links: [{ label: 'Website', icon: 'world', url: 'https://bitria.com' }, { label: 'App Store', icon: 'apple', url: 'https://apps.apple.com/kr/app/bitria/id6775212278' }, { label: 'Google Play', icon: 'googleplay', url: 'https://play.google.com/store/apps/details?id=com.bitria.app' }],
     description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s로 배포·운영하고 있습니다.',
     summary: [
-    '실시간 시세·호가·TradingView 차트, 주문·자산·인증·KYC 등 화면 및 API 서버 개발',
-      '렌더 계측으로 비활성 화면의 리렌더를 찾아 실시간 구독 격리, 거래 화면 렌더 작업 70% 감소',
-      '번들·폰트 최적화로 홈 JS 27%, 초기 폰트 전송 95% 감소, 배럴 import 정리로 모바일 TBT 30% 감소',
-      '운영 로그로 TradingView 캐시 버그·심볼 전환 경쟁 상태 등 차트 로딩 실패 원인을 특정해 해결',
-      'iOS 앱 복귀 시 이전 데이터 표시, 비영어 기기의 Safari 열림 등 앱 전용 문제를 원인 특정 후 해결'
+      '하나의 Next.js 코드베이스로 웹·iOS·Android·데스크톱 앱 구축, App Store·Google Play 출시',
+      'TradingView 차트, 실시간 시세·호가, 현물·선물·마진 주문 등 거래 화면 개발',
+      '회원·인증(2단계 인증·패스키), 자산, 시세, KYC 등 백엔드 API 서버 개발 및 K3s 배포·운영',
+      '실시간 구독 구조 개선으로 거래 화면 렌더 작업 70% 감소',
+      '번들·폰트 최적화로 모바일 TBT 30%, 홈 JS 27%, 초기 폰트 전송 95% 감소',
+      '운영 중 발생한 차트 로딩 실패, 앱 복귀 시 데이터 불일치 등의 원인을 찾아 해결'
     ],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
@@ -50,7 +51,7 @@ export const projects = [
       ['', '가격 알림·푸시·고객 문의 API 개발'],
       ['', 'K3s 프로덕션 배포·운영'],
     ],
-    tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Express', 'TimescaleDB', 'Redis', 'Socket.IO'],
+    tech: ['TypeScript', 'Next.js', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'Capacitor', 'Electron', 'Express', 'TimescaleDB', 'Redis', 'Socket.IO'],
     techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'next-intl', 'Zustand', 'TanStack Query', 'Capacitor', 'Electron']], ['백엔드', ['Express', 'Prisma', 'MariaDB', 'TimescaleDB', 'Redis', 'RabbitMQ', 'Socket.IO', 'AWS(EC2)', 'Docker', 'Kubernetes(K3s)']]],
     outcomes: [{ label: '모바일 홈 총 차단 시간(TBT)', value: '30%', detail: '417 → 292.5ms · 로컬 프로덕션 빌드·5회 중앙값' }],
     cases: [

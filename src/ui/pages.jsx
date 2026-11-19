@@ -1,6 +1,6 @@
 // 페이지: 공통 컴포넌트를 조립만 한다. 크기·간격은 components.jsx에서만 정한다.
 import { profile, experiences, projects, skills, careerDetails } from '../content.mjs';
-import { portfolioMaterial } from '../portfolio-content.mjs';
+import { portfolioMaterial, portfolioDoc } from '../portfolio-content.mjs';
 import { Document } from './layout.jsx';
 import {
   Bar, Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, IconLinks, MeasurementNote, Meta, PageIntro, PageTitle,
@@ -12,11 +12,7 @@ const startDate = project => Number((project.period.match(/\d{4}\.\d{2}/)?.[0] ?
 export const orderedProjects = [...projects].sort((a, b) => startDate(b) - startDate(a));
 const workProjects = orderedProjects.filter(project => project.category === 'work');
 const material = project => portfolioMaterial[project.id] || {};
-// 포트폴리오 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
-// 경력기술서·포트폴리오 PDF 첫 쪽에 넣는 웹 문서 링크 (이력서 PDF는 연락처 줄에 웹 이력서 링크가 있다)
-const webLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
-// 포트폴리오 상세는 경력기술서 내용을 담고 있어 웹 경력기술서 링크를 빼고, '웹 포트폴리오'는 웹 포트폴리오 상세 페이지로 연결한다
-const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 포트폴리오']];
+// 프로젝트 상세 페이지 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
 const portfolioIntro = project => [material(project).overview, material(project).scope].filter(Boolean).join(' ');
 
 /* ── 이력서 ── */
@@ -78,7 +74,7 @@ const careerTotal = jobs => formatMonths(jobs.reduce((sum, job) => sum + jobMont
 const pdfContacts = [
   ['전화번호', 'tel:+821099313175', profile.phone],
   ['이메일', `mailto:${profile.email}`, profile.email],
-  ['포트폴리오', `${profile.site}/portfolio-detail/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
+  ['포트폴리오', `${profile.site}/portfolio/`, `${profile.site.replace('https://', '')}/portfolio`]
 ];
 
 // 개발 이전 경력: 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다)
@@ -189,7 +185,7 @@ function Resume() {
         <EarlierCareer />
       </ResumeSection>
       <SkillsAndEducation />
-      <DocumentNext label="주요 업무와 문제 해결 과정을 더 자세히" href="/portfolio-detail/">포트폴리오 보기</DocumentNext>
+      <DocumentNext label="주요 업무와 문제 해결 과정을 더 자세히" href="/portfolio/">포트폴리오 보기</DocumentNext>
     </Document>
   );
 }
@@ -222,51 +218,6 @@ const Implementation = ({ project, prefix = '', detail }) => {
   );
 };
 
-const Highlights = ({ project, prefix = '' }) => {
-  const m = material(project);
-  const items = (project.cases || []).filter(study => study.highlight);
-  if (!items.length) return null;
-  const diagrams = Object.fromEntries((m.caseDiagrams || []).map(d => [d.id, d]));
-  const featured = m.featured || [];
-  const featuredIds = new Set(featured.map(f => f.id));
-  const evidence = f => f.evidence === 'code'
-    ? (m.codeExamples?.[f.id]?.examples || []).map(item => <CodeExample key={item.label} label={item.label} code={item.code} />)
-    : f.evidence === 'images' ? <Gallery images={m.caseImages?.[f.id]} className="mt-5" />
-    : diagrams[f.id] ? <Diagram name={diagrams[f.id].diagram} caption={diagrams[f.id].caption} /> : null;
-  // 이미지·다이어그램이 있는 사례를 앞에, 글만 있는 사례를 뒤에 둔다 (PDF 에서 이미지가 글 사이에 끼어 페이지가 비는 것 방지)
-  const hasVisual = study => Boolean(m.caseImages?.[study.id]?.length || diagrams[study.id]);
-  const rest = items.filter(study => !featuredIds.has(study.id)).sort((a, b) => hasVisual(b) - hasVisual(a));
-  return (
-    <SectionBlock id={`${prefix}measurements`} title="문제 해결과 개선" rule>
-      {featured.map(f => {
-        const study = items.find(s => s.id === f.id);
-        return (
-          <section key={f.id} id={`${prefix}case-${f.id}`} className="implementation-section featured-case not-first-of-type:mt-10 print:not-first-of-type:mt-5">
-            <SubTitle>{f.title || study.title}</SubTitle>
-            <Paragraphs items={f.paragraphs} />
-            {f.result && <ResultBox text={f.result} raw />}
-            {f.method && <MeasurementNote text={f.method} raw />}
-            {f.measure && <div className="measure-shot mt-5"><Gallery images={[f.measure]} single /></div>}
-            {evidence(f)}
-          </section>
-        );
-      })}
-      {rest.length > 0 && (
-        <ul className={cx('grid gap-8 print:gap-3', featured.length > 0 && 'mt-10 print:mt-5')}>
-          {rest.map(study => (
-            <li key={study.id} id={`${prefix}case-${study.id}`} className="min-w-0 print:break-inside-avoid">
-              <p className={text.heading}>{study.title}</p>
-              <p className={cx(text.body, 'mt-2 text-secondary')}>{study.highlight}</p>
-              {diagrams[study.id] && <Diagram name={diagrams[study.id].diagram} caption={diagrams[study.id].caption} />}
-              <Gallery images={m.caseImages?.[study.id]} className="mt-4" />
-            </li>
-          ))}
-        </ul>
-      )}
-    </SectionBlock>
-  );
-};
-
 const Screens = ({ project, id }) => {
   const web = material(project).webImages || [];
   const images = [...(project.images || []), ...(material(project).images || [])];
@@ -295,14 +246,14 @@ const FlowBullets = ({ items, glueEnd }) => (
     ))}
   </ul>
 );
-// 사례: 제목은 첫 줄과 같은 쪽에 둔다
-const CareerCase = ({ study }) => (
+// 사례: 제목은 첫 줄과 같은 쪽에 둔다. glueEnd: 바로 뒤 기술 줄을 마지막 줄과 같은 쪽에 묶는다 (마지막 사례)
+const CareerCase = ({ study, glueEnd }) => (
   <section className="mt-6 print:mt-4">
     <h4 className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>
       {study.title}{study.period && <span className={cx(text.meta, 'ml-2.5 font-medium text-muted tabular-nums')}>{study.period}</span>}
     </h4>
-    <FlowBullets items={study.bullets} glueEnd={Boolean(study.note)} />
-    {study.note && <Meta className="mt-1.5 print:break-inside-avoid">{study.note}</Meta>}
+    <FlowBullets items={study.bullets} glueEnd={Boolean(study.note) || glueEnd} />
+    {study.note && <Meta className={cx('mt-1.5 print:break-inside-avoid', glueEnd && 'print:break-after-avoid')}>{study.note}</Meta>}
   </section>
 );
 // 주요 업무: 사례와 같은 불릿 모양을 쓴다. '#' 줄로 묶음이 둘 이상이면 좌우로 나란히 (이때는 쪽이 나뉘지 않게 한 덩어리)
@@ -326,14 +277,14 @@ const CareerTasks = ({ tasks, glueEnd }) => {
     </div>
   );
 };
-// 모든 프로젝트가 같은 순서: 이름·기간·링크 → 소개(서비스와 맡은 범위) → 사례(있는 프로젝트만) → 주요 업무 → 기술.
-// 맡은 일의 목록보다 문제를 푼 과정이 먼저 읽히게 사례를 주요 업무 앞에 둔다
+// 모든 프로젝트가 같은 순서: 이름·기간·링크 → 소개(서비스와 맡은 범위) → 주요 업무 → 사례(있는 프로젝트만) → 기술.
+// 맡은 범위를 먼저 보이고 그 안에서 푼 문제를 보인다 — 사례가 길어 주요 업무를 뒤에 두면 2쪽 넘게 지나서야 나온다
 const CareerEntry = ({ project, first }) => {
   const detail = careerDetails[project.id] || {};
   const cases = detail.cases || [];
   return (
     <article id={project.id} className={cx('career-entry', first ? 'pt-6 print:pt-4' : 'pt-11 mobile:pt-9 print:mt-8 print:pt-0')}>
-      {/* 이름·기간 줄, 링크, 소개는 한 덩어리로, 바로 뒤 내용(첫 사례 또는 주요 업무)의 첫 줄과 같은 쪽에 둔다 —
+      {/* 이름·기간 줄, 링크, 소개는 한 덩어리로, 바로 뒤 주요 업무의 첫 줄과 같은 쪽에 둔다 —
           프로젝트 이름만 쪽 맨 아래에 남고 내용이 다음 쪽에서 시작하지 않게 */}
       <div className="print:break-inside-avoid print:break-after-avoid">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -347,12 +298,12 @@ const CareerEntry = ({ project, first }) => {
         <IconLinks links={project.links} className="mt-2.5" />
         <div className="mt-3 print:mt-2.5"><Paragraphs items={[detail.description || project.description]} /></div>
       </div>
-      {cases.map(study => <CareerCase key={study.title} study={study} />)}
-      <section className="mt-6 print:mt-4">
+      <section className="mt-4 print:mt-3.5">
         <h4 className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>주요 업무</h4>
-        <CareerTasks tasks={detail.tasks || project.tasks} glueEnd />
+        <CareerTasks tasks={detail.tasks || project.tasks} glueEnd={cases.length === 0} />
       </section>
-      {/* 기술 줄은 주요 업무 끝과 같은 쪽에 둔다 — 다음 쪽에 홀로 남지 않게 */}
+      {cases.map((study, i) => <CareerCase key={study.title} study={study} glueEnd={i === cases.length - 1} />)}
+      {/* 기술 줄은 바로 앞 내용(마지막 사례 또는 주요 업무)의 끝과 같은 쪽에 둔다 — 다음 쪽에 홀로 남지 않게 */}
       <p className={cx(text.meta, 'mt-5 text-secondary print:mt-4 print:break-inside-avoid')}><TechTokens items={project.tech} /></p>
     </article>
   );
@@ -381,6 +332,8 @@ function Career() {
 }
 
 /* ── 포트폴리오 ── */
+// 포트폴리오는 하나로 합친 문서다: 프로젝트마다 맡은 범위 → 화면 → 구조와 기술 선택 → 성능·문제 해결 근거 → 기술 스택.
+// 문제를 푼 과정은 경력기술서가 글로 설명하므로, 여기서는 그 근거(화면·구조도·측정 결과·코드)를 보여준다
 const PortfolioList = ({ children }) => <div className="portfolio-document">{children}</div>;
 const PortfolioProject = ({ index, children }) => (
   <div className={cx('portfolio-project', index > 0 ? 'mt-27.5 border-t-2 border-ink mobile:mt-18 print:mt-0 print:break-before-page print:border-t-0' : 'print:border-t print:border-[#333]')}>
@@ -388,20 +341,110 @@ const PortfolioProject = ({ index, children }) => (
   </div>
 );
 
-function Portfolio() {
+// 서비스·팀·맡은 범위와 기술: 프로젝트 첫머리의 두 칸 표 하나로 묶는다 (기술 스택을 끝에 따로 두면 쪽 끝에 홀로 남는다)
+const FactRows = ({ rows }) => (
+  <dl className="mt-6 grid gap-2.5 print:mt-4">
+    {rows.map(([label, value]) => (
+      <div key={label} className={cx(text.body, 'grid grid-cols-[5.75rem_minmax(0,1fr)] items-baseline gap-x-5 mobile:block print:break-inside-avoid')}>
+        <dt className="font-semibold whitespace-nowrap text-ink mobile:mb-1">{label}</dt>
+        <dd className="text-secondary">{value}</dd>
+      </div>
+    ))}
+  </dl>
+);
+// 화면: 소개 바로 다음에 둬 어떤 서비스인지 먼저 보이게 한다 (웹 화면 2×2, 앱 화면은 한 줄)
+const PortfolioScreens = ({ project }) => {
+  const m = material(project);
+  const web = m.webImages || [];
+  const images = [...(project.images || []), ...(m.images || [])];
+  if (!images.length && !web.length) return null;
   return (
-    <Document title="포트폴리오" description="김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다." route="/portfolio/" active="portfolio" pageLabel="포트폴리오" pdf="portfolio" toc={orderedProjects.map(p => [p.id, p.name])}>
+    <SectionBlock title="화면" rule>
+      <Gallery images={web} />
+      <Gallery images={images} className={web.length ? 'mt-6 print:mt-3' : ''} printRow={web.length > 0} printCompact />
+    </SectionBlock>
+  );
+};
+// DevTools 캡처는 인쇄 크기에서 글자가 읽히지 않으므로, 합계가 적힌 맨 아래 상태 줄만 확대해 보여준다.
+// 캡처마다 목록 줄 위치가 달라, 잘린 줄이 보이지 않게 그림을 내리는 정도를 파일별로 맞춘다
+const stripOffset = { 'bitria-devtools-before.jpg': 'bottom-0', 'bitria-devtools-after.jpg': '-bottom-[10%]' };
+const StatusStrips = ({ images }) => (
+  <div className="mt-4 grid grid-cols-2 gap-3 mobile:grid-cols-1 print:break-inside-avoid">
+    {images.map(image => (
+      <figure key={image.src} className="min-w-0">
+        <div className="relative aspect-9/1 overflow-hidden rounded-sm border border-line">
+          <img className={cx('absolute left-0 w-[240%] max-w-none', stripOffset[image.src])} src={`/assets/${image.src}`} alt={image.alt} />
+        </div>
+        <Meta as="figcaption" className="mt-1.5">{image.alt}</Meta>
+      </figure>
+    ))}
+  </div>
+);
+const Examples = ({ items }) => items?.map(item => <CodeExample key={item.label} label={item.label} code={item.code} />);
+// 한 덩어리: 굵은 제목 + 불릿, 그 아래 구조도·측정 화면·코드. 제목과 불릿은 바로 뒤 그림과 같은 쪽에 둔다
+const PortfolioItem = ({ title, points, note, children }) => (
+  <section className="mt-9 first-of-type:mt-0 print:mt-6">
+    <div className="print:break-inside-avoid print:break-after-avoid">
+      <h3 className={cx(text.item, 'mb-1.5')}>{title}</h3>
+      <div className="text-secondary"><Bullets items={points} /></div>
+    </div>
+    {children}
+    {note && <Meta className="mt-2.5">{note}</Meta>}
+  </section>
+);
+const PortfolioDesign = ({ project }) => {
+  const items = portfolioDoc[project.id]?.design || [];
+  if (!items.length) return null;
+  return (
+    <SectionBlock title="구조와 기술 선택" rule>
+      {items.map(item => (
+        <PortfolioItem key={item.id} title={item.title} points={item.points}>
+          {item.diagram && <Diagram name={item.diagram} caption={item.caption} />}
+          <Examples items={item.examples} />
+        </PortfolioItem>
+      ))}
+    </SectionBlock>
+  );
+};
+const PortfolioEvidence = ({ project }) => {
+  const m = material(project);
+  const items = portfolioDoc[project.id]?.evidence || [];
+  if (!items.length) return null;
+  const diagrams = Object.fromEntries((m.caseDiagrams || []).map(d => [d.id, d]));
+  const measure = id => (m.featured || []).find(f => f.id === id)?.measure;
+  return (
+    <SectionBlock title="성능·문제 해결 근거" rule>
+      {items.map(item => (
+        <PortfolioItem key={item.id} title={item.title} points={item.points} note={item.note}>
+          {item.measure && <div className="measure-shot mt-4"><Gallery images={[measure(item.id)]} single /></div>}
+          {item.caseImages && <Gallery images={m.caseImages?.[item.caseImages]} className="mt-4" />}
+          {item.strips && <StatusStrips images={m.caseImages?.[item.strips]} />}
+          {item.diagram && <Diagram name={diagrams[item.diagram].diagram} caption={diagrams[item.diagram].caption} />}
+          {item.code && <Examples items={m.codeExamples?.[item.code]?.examples} />}
+          <Examples items={item.examples} />
+        </PortfolioItem>
+      ))}
+    </SectionBlock>
+  );
+};
+
+// 이력서·경력기술서와 같은 순서(회사별, 비중 순)로 둔다
+const portfolioProjects = projects.filter(project => project.category === 'work');
+const portfolioLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
+// 대표 주소는 /portfolio/다. 예전 주소(/portfolio-detail/)와 portfolio-detail.pdf는 이미 보낸 이력서의 링크가 끊기지 않게 같은 문서로 남긴다
+function PortfolioDoc({ route, pdf }) {
+  return (
+    <Document title="포트폴리오" description="김수환의 프로젝트별 화면, 구조도, 측정 결과와 코드입니다." route={route} active="portfolio" pageLabel="포트폴리오" pdf={pdf} toc={portfolioProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</PageIntro>
-        <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '상세 버전으로 보기'], ['/projects/', '프로젝트별로 보기']]} />
-        {orderedProjects.map((project, i) => (
+        <PageIntro title="김수환 포트폴리오" links={portfolioLinks}>프로젝트별 실제 화면, 구조도, 측정 결과와 코드를 정리했습니다.<br className="mobile:hidden" /> 문제를 해결한 과정은 경력기술서에 자세히 적었습니다.</PageIntro>
+        <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
+        {portfolioProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
-            <ProjectIntro project={project} items={[portfolioIntro(project)]} />
-            <Implementation project={project} prefix={`${project.id}-`} />
-            <Highlights project={project} prefix={`${project.id}-`} />
-            <Screens project={project} />
-            <Technology project={project} />
+            <FactRows rows={[...portfolioDoc[project.id].facts, ...(project.techGroups || [['기술', project.tech]]).map(([label, items]) => [label, <TechTokens items={items} />])]} />
+            <PortfolioScreens project={project} />
+            <PortfolioDesign project={project} />
+            <PortfolioEvidence project={project} />
           </PortfolioProject>
         ))}
       </PortfolioList>
@@ -409,7 +452,7 @@ function Portfolio() {
   );
 }
 
-// 포트폴리오 단독 제출용: 경력기술서의 설명(주요 업무·문제 해결 전문)에 포트폴리오 근거 자료를 붙인 문서
+// 프로젝트 상세 페이지의 사례 근거 자료 (측정 화면·캡처·흐름도)
 const CaseEvidence = ({ project, study }) => {
   const m = material(project);
   const diagram = (m.caseDiagrams || []).find(d => d.id === study.id);
@@ -424,43 +467,15 @@ const CaseEvidence = ({ project, study }) => {
   );
 };
 
-function PortfolioDetail() {
-  return (
-    <Document title="포트폴리오 상세" description="김수환의 프로젝트 주요 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
-      <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={detailWebLinks}>프로젝트별 주요 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
-        <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
-        {orderedProjects.map((project, i) => (
-          <PortfolioProject key={project.id} index={i}>
-            <div id={project.id}><ProjectHeader project={project} /></div>
-            <ProjectIntro project={project} items={[portfolioIntro(project)]} />
-            <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-            <Implementation project={project} prefix={`${project.id}-`} detail />
-            {project.cases?.length > 0 && (
-              <SectionBlock title="문제 해결과 개선" rule>
-                {project.cases.map(study => (
-                  <CaseStudy key={study.id} study={study} id={`case-${project.id}-${study.id}`}><CaseEvidence project={project} study={study} /></CaseStudy>
-                ))}
-              </SectionBlock>
-            )}
-            <Screens project={project} />
-            <Technology project={project} />
-          </PortfolioProject>
-        ))}
-      </PortfolioList>
-    </Document>
-  );
-}
-
 /* ── 프로젝트 목록 ── */
 // 목록 대표 이미지: 웹 화면이 있으면 웹 화면을 먼저 쓴다
 const thumbnail = project => material(project).webImages?.[0] || project.images?.[0] || material(project).images?.[0];
 
 function ProjectIndex() {
   return (
-    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio-detail" toc={[['main', '전체 프로젝트']]}>
+    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio" toc={[['main', '전체 프로젝트']]}>
       <PageIntro title="프로젝트">직접 개발한 6개 프로젝트의<br className="hidden mobile:inline" /> 주요 업무와 구현 사례입니다.</PageIntro>
-      <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '한 페이지로 모두 보기']]} />
+      <Toolbar count="6개 프로젝트" links={[['/portfolio/', '한 페이지로 모두 보기']]} />
       <div>
         {orderedProjects.map(p => (
           <article key={p.id} data-category={p.category} className={cx('project-index-row group relative border-b border-line py-8 mobile:py-6 print:break-inside-avoid', thumbnail(p) && 'grid grid-cols-[minmax(0,1fr)_14.25rem] items-center gap-7 tablet:grid-cols-[minmax(0,1fr)_10.5rem] tablet:gap-5.5 mobile:grid-cols-1 mobile:gap-4')}>
@@ -496,7 +511,7 @@ function ProjectDetail({ project, index }) {
   toc.push(['technology', '기술 스택']);
   const previous = orderedProjects[index - 1], next = orderedProjects[index + 1];
   return (
-    <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio-detail" toc={toc}>
+    <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio" toc={toc}>
       <a className={cx(text.meta, 'mb-8 inline-flex gap-2 text-muted mobile:mb-6 print:hidden')} href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a>
       <section id="overview">
         <p className={cx(text.detail, 'mb-3.5 text-secondary')}>{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</p>
@@ -537,8 +552,9 @@ export const pages = [
   ['/', () => <Resume />],
   ['/career/', () => <Career />],
   ['/projects/', () => <ProjectIndex />],
-  ['/portfolio/', () => <Portfolio />],
-  ['/portfolio-detail/', () => <PortfolioDetail />],
+  ['/portfolio/', () => <PortfolioDoc route="/portfolio/" pdf="portfolio" />],
+  // 예전 주소: 같은 문서를 보여 주고, 대표 주소(canonical)와 다운로드는 /portfolio/ 쪽을 쓴다
+  ['/portfolio-detail/', () => <PortfolioDoc route="/portfolio/" pdf="portfolio" />],
   ...orderedProjects.map((project, i) => [projectHref(project), () => <ProjectDetail project={project} index={i} />])
 ];
 export const notFound = () => <NotFound />;

@@ -23,8 +23,8 @@ export async function build() {
     await writeFile(path.join(directory, 'index.html'), html(page()));
   }
   await writeFile(path.join(out, '404.html'), html(notFound()));
-  // PDF를 만들기 위해서만 두는 페이지는 사이트맵에 넣지 않는다 (사이트 안에서도 링크하지 않는다)
-  const pdfOnly = ['/career/', '/portfolio/'];
+  // PDF를 만들기 위해서만 두는 페이지와 예전 주소는 사이트맵에 넣지 않는다 (사이트 안에서도 링크하지 않는다)
+  const pdfOnly = ['/career/', '/portfolio-detail/'];
   await writeFile(path.join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.filter(([route]) => !pdfOnly.includes(route)).map(([route]) => `<url><loc>${origin}${route}</loc></url>`).join('')}</urlset>`);
   await writeFile(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
   console.log(`Built ${pages.length} pages → dist/`);

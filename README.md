@@ -29,9 +29,9 @@ npm run check
 - `src/app.js`: 목차, 분류 필터, 화면 확대, 인쇄
 - `public/`: 글꼴, 실제 프로젝트 화면, PDF
 
-`/`은 이력서, `/career/`는 경력기술서, `/projects/`는 프로젝트 목록입니다. 모든 프로젝트는 `/projects/<id>/` 상세 페이지가 있습니다.
+`/`은 이력서, `/career/`는 경력기술서, `/projects/`는 프로젝트 목록입니다. 모든 프로젝트는 `/projects/<id>/` 상세 페이지가 있습니다. 기존 `/portfolio-detail/` 주소는 `/portfolio/`로 이동합니다.
 
-PDF는 실제 페이지에 인쇄 스타일을 적용해 만든 파일입니다. `/portfolio/`는 구현 구조·문제 해결 사례·화면 자료를 모아 인쇄하는 전체 포트폴리오입니다. 프로젝트 목록의 PDF 다운로드로 `public/portfolio.pdf`를 받을 수 있습니다.
+PDF는 실제 페이지에 인쇄 스타일을 적용해 만든 파일입니다. `/portfolio/`는 주요 업무·문제 해결 과정·구현 구조·측정 근거·화면 자료를 통합한 포트폴리오입니다. 헤더 PDF 다운로드 메뉴에서 `public/portfolio.pdf`를 받을 수 있습니다.
 
 문서 수정 후에는 로컬 서버를 실행한 상태에서 `node scripts/export-pdfs.mjs`로 세 문서를 갱신합니다. Playwright가 외부에 설치돼 있다면 `PLAYWRIGHT_MODULE`에 해당 모듈 경로를 지정합니다. 모든 이미지의 로드가 끝난 뒤 PDF를 생성하고, 다이어그램 포함 여부와 인쇄 배치를 검증합니다.
 

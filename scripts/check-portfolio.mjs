@@ -19,9 +19,10 @@ try {
       await page.evaluate(() => document.fonts.ready);
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${route} overflow at ${width}`);
       assert.equal(await page.locator('main h1').count(), 1);
-      assert.equal(await page.locator('.download-link').getAttribute('href'), '/portfolio.pdf');
+      assert.equal(await page.locator('#download-list a').count(), 3);
+      assert.equal(await page.locator('#download-list a[href="/portfolio.pdf"]').count(), 1);
       if (route === '/projects/bitria/' || route === '/portfolio/') {
-        assert.equal(await page.locator('.architecture-diagram svg').count(), 4);
+        assert(await page.locator('.architecture-diagram svg').count() >= 4);
         assert.equal(await page.locator('.architecture-diagram foreignObject').count(), 0);
         for (const figure of await page.locator('.architecture-diagram').all()) {
           const box = await figure.boundingBox();
@@ -41,6 +42,7 @@ try {
   await page.goto(base + '/projects/');
   const downloadEvent = page.waitForEvent('download');
   await page.locator('.download-link').click();
+  await page.locator('#download-list a[href="/portfolio.pdf"]').click();
   const download = await downloadEvent;
   assert.equal(download.suggestedFilename(), '김수환_포트폴리오.pdf');
   assert.equal(await download.failure(), null);

@@ -28,12 +28,12 @@ export const projects = [
     links: [{ label: 'Website', icon: 'world', url: 'https://bitria.com' }, { label: 'App Store', icon: 'apple', url: 'https://apps.apple.com/kr/app/bitria/id6775212278' }, { label: 'Google Play', icon: 'googleplay', url: 'https://play.google.com/store/apps/details?id=com.bitria.app' }],
     description: '외부 거래소 유동성을 연동해 현물·선물·마진 거래를 제공하는 암호화폐 거래 플랫폼입니다. 웹·iOS·Android·데스크톱 프론트엔드 전체를 초기 구축부터 개발했습니다. 인증·주문·자산·시세·KYC 등 백엔드 API 서버를 설계·개발하고, K3s로 배포·운영하고 있습니다.',
     summary: [
-      '하나의 Next.js 코드베이스로 웹·iOS·Android·데스크톱 앱 구축, App Store·Google Play 출시',
+      '웹·iOS·Android·데스크톱을 단일 Next.js 코드베이스로 구축하고 모바일 앱 스토어 출시',
       'TradingView 차트, 실시간 시세·호가, 현물·선물·마진 주문 등 거래 화면 개발',
       '회원·인증(2단계 인증·패스키), 자산, 시세, KYC 등 백엔드 API 서버 개발 및 K3s 배포·운영',
       '실시간 구독 구조 개선으로 거래 화면 렌더 작업 70.5% 감소',
-      '번들·폰트 최적화로 모바일 TBT 30%, 홈 JS 27%, 초기 폰트 전송 95% 감소',
-      '운영 중 발생한 차트 로딩 실패, 앱 복귀 시 데이터 불일치 등의 원인을 찾아 해결'
+      '배럴 import·번들·폰트 최적화로 모바일 홈 TBT 30%, 홈 JS 27%, 초기 폰트 전송량 95% 감소',
+      '운영 로그와 WebKit 재현을 기반으로 TradingView 로딩 실패 해결, 앱 복귀 시 포지션·자산 갱신 복구'
     ],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
@@ -221,9 +221,9 @@ export const careerDetails = {
           '모바일에서만 느리던 원인을 Lighthouse와 번들 분석기로 추적, 다운로드 용량이 아니라 한 청크의 실행 시간임을 확인',
           '배럴 import 136곳을 직접 참조로 변경, 버튼 하나에 163개 모듈이 묶이던 그 청크 제거 (TBT 417 → 292.5ms)',
           'optimizePackageImports 설정도 비교했으나 청크 수와 전체 번들이 늘어 채택하지 않음',
-          'sideEffects 선언으로 쓰지 않는 모듈 제외 (홈 JS 752 → 550KB)',
+          '소켓·인터셉터 등 부수효과가 필요한 모듈과 CSS를 예외로 지정해 tree shaking 개선 (홈 JS 752 → 550KB)',
           '한글 전체 폰트를 필요한 글자만 받는 서브셋으로 교체 (초기 폰트 2,048 → 111KB)',
-          '개발·배포 빌드를 Turbopack으로 통일 (빌드 74.2 → 32.8초)'
+          'SVG import 쿼리 분기 지원을 확인한 뒤 개발·배포 빌드를 Turbopack으로 통일 (74.2 → 32.8초, 56% 감소)'
         ],
         note: 'TBT는 로컬 프로덕션 빌드에서 모바일 CPU 4배 감속으로 5회 측정한 중앙값, JS는 gzip 기준, 빌드 시간은 캐시 없는 빌드 3회 중앙값입니다.'
       },
@@ -233,7 +233,7 @@ export const careerDetails = {
           '차트가 로딩 화면에서 멈춰도 실패 기록이 남지 않아 원인을 알 수 없던 문제',
           '실패 단계와 원인을 서버 로그로 수집, 13일간 50건을 분석해 대부분 앱 거래 화면에서 발생하는 것 확인',
           'TradingView 릴리스 노트에서 캐시된 번들과 호환 로딩 모드가 겹치면 준비 신호가 누락되는 버그 확인',
-          '라이선스 제약으로 수정 버전을 쓸 수 없어, 버그와 무관한 blob 로딩으로 변경',
+          '라이선스 제약으로 수정 버전을 쓸 수 없어 blob 로딩을 기본으로 적용하고, 인앱 브라우저에는 same_origin 폴백 구성',
           '남은 실패는 빠른 심볼 전환 때의 경쟁 상태로 확인(WebKit에서 재현), 위젯은 그대로 두고 심볼만 교체하도록 수정',
           '스크립트 로드 재시도와 요청 타임아웃 추가, 실패해도 로딩 화면에 갇히지 않고 재시도로 복구'
         ]
@@ -253,7 +253,7 @@ export const careerDetails = {
         bullets: [
           'iOS 앱을 백그라운드에 두었다 돌아오면 종료된 포지션이 최대 2분간 남던 문제',
           'WKWebView가 복귀 시 visibilitychange 이벤트를 보내지 않아 TanStack Query가 복귀를 감지하지 못하는 것 확인',
-          'Capacitor 앱 상태 이벤트를 TanStack Query focusManager에 연결해 복귀 시 재조회, 알림 소켓도 복귀 시 재연결'
+          'Capacitor 앱 상태 이벤트를 TanStack Query focusManager에 연결해 stale 쿼리를 재조회하고, 알림 소켓도 복귀 시 재연결해 현재 상태와 이후 변경을 함께 복구'
         ]
       },
       {

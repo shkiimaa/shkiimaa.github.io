@@ -231,7 +231,7 @@ export * from './media';   // three.js 기반 컴포넌트까지 함께 평가
 import { Button } from '@/shared/ui';` },
           { label: '변경 후 · 정의 파일 직접 참조 (136곳)', code: `import { Button } from '@/shared/ui/primitives/button';` }
         ],
-        note: '로컬 프로덕션 빌드, 모바일 CPU 4배 감속, 전후 각 5회 중앙값입니다. three.js 지연 로딩은 전후 모두 적용돼 있어 직접 참조 변경만 비교했습니다.'
+        note: '측정 조건: 로컬 프로덕션 빌드 · 모바일 CPU 4배 감속 · 전후 각 5회 중앙값 / three.js 지연 로딩은 전후 동일'
       },
       {
         id: 'build-optimization', title: 'Turbopack 통일과 번들·폰트 정리: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소',
@@ -253,9 +253,23 @@ import { Button } from '@/shared/ui';` },
       {
         id: 'app-resume', title: '앱 복귀 시 재조회와 실시간 연결 복구',
         points: [
-          'WKWebView는 복귀 이벤트(visibilitychange)를 보내지 않아, Capacitor 앱 상태 이벤트를 기준으로 쿼리 재조회와 소켓 재연결을 함께 실행'
+          '수정 전에는 복귀해도 쿼리를 다시 요청하지 않아, 다음 정기 조회(최대 2분)까지 이전 캐시가 화면에 남음',
+          'WKWebView는 복귀 이벤트(visibilitychange)를 보내지 않아, Capacitor 앱 상태 이벤트를 기준으로 쿼리 재조회와 소켓 재연결을 함께 실행',
+          '수정 후에는 복귀할 때마다 사용 중인 포지션·자산·주문 쿼리만 다시 요청 (페이지 새로고침 없음)'
         ],
-        diagram: 'app-resume'
+        diagram: 'app-resume',
+        examples: [
+          { label: 'app/[locale]/m/layout.tsx · 앱 복귀 처리 (요약)', code: `App.addListener('appStateChange', async ({ isActive }) => {
+  // 네이티브 복귀를 웹 focus 신호로 승격 — visibilitychange 가 안 오는 WKWebView 보정
+  focusManager.setFocused(isActive);
+  if (isActive) {
+    marketSocket.handleForeground('appStateChange');
+    notifySocket.handleForeground();
+  } else {
+    marketSocket.handleBackground();
+  }
+});` }
+        ]
       }
     ]
   },

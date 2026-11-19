@@ -15,8 +15,7 @@ const material = project => portfolioMaterial[project.id] || {};
 // 포트폴리오 소개: 서비스 소개와 담당 범위를 한 문단으로 (문장마다 줄만 바뀜)
 // 경력기술서·포트폴리오 PDF 첫 쪽에 넣는 웹 문서 링크 (이력서 PDF는 연락처 줄에 웹 이력서 링크가 있다)
 const webLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
-// 포트폴리오 상세는 경력기술서 내용을 담고 있어 웹 경력기술서 링크를 빼고, '웹 포트폴리오'는 웹 포트폴리오 상세 페이지로 연결한다
-const detailWebLinks = [webLinks[0], [`${profile.site}/portfolio-detail/`, '웹 포트폴리오']];
+// 포트폴리오는 경력기술서 내용을 담고 있어 웹 경력기술서 링크를 빼고, '웹 포트폴리오'는 웹 포트폴리오 페이지로 연결한다
 const portfolioIntro = project => [material(project).overview, material(project).scope].filter(Boolean).join(' ');
 
 /* ── 이력서 ── */
@@ -78,7 +77,7 @@ const careerTotal = jobs => formatMonths(jobs.reduce((sum, job) => sum + jobMont
 const pdfContacts = [
   ['전화번호', 'tel:+821099313175', profile.phone],
   ['이메일', `mailto:${profile.email}`, profile.email],
-  ['포트폴리오', `${profile.site}/portfolio-detail/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
+  ['포트폴리오', `${profile.site}/portfolio/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
 ];
 
 // 개발 이전 경력: 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다)
@@ -189,7 +188,7 @@ function Resume() {
         <EarlierCareer />
       </ResumeSection>
       <SkillsAndEducation />
-      <DocumentNext label="주요 업무와 문제 해결 과정을 더 자세히" href="/portfolio-detail/">포트폴리오 보기</DocumentNext>
+      <DocumentNext label="주요 업무와 문제 해결 과정을 더 자세히" href="/portfolio/">포트폴리오 보기</DocumentNext>
     </Document>
   );
 }
@@ -388,27 +387,6 @@ const PortfolioProject = ({ index, children }) => (
   </div>
 );
 
-function Portfolio() {
-  return (
-    <Document title="포트폴리오" description="김수환의 프로젝트 구현 구조·문제 해결 사례·화면 자료 모음입니다." route="/portfolio/" active="portfolio" pageLabel="포트폴리오" pdf="portfolio" toc={orderedProjects.map(p => [p.id, p.name])}>
-      <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트 화면과 구조도를 중심으로 구현 방식과 설계 기준을 설명합니다.</PageIntro>
-        <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '상세 버전으로 보기'], ['/projects/', '프로젝트별로 보기']]} />
-        {orderedProjects.map((project, i) => (
-          <PortfolioProject key={project.id} index={i}>
-            <div id={project.id}><ProjectHeader project={project} /></div>
-            <ProjectIntro project={project} items={[portfolioIntro(project)]} />
-            <Implementation project={project} prefix={`${project.id}-`} />
-            <Highlights project={project} prefix={`${project.id}-`} />
-            <Screens project={project} />
-            <Technology project={project} />
-          </PortfolioProject>
-        ))}
-      </PortfolioList>
-    </Document>
-  );
-}
-
 // 포트폴리오 단독 제출용: 경력기술서의 설명(주요 업무·문제 해결 전문)에 포트폴리오 근거 자료를 붙인 문서
 const CaseEvidence = ({ project, study }) => {
   const m = material(project);
@@ -424,11 +402,11 @@ const CaseEvidence = ({ project, study }) => {
   );
 };
 
-function PortfolioDetail() {
+function Portfolio() {
   return (
-    <Document title="포트폴리오 상세" description="김수환의 프로젝트 주요 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio-detail/" active="portfolio" pageLabel="포트폴리오 상세" pdf="portfolio-detail" toc={orderedProjects.map(p => [p.id, p.name])}>
+    <Document title="포트폴리오" description="김수환의 프로젝트 주요 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio/" active="portfolio" pageLabel="포트폴리오" pdf="portfolio" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={detailWebLinks}>프로젝트별 주요 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
+        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트별 주요 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
         <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
@@ -458,9 +436,9 @@ const thumbnail = project => material(project).webImages?.[0] || project.images?
 
 function ProjectIndex() {
   return (
-    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio-detail" toc={[['main', '전체 프로젝트']]}>
+    <Document title="프로젝트" description="Bitria, Gobit, Doit UI Kit, D.A.X 등 김수환이 개발한 6개 프로젝트입니다." route="/projects/" active="projects" pageLabel="프로젝트" pdf="portfolio" toc={[['main', '전체 프로젝트']]}>
       <PageIntro title="프로젝트">직접 개발한 6개 프로젝트의<br className="hidden mobile:inline" /> 주요 업무와 구현 사례입니다.</PageIntro>
-      <Toolbar count="6개 프로젝트" links={[['/portfolio-detail/', '한 페이지로 모두 보기']]} />
+      <Toolbar count="6개 프로젝트" links={[['/portfolio/', '한 페이지로 모두 보기']]} />
       <div>
         {orderedProjects.map(p => (
           <article key={p.id} data-category={p.category} className={cx('project-index-row group relative border-b border-line py-8 mobile:py-6 print:break-inside-avoid', thumbnail(p) && 'grid grid-cols-[minmax(0,1fr)_14.25rem] items-center gap-7 tablet:grid-cols-[minmax(0,1fr)_10.5rem] tablet:gap-5.5 mobile:grid-cols-1 mobile:gap-4')}>
@@ -486,7 +464,7 @@ function ProjectIndex() {
 }
 
 /* ── 프로젝트 상세 ── */
-// 포트폴리오 상세와 같은 구성: 주요 업무와 문제 해결 전문에 근거 자료를 붙인다
+// 포트폴리오와 같은 구성: 주요 업무와 문제 해결 전문에 근거 자료를 붙인다
 function ProjectDetail({ project, index }) {
   const m = material(project);
   const toc = [['overview', '프로젝트 소개'], ['tasks', '주요 업무']];
@@ -496,7 +474,7 @@ function ProjectDetail({ project, index }) {
   toc.push(['technology', '기술 스택']);
   const previous = orderedProjects[index - 1], next = orderedProjects[index + 1];
   return (
-    <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio-detail" toc={toc}>
+    <Document title={project.name} description={project.description} route={projectHref(project)} active="projects" pageLabel={project.name} pdf="portfolio" toc={toc}>
       <a className={cx(text.meta, 'mb-8 inline-flex gap-2 text-muted mobile:mb-6 print:hidden')} href="/projects/"><span aria-hidden="true">←</span> 프로젝트 목록</a>
       <section id="overview">
         <p className={cx(text.detail, 'mb-3.5 text-secondary')}>{project.category === 'work' ? `${project.company} · 업무 프로젝트` : '팀 프로젝트'}</p>
@@ -538,7 +516,6 @@ export const pages = [
   ['/career/', () => <Career />],
   ['/projects/', () => <ProjectIndex />],
   ['/portfolio/', () => <Portfolio />],
-  ['/portfolio-detail/', () => <PortfolioDetail />],
   ...orderedProjects.map((project, i) => [projectHref(project), () => <ProjectDetail project={project} index={i} />])
 ];
 export const notFound = () => <NotFound />;

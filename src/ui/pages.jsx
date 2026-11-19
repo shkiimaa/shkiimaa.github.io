@@ -1,5 +1,5 @@
 // 페이지: 공통 컴포넌트를 조립만 한다. 크기·간격은 components.jsx에서만 정한다.
-import { profile, experiences, projects, skills } from '../content.mjs';
+import { profile, experiences, projects, skills, careerDetails } from '../content.mjs';
 import { portfolioMaterial } from '../portfolio-content.mjs';
 import { Document } from './layout.jsx';
 import {
@@ -81,35 +81,74 @@ const pdfContacts = [
   ['포트폴리오', `${profile.site}/portfolio-detail/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
 ];
 
-function Resume() {
+// 개발 이전 경력: 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다)
+const EarlierCareer = () => experiences.filter(job => job.id === 'founder').map(job => (
+  <section key={job.id} className="experience-group pt-16 mobile:pt-13 print:pt-14">
+    <MarkedHead name={job.name} logo={job.logo}>
+      <span className="whitespace-nowrap">{job.period}</span><Bar /><span>{job.role}</span><Bar /><span className="text-secondary">개발 이전 경력</span>
+    </MarkedHead>
+  </section>
+));
+// 스킬·학력: 이력서와 경력기술서가 같은 구역을 쓴다
+const SkillsAndEducation = () => (
+  <>
+    {/* 기술 표는 PDF에서 페이지 사이에 나뉘지 않게 한 덩어리로 둔다 */}
+    <ResumeSection id="skills" title="스킬" className="print:break-inside-avoid">
+      {/* 첫 줄 위 간격을 다른 구역(제목 선 아래 pt-7)과 같게 맞춘다 */}
+      <dl className="print:pt-1.5">
+        {skills.map(group => (
+          <Row key={group.label} as="div" meta={<dt className={cx(text.body, 'font-semibold')}>{group.label}</dt>} className="py-5 mobile:gap-1.5 mobile:py-4 print:py-2">
+            <dd className={cx(text.body, 'text-secondary')}><TechTokens items={group.items} /></dd>
+          </Row>
+        ))}
+      </dl>
+    </ResumeSection>
+    <ResumeSection id="education" title="학력" className="print:break-inside-avoid">
+      <div className="pt-7 mobile:pt-6 print:pt-5">
+        <MarkedHead name={profile.education.school}>
+          <span className="whitespace-nowrap">{profile.education.period}</span><Bar /><span>{profile.education.status}</span><Bar /><span>{profile.education.department}</span>
+        </MarkedHead>
+      </div>
+    </ResumeSection>
+  </>
+);
+
+// 이름·연락처·사진·소개 글: 이력서와 경력기술서가 같은 머리를 쓴다
+const ProfileHead = () => {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
-    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" htmlClass="resume-doc" toc={[['about', '소개'], ['experience', '경력'], ['skills', '스킬'], ['education', '학력']]}>
-      <section id="about">
-        {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈)
-            PDF는 연락처를 이름 아래로 내리고, 그 옆에만 증명사진을 둬서 소개 문단 폭은 그대로 쓴다 (웹 화면에는 사진 없음) */}
-        <div className="mb-5 mobile:mb-4 print:mb-8 print:flex print:items-start print:justify-between print:gap-6">
-          <div>
-            <div className="flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:gap-x-4">
-              <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Engineer</span>
-              <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
-                <a href={`mailto:${profile.email}`}>{profile.email}</a>
-                <a href="tel:+821099313175">{profile.phone}</a>
-              </div>
+    <>
+      {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈)
+          PDF는 연락처를 이름 아래로 내리고, 그 옆에만 증명사진을 둬서 소개 문단 폭은 그대로 쓴다 (웹 화면에는 사진 없음) */}
+      <div className="mb-5 mobile:mb-4 print:mb-8 print:flex print:items-start print:justify-between print:gap-6">
+        <div>
+          <div className="flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:gap-x-4">
+            <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Engineer</span>
+            <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
+              <a href={`mailto:${profile.email}`}>{profile.email}</a>
+              <a href="tel:+821099313175">{profile.phone}</a>
             </div>
-            {/* PDF 연락처: 이름 아래에 항목 이름을 붙여 세로로 나열하고, 출력해도 읽히게 주소를 보여준다 */}
-            <dl className={cx(text.body, 'mt-3 hidden grid-cols-[auto_minmax(0,1fr)] gap-x-5 print:grid')}>
-              {pdfContacts.map(([label, href, value]) => (
-                <div key={label} className="contents"><dt className="text-muted">{label}</dt><dd><a href={href}>{value}</a></dd></div>
-              ))}
-            </dl>
           </div>
-          {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기 */}
-          <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile.jpg" alt="김수환 증명사진" loading="lazy" />
+          {/* PDF 연락처: 이름 아래에 항목 이름을 붙여 세로로 나열하고, 출력해도 읽히게 주소를 보여준다 */}
+          <dl className={cx(text.body, 'mt-3 hidden grid-cols-[auto_minmax(0,1fr)] gap-x-5 print:grid')}>
+            {pdfContacts.map(([label, href, value]) => (
+              <div key={label} className="contents"><dt className="text-muted">{label}</dt><dd><a href={href}>{value}</a></dd></div>
+            ))}
+          </dl>
         </div>
-        <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
-        <Paragraphs items={introDetails} muted={false} />
-      </section>
+        {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기 */}
+        <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile.jpg" alt="김수환 증명사진" loading="lazy" />
+      </div>
+      <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
+      <Paragraphs items={introDetails} muted={false} />
+    </>
+  );
+};
+
+function Resume() {
+  return (
+    <Document title="이력서" description={profile.introduction.split('\n')[0]} route="/" active="resume" pageLabel="이력서" pdf="resume" htmlClass="resume-doc" toc={[['about', '소개'], ['experience', '경력'], ['skills', '스킬'], ['education', '학력']]}>
+      <section id="about"><ProfileHead /></section>
       {/* 한 단 구성: 회사 이름, 그 아래 '재직 기간 | 직무' 줄과 구분선, 이어서 그 회사의 프로젝트를 위에서 아래로 쌓는다.
           프로젝트 사이는 선 없이 간격으로만 나누고, 글자는 보조 줄까지 본문색에 가깝게 써서 흐린 줄이 없게 한다 */}
       <ResumeSection id="experience" title="경력" note={careerTotal(devJobs)}>
@@ -147,33 +186,9 @@ function Resume() {
             </div>
           </section>
         ))}
-        {/* 개발 이전 경력은 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다) */}
-        {experiences.filter(job => job.id === 'founder').map(job => (
-          <section key={job.id} className="experience-group pt-16 mobile:pt-13 print:pt-14">
-            <MarkedHead name={job.name} logo={job.logo}>
-              <span className="whitespace-nowrap">{job.period}</span><Bar /><span>{job.role}</span><Bar /><span className="text-secondary">개발 이전 경력</span>
-            </MarkedHead>
-          </section>
-        ))}
+        <EarlierCareer />
       </ResumeSection>
-      {/* 기술 표는 PDF에서 페이지 사이에 나뉘지 않게 한 덩어리로 둔다 */}
-      <ResumeSection id="skills" title="스킬" className="print:break-inside-avoid">
-        {/* 첫 줄 위 간격을 다른 구역(제목 선 아래 pt-7)과 같게 맞춘다 */}
-        <dl className="print:pt-1.5">
-          {skills.map(group => (
-            <Row key={group.label} as="div" meta={<dt className={cx(text.body, 'font-semibold')}>{group.label}</dt>} className="py-5 mobile:gap-1.5 mobile:py-4 print:py-2">
-              <dd className={cx(text.body, 'text-secondary')}><TechTokens items={group.items} /></dd>
-            </Row>
-          ))}
-        </dl>
-      </ResumeSection>
-      <ResumeSection id="education" title="학력" className="print:break-inside-avoid">
-        <div className="pt-7 mobile:pt-6 print:pt-5">
-          <MarkedHead name={profile.education.school}>
-            <span className="whitespace-nowrap">{profile.education.period}</span><Bar /><span>{profile.education.status}</span><Bar /><span>{profile.education.department}</span>
-          </MarkedHead>
-        </div>
-      </ResumeSection>
+      <SkillsAndEducation />
       <DocumentNext label="주요 업무와 문제 해결 과정을 더 자세히" href="/portfolio-detail/">포트폴리오 보기</DocumentNext>
     </Document>
   );
@@ -267,40 +282,100 @@ const Screens = ({ project, id }) => {
 const Technology = ({ project, id }) => <SectionBlock id={id} title="기술 스택" rule className="print:mt-4 print:break-inside-avoid print:pt-3"><TechStack project={project} /></SectionBlock>;
 
 /* ── 경력기술서 ── */
-const CareerProject = ({ project }) => (
-  <article id={project.id} className="career-project border-b border-line py-9 last:border-b-0 last:pb-0 mobile:py-7 print:py-5">
-    <ProjectHeader project={project} href={projectHref(project)} />
-    <ProjectIntro project={project} items={[project.description]} />
-    {/* 모든 구역은 같은 방식(구분선 + 간격)으로 나눈다 */}
-    <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-    <SectionBlock title="기술 스택" rule className="print:mt-4 print:break-inside-avoid print:pt-3"><TechStack project={project} /></SectionBlock>
-    {project.cases?.length > 0 && (
-      <SectionBlock title="문제 해결과 개선" rule>
-        {project.cases.map(study => <CaseStudy key={study.id} study={study} id={`${project.id}-${study.id}`} />)}
-      </SectionBlock>
-    )}
-  </article>
+// 이력서와 같은 틀(소개 → 경력 → 스킬 → 학력)에 프로젝트마다 소개·주요 업무·사례를 펼친 문서.
+// 경력기술서만 받는 곳에 이 문서 하나로 낼 수 있게 연락처·소개·스킬·학력을 이력서와 똑같이 싣는다.
+// 사례: 굵은 제목(결과 포함) + 한 줄 불릿 + 측정 조건 한 줄. 라벨·상자·그림은 쓰지 않는다 (그림은 포트폴리오에 있다)
+// 쪽 나눔: 목록이 통째로 다음 쪽으로 밀려 앞쪽 아래가 비지 않게, 목록 안에서도 쪽이 바뀔 수 있다.
+// 다만 첫 줄은 둘째 줄과, 마지막 줄은 그 앞줄과 같은 쪽에 둔다 (한 줄만 따로 떨어지지 않게).
+// glueEnd: 목록 바로 뒤 내용(측정 조건, 기술 줄)을 마지막 줄과 같은 쪽에 묶는다
+const FlowBullets = ({ items, glueEnd }) => (
+  <ul className={cx(text.body, 'list-disc pl-4 text-secondary marker:text-secondary')}>
+    {items.map((item, i, all) => (
+      <Prose key={i} as="li" text={item} className={cx('my-0.5 pl-px print:break-inside-avoid', ((i === 0 || i >= all.length - 2) && i < all.length - 1 || i === all.length - 1 && glueEnd) && 'print:break-after-avoid')} />
+    ))}
+  </ul>
 );
+// 사례: 제목은 첫 줄과 같은 쪽에 둔다
+const CareerCase = ({ study }) => (
+  <section className="mt-6 print:mt-4">
+    <h4 className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>
+      {study.title}{study.period && <span className={cx(text.meta, 'ml-2.5 font-medium text-muted tabular-nums')}>{study.period}</span>}
+    </h4>
+    <FlowBullets items={study.bullets} glueEnd={Boolean(study.note)} />
+    {study.note && <Meta className="mt-1.5 print:break-inside-avoid">{study.note}</Meta>}
+  </section>
+);
+// 주요 업무: 사례와 같은 불릿 모양을 쓴다. '#' 줄로 묶음이 둘 이상이면 좌우로 나란히 (이때는 쪽이 나뉘지 않게 한 덩어리)
+// glueEnd: 바로 뒤 기술 줄을 마지막 줄과 같은 쪽에 묶는다
+const CareerTasks = ({ tasks, glueEnd }) => {
+  const groups = [];
+  for (const [label, copy] of tasks) {
+    if (label === '#') groups.push({ title: copy, items: [] });
+    else { if (!groups.length) groups.push({ items: [] }); groups.at(-1).items.push(copy); }
+  }
+  if (groups.length < 2) return <FlowBullets items={groups[0].items} glueEnd={glueEnd} />;
+  return (
+    <div className={cx('grid grid-cols-2 gap-x-6 gap-y-5 mobile:grid-cols-1 print:break-inside-avoid', glueEnd && 'print:break-after-avoid')}>
+      {groups.map(group => (
+        <div key={group.title} className="min-w-0">
+          {/* 묶음 이름은 '주요 업무' 제목보다 한 단계 아래 */}
+          <p className={cx(text.body, 'mb-0.5 font-semibold text-secondary')}>{group.title}</p>
+          <FlowBullets items={group.items} />
+        </div>
+      ))}
+    </div>
+  );
+};
+// 모든 프로젝트가 같은 순서: 이름·기간·링크 → 소개(서비스와 맡은 범위) → 사례(있는 프로젝트만) → 주요 업무 → 기술.
+// 맡은 일의 목록보다 문제를 푼 과정이 먼저 읽히게 사례를 주요 업무 앞에 둔다
+const CareerEntry = ({ project, first }) => {
+  const detail = careerDetails[project.id] || {};
+  const cases = detail.cases || [];
+  return (
+    <article id={project.id} className={cx('career-entry', first ? 'pt-6 print:pt-4' : 'pt-11 mobile:pt-9 print:mt-8 print:pt-0')}>
+      {/* 이름·기간 줄, 링크, 소개는 한 덩어리로, 바로 뒤 내용(첫 사례 또는 주요 업무)의 첫 줄과 같은 쪽에 둔다 —
+          프로젝트 이름만 쪽 맨 아래에 남고 내용이 다음 쪽에서 시작하지 않게 */}
+      <div className="print:break-inside-avoid print:break-after-avoid">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h3 className={text.item}>{project.name}</h3>
+          <p className={cx(text.body, 'text-secondary')}>{project.kind}</p>
+        </div>
+        <p className={cx(text.detail, 'mt-0.5 flex flex-wrap items-center gap-y-0.5')}>
+          <span className="tabular-nums whitespace-nowrap">{project.period}</span><Bar /><span>{project.role}</span>
+        </p>
+        {/* 서비스 링크는 기간·역할 바로 아래에 둔다 — 내용이 길어 끝에 두면 한 쪽 넘게 지나서야 나온다 */}
+        <IconLinks links={project.links} className="mt-2.5" />
+        <div className="mt-3 print:mt-2.5"><Paragraphs items={[detail.description || project.description]} /></div>
+      </div>
+      {cases.map(study => <CareerCase key={study.title} study={study} />)}
+      <section className="mt-6 print:mt-4">
+        <h4 className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>주요 업무</h4>
+        <CareerTasks tasks={detail.tasks || project.tasks} glueEnd />
+      </section>
+      {/* 기술 줄은 주요 업무 끝과 같은 쪽에 둔다 — 다음 쪽에 홀로 남지 않게 */}
+      <p className={cx(text.meta, 'mt-5 text-secondary print:mt-4 print:break-inside-avoid')}><TechTokens items={project.tech} /></p>
+    </article>
+  );
+};
 
 function Career() {
   return (
-    <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결·개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" toc={workProjects.map(p => [p.id, p.name])}>
-      <PageIntro title="김수환 경력기술서" links={webLinks}>개발한 서비스와 역할,<br className="hidden mobile:inline" /> 그리고 문제를 해결한 과정입니다.</PageIntro>
-      {experiences.slice(0, 2).map((job, j) => (
-        <section key={job.id} id={job.id} className={j ? 'mt-17.5 mobile:mt-12 print:mt-7' : 'mt-7.5 mobile:mt-5 print:mt-4'}>
-          <header className="flex items-start justify-between gap-5 border-t-2 border-b border-t-ink border-b-strong-line pt-5 pb-6 mobile:block mobile:py-4.5 print:items-baseline print:border-t-0 print:border-b-[#333] print:py-2.5 print:break-after-avoid">
-            {/* 이력서의 회사 줄과 같은 모양: 이름, 그 아래 재직 기간 | 직무 */}
-            <div>
-              <h2 className={text.section}>{job.name}</h2>
-              <p className={cx(text.lead, 'mt-1 flex flex-wrap items-center leading-6 tabular-nums')}>
-                <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.employment}</span><Bar /><span>{job.role}</span>
-              </p>
+    <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결·개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" htmlClass="resume-doc" toc={[['about', '소개'], ['experience', '경력'], ['skills', '스킬'], ['education', '학력']]}>
+      <section id="about"><ProfileHead /></section>
+      <ResumeSection id="experience" title="경력" note={careerTotal(devJobs)}>
+        {devJobs.map((job, i) => (
+          <section key={job.id} className={cx('experience-group', i > 0 ? 'pt-16 mobile:pt-13 print:mt-12 print:pt-0' : 'pt-7 mobile:pt-6 print:pt-5')}>
+            <MarkedHead name={job.name} logo={job.logo} rule>
+              <span className="whitespace-nowrap">{job.period} ({formatMonths(jobMonths(job))})</span><Bar /><span>{job.employment}</span><Bar /><span>{job.role}</span>
+            </MarkedHead>
+            <div className={underMark}>
+              {projects.filter(project => project.category === 'work' && project.companyId === job.id).map((project, n) => <CareerEntry key={project.id} project={project} first={n === 0} />)}
             </div>
-          </header>
-          {workProjects.filter(p => p.companyId === job.id).map(project => <CareerProject key={project.id} project={project} />)}
-        </section>
-      ))}
-      <DocumentNext label="프로젝트 화면과 구현 자료" href="/projects/">프로젝트 둘러보기</DocumentNext>
+          </section>
+        ))}
+        <EarlierCareer />
+      </ResumeSection>
+      <SkillsAndEducation />
     </Document>
   );
 }

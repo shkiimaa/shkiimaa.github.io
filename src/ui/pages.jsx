@@ -77,7 +77,7 @@ const careerTotal = jobs => formatMonths(jobs.reduce((sum, job) => sum + jobMont
 const pdfContacts = [
   ['전화번호', 'tel:+821099313175', profile.phone],
   ['이메일', `mailto:${profile.email}`, profile.email],
-  ['포트폴리오', `${profile.site}/portfolio/`, `${profile.site.replace('https://', '')}/portfolio-detail`]
+  ['포트폴리오', `${profile.site}/portfolio/`, `${profile.site.replace('https://', '')}/portfolio`]
 ];
 
 // 개발 이전 경력: 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다)

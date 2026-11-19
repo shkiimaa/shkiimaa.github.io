@@ -49,7 +49,7 @@ useSnapshotSocket({
     featured: [
       { id: 'render-isolation', title: '비활성 화면의 불필요한 리렌더 개선', paragraphs: [
         '차트 사전 로딩을 위해 숨겨둔 차트 화면과 닫힌 오더북 드로어가 시세 갱신마다 렌더링되며 전체 렌더 시간의 64%를 차지하는 문제를 발견했습니다. 실시간 데이터 구독을 화면 최상위에서 실제 값을 쓰는 컴포넌트로 옮기고, 비활성 화면의 구독을 멈췄습니다.'
-      ], result: '렌더 작업 5,192회 → 1,534회(70% 감소)', evidence: 'images',
+      ], result: '렌더 작업 5,192회 → 1,534회(70.5% 감소)', evidence: 'images',
         method: '측정 방법: 공개 시세 메시지 73개를 녹화해 개선 전후 버전에서 같은 12초 구간을 재생하고, React DevTools 훅(onCommitFiberRoot)으로 커밋마다 실제로 렌더된 컴포넌트를 집계했습니다. 개발 빌드, 모바일 앱 화면(390×844), 회차마다 새 브라우저로 전후 각 5회 실행한 중앙값입니다.',
         measure: { src: 'bitria-render-measure.jpg', alt: '측정 스크립트 실행 결과 · 렌더된 컴포넌트 합계와 컴포넌트별 렌더 횟수(5회 중앙값)' } },
       { id: 'chart-lifecycle', title: 'TradingView 차트 로딩 안정화', paragraphs: [
@@ -65,7 +65,7 @@ useSnapshotSocket({
       {
         id: 'fsd', title: 'FSD 아키텍처와 화면 분기 기준',
         paragraphs: [
-          '화면과 도메인이 늘어나도 의존성이 뒤섞이지 않도록 app → views → widgets → features → entities → shared 순의 단방향 규칙을 정했습니다. 조회(query)는 entity에, 변경(mutation)은 feature에 두어 각 레이어의 책임을 분리했습니다.',
+          'FSD를 프로젝트에 맞게 적용해 화면 구성에 views 레이어를 사용하고, app → views → widgets → features → entities → shared 순으로 의존 방향을 제한했습니다. 조회(query)는 entity에, 변경(mutation)은 feature에 두어 각 레이어의 책임을 분리했습니다.',
           '웹과 앱의 라우트가 다르면 폴더를 분리했습니다. 화면 크기 차이가 작으면 prop으로 분기하고, 마크업 차이가 크면 디바이스별 파일을 두도록 기준을 정했습니다.'
         ], diagram: 'bitria-fsd', caption: 'FSD 레이어 간 의존 방향과 각 레이어의 책임'
       },

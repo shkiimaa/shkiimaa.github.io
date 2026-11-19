@@ -236,7 +236,7 @@ const Highlights = ({ project, prefix = '' }) => {
   const hasVisual = study => Boolean(m.caseImages?.[study.id]?.length || diagrams[study.id]);
   const rest = items.filter(study => !featuredIds.has(study.id)).sort((a, b) => hasVisual(b) - hasVisual(a));
   return (
-    <SectionBlock id={`${prefix}measurements`} title="문제 해결과 개선" rule>
+    <SectionBlock id={`${prefix}measurements`} title="핵심 개선 사례와 구현 근거" rule>
       {featured.map(f => {
         const study = items.find(s => s.id === f.id);
         return (
@@ -404,23 +404,17 @@ const CaseEvidence = ({ project, study }) => {
 
 function Portfolio() {
   return (
-    <Document title="포트폴리오" description="김수환의 프로젝트 주요 업무·문제 해결 과정·구현 구조·화면 자료입니다." route="/portfolio/" active="portfolio" pageLabel="포트폴리오" pdf="portfolio" toc={orderedProjects.map(p => [p.id, p.name])}>
+    <Document title="포트폴리오" description="김수환의 프로젝트 구현 구조·측정 근거·코드와 실제 서비스 화면입니다." route="/portfolio/" active="portfolio" pageLabel="포트폴리오" pdf="portfolio" toc={orderedProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트별 주요 업무와 문제 해결 과정, 구현 구조와 실제 화면을 함께 정리했습니다.</PageIntro>
+        <PageIntro title="김수환 포트폴리오" links={webLinks}>프로젝트별 구현 구조, 설계 판단, 측정 근거와 실제 서비스 화면을 정리했습니다. 문제 해결의 전체 과정은 경력기술서에서 확인할 수 있습니다.</PageIntro>
         <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
         {orderedProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>
             <div id={project.id}><ProjectHeader project={project} /></div>
             <ProjectIntro project={project} items={[portfolioIntro(project)]} />
-            <SectionBlock title="주요 업무" rule><TaskList tasks={project.tasks} /><Results project={project} /></SectionBlock>
-            <Implementation project={project} prefix={`${project.id}-`} detail />
-            {project.cases?.length > 0 && (
-              <SectionBlock title="문제 해결과 개선" rule>
-                {project.cases.map(study => (
-                  <CaseStudy key={study.id} study={study} id={`case-${project.id}-${study.id}`}><CaseEvidence project={project} study={study} /></CaseStudy>
-                ))}
-              </SectionBlock>
-            )}
+            <Implementation project={project} prefix={`${project.id}-`} />
+            <Highlights project={project} prefix={`${project.id}-`} />
+            <Results project={project} />
             <Screens project={project} />
             <Technology project={project} />
           </PortfolioProject>

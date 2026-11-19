@@ -22,9 +22,12 @@ export async function build() {
     await mkdir(directory, { recursive: true });
     await writeFile(path.join(directory, 'index.html'), html(page()));
   }
+  await rm(path.join(out, 'portfolio-detail.pdf'), { force: true });
+  await mkdir(path.join(out, 'portfolio-detail'), { recursive: true });
+  await writeFile(path.join(out, 'portfolio-detail', 'index.html'), '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="description" content="통합 포트폴리오 이동"><meta http-equiv="refresh" content="0;url=/portfolio/"><link rel="canonical" href="https://shkiimaa.github.io/portfolio/"></head><body><h1>포트폴리오</h1><a href="/portfolio/">통합 포트폴리오 보기</a></body></html>');
   await writeFile(path.join(out, '404.html'), html(notFound()));
   // PDF를 만들기 위해서만 두는 페이지는 사이트맵에 넣지 않는다 (사이트 안에서도 링크하지 않는다)
-  const pdfOnly = ['/career/', '/portfolio/'];
+  const pdfOnly = ['/career/'];
   await writeFile(path.join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.filter(([route]) => !pdfOnly.includes(route)).map(([route]) => `<url><loc>${origin}${route}</loc></url>`).join('')}</urlset>`);
   await writeFile(path.join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
   console.log(`Built ${pages.length} pages → dist/`);

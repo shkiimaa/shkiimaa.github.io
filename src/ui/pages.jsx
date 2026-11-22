@@ -247,10 +247,16 @@ const FlowBullets = ({ items, glueEnd }) => (
   </ul>
 );
 // 사례: 제목은 첫 줄과 같은 쪽에 둔다. glueEnd: 바로 뒤 기술 줄을 마지막 줄과 같은 쪽에 묶는다 (마지막 사례)
+// ref: 같은 사례의 근거(측정 화면·코드·흐름도)가 있는 포트폴리오 위치. PDF에는 쪽 번호를, 웹에는 링크 이름을 보인다
 const CareerCase = ({ study, glueEnd }) => (
   <section className="mt-6 print:mt-4">
     <h4 className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>
       {study.title}{study.period && <span className={cx(text.meta, 'ml-2.5 font-medium text-muted tabular-nums')}>{study.period}</span>}
+      {study.ref && (
+        <a className={cx(text.meta, 'ml-2.5 font-medium whitespace-nowrap text-muted underline underline-offset-2')} href={`${profile.site}/portfolio/#case-${study.ref[0]}`}>
+          <span className="print:hidden">포트폴리오에서 근거 보기</span><span className="hidden print:inline">→ 포트폴리오 p.{study.ref[1]}</span>
+        </a>
+      )}
     </h4>
     <FlowBullets items={study.bullets} glueEnd={Boolean(study.note) || glueEnd} />
     {study.note && <Meta className={cx('mt-1.5 print:break-inside-avoid', glueEnd && 'print:break-after-avoid')}>{study.note}</Meta>}
@@ -332,7 +338,7 @@ function Career() {
 }
 
 /* ── 포트폴리오 ── */
-// 포트폴리오는 하나로 합친 문서다: 프로젝트마다 맡은 범위 → 화면 → 구조와 기술 선택 → 성능·문제 해결 근거 → 기술 스택.
+// 포트폴리오는 하나로 합친 문서다: 프로젝트마다 맡은 범위 → 화면 → 구조와 기술 선택 → 성능 개선 → 트러블슈팅.
 // 문제를 푼 과정은 경력기술서가 글로 설명하므로, 여기서는 그 근거(화면·구조도·측정 결과·코드)를 보여준다
 const PortfolioList = ({ children }) => <div className="portfolio-document">{children}</div>;
 const PortfolioProject = ({ index, children }) => (
@@ -381,12 +387,29 @@ const StatusStrips = ({ images }) => (
   </div>
 );
 const Examples = ({ items }) => items?.map(item => <CodeExample key={item.label} label={item.label} code={item.code} />);
+// 사례 불릿의 '문제:'·'원인 추적:' 같은 단계 이름은 굵게 써서 본문과 구분한다
+const stepLabel = /^(문제|원인|해결|결과): /;
+const LabeledBullets = ({ items }) => (
+  <ul className={cx(text.body, 'list-disc pl-4 marker:text-secondary')}>
+    {items.map((item, i) => {
+      const label = item.match(stepLabel);
+      return (
+        <li key={i} className="my-0.5 pl-px">
+          {label && <strong className="font-semibold text-ink">{label[1]}: </strong>}
+          <Prose text={label ? item.slice(label[0].length) : item} />
+        </li>
+      );
+    })}
+  </ul>
+);
 // 한 덩어리: 굵은 제목 + 불릿, 그 아래 구조도·측정 화면·코드. 제목과 불릿은 바로 뒤 그림과 같은 쪽에 둔다
-const PortfolioItem = ({ title, points, note, children }) => (
-  <section className="mt-9 first-of-type:mt-0 print:mt-6">
-    <div className="print:break-inside-avoid print:break-after-avoid">
-      <h3 className={cx(text.item, 'mb-1.5')}>{title}</h3>
-      <div className="text-secondary"><Bullets items={points} /></div>
+// (glue: 뒤에 그림·코드가 있을 때만 묶는다 — 글만 있는 항목까지 묶으면 구역 전체가 한 덩어리가 돼 통째로 다음 쪽으로 밀린다)
+// period: 프로젝트 기간과 다른 때에 한 일 — 경력기술서 사례와 같은 모양으로 제목 옆에 둔다
+const PortfolioItem = ({ id, title, period, points, note, glue, children }) => (
+  <section id={id} className="mt-9 first-of-type:mt-0 print:mt-6">
+    <div className={cx('print:break-inside-avoid', glue && 'print:break-after-avoid')}>
+      <h3 className={cx(text.item, 'mb-1.5')}>{title}{period && <span className={cx(text.meta, 'ml-2.5 font-medium text-muted tabular-nums')}>{period}</span>}</h3>
+      <div className="text-secondary"><LabeledBullets items={points} /></div>
     </div>
     {children}
     {note && <Meta className="mt-2.5">{note}</Meta>}
@@ -398,7 +421,7 @@ const PortfolioDesign = ({ project }) => {
   return (
     <SectionBlock title="구조와 기술 선택" rule>
       {items.map(item => (
-        <PortfolioItem key={item.id} title={item.title} points={item.points}>
+        <PortfolioItem key={item.id} id={`case-${project.id}-${item.id}`} title={item.title} period={item.period} points={item.points} glue={Boolean(item.diagram || item.examples)}>
           {item.diagram && <Diagram name={item.diagram} caption={item.caption} />}
           <Examples items={item.examples} />
         </PortfolioItem>
@@ -412,10 +435,12 @@ const PortfolioEvidence = ({ project }) => {
   if (!items.length) return null;
   const diagrams = Object.fromEntries((m.caseDiagrams || []).map(d => [d.id, d]));
   const measure = id => (m.featured || []).find(f => f.id === id)?.measure;
-  return (
-    <SectionBlock title="성능·문제 해결 근거" rule>
-      {items.map(item => (
-        <PortfolioItem key={item.id} title={item.title} points={item.points} note={item.note}>
+  // 사례는 kind(성능 개선 / 트러블슈팅)별로 구역을 나눈다. 구역 순서는 처음 나온 순서
+  const kinds = [...new Set(items.map(item => item.kind))];
+  return kinds.map(kind => (
+    <SectionBlock key={kind} title={kind} rule>
+      {items.filter(item => item.kind === kind).map(item => (
+        <PortfolioItem key={item.id} id={`case-${project.id}-${item.id}`} title={item.title} period={item.period} points={item.points} note={item.note} glue={Boolean(item.measure || item.caseImages || item.strips || item.diagram || item.code || item.examples)}>
           {item.measure && <div className="measure-shot mt-4"><Gallery images={[measure(item.id)]} single /></div>}
           {item.caseImages && <Gallery images={m.caseImages?.[item.caseImages]} className="mt-4" />}
           {item.strips && <StatusStrips images={m.caseImages?.[item.strips]} />}
@@ -425,7 +450,7 @@ const PortfolioEvidence = ({ project }) => {
         </PortfolioItem>
       ))}
     </SectionBlock>
-  );
+  ));
 };
 
 // 이력서·경력기술서와 같은 순서(회사별, 비중 순)로 둔다
@@ -436,7 +461,7 @@ function PortfolioDoc({ route, pdf }) {
   return (
     <Document title="포트폴리오" description="김수환의 프로젝트별 화면, 구조도, 측정 결과와 코드입니다." route={route} active="portfolio" pageLabel="포트폴리오" pdf={pdf} toc={portfolioProjects.map(p => [p.id, p.name])}>
       <PortfolioList>
-        <PageIntro title="김수환 포트폴리오" links={portfolioLinks}>프로젝트별 실제 화면, 구조도, 측정 결과와 코드를 정리했습니다.<br className="mobile:hidden" /> 문제를 해결한 과정은 경력기술서에 자세히 적었습니다.</PageIntro>
+        <PageIntro title="김수환 포트폴리오" links={portfolioLinks}>프로젝트별 실제 화면, 구조도, 측정 결과와 코드를 정리했습니다.<br className="mobile:hidden" /> 문제 해결 사례는 문제 → 원인 → 해결 → 결과 순서로 적었습니다.</PageIntro>
         <Toolbar count="6개 프로젝트" links={[['/projects/', '프로젝트별로 보기']]} />
         {portfolioProjects.map((project, i) => (
           <PortfolioProject key={project.id} index={i}>

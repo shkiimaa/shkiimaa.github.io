@@ -186,12 +186,13 @@ const ratio = src => { const { width, height } = imageSize(src); return (width /
 export const Gallery = ({ images, className, printRow, single, printCompact }) => {
   if (!images?.length) return null;
   const phone = images.every(image => image.phone), screen = images.every(image => image.screen);
+  // webOnly 화면은 웹에서만 보여준다. PDF에서는 남은 화면을 한 줄 3장으로 둔다
   // 일반 화면 캡처: PDF에서는 한 줄 2장, 높이 제한 (측정 캡처처럼 한 장을 크게 보여줄 때는 single)
   const plain = !phone && !screen && !single;
   return (
-    <div className={cx('project-gallery grid gap-6 print:gap-4', phone && 'phone-gallery grid-cols-2 gap-x-6 mobile:grid-cols-1', phone && printRow && 'print:grid-cols-4 print:gap-x-3', screen && 'screen-gallery grid-cols-2 mobile:grid-cols-1', plain && (printCompact && images.length === 3 ? 'print:grid-cols-3 print:gap-3' : 'print:grid-cols-2 print:gap-3'), className)}>
-      {images.map(image => (
-        <figure key={image.src} className="min-w-0 break-inside-avoid">
+    <div className={cx('project-gallery grid gap-6 print:gap-4', phone && 'phone-gallery grid-cols-2 gap-x-6 mobile:grid-cols-1', phone && printRow && 'print:grid-cols-4 print:gap-x-3', screen && 'screen-gallery grid-cols-2 mobile:grid-cols-1', screen && printCompact && images.some(image => image.webOnly) && 'print:grid-cols-3', plain && (printCompact && images.length === 3 ? 'print:grid-cols-3 print:gap-3' : 'print:grid-cols-2 print:gap-3'), className)}>
+      {images.map((image, i) => (
+        <figure key={image.src} className={cx('min-w-0 break-inside-avoid', image.webOnly && 'print:hidden')}>
           <button className={cx('image-expand relative block w-full overflow-hidden rounded-sm after:pointer-events-none after:absolute after:inset-0 after:rounded-sm after:shadow-[inset_0_0_0_1px_var(--color-strong-line)] after:content-[\'\']', phone && 'bg-wash p-6 print:p-3', phone && printRow && 'print:p-1.5')} type="button" data-image={`/assets/${image.src}`} data-caption={image.alt} aria-label={`${image.alt} 확대`}>
             {/* 휴대폰 캡처: 높이 상한(화면 32.5rem, PDF 16·22.5rem)을 원본 비율로 너비 상한으로 바꿔 둔다.
                 w-auto + max-h는 로드 전 높이가 0이라 목차 이동 위치가 밀리고, w-full + max-h는 옆으로 늘어난다. */}

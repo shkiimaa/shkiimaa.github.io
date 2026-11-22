@@ -21,24 +21,24 @@ export const portfolioMaterial = {
     // 사례 근거 캡처 (같은 조건의 개선 전·후)
     caseImages: {
       'render-isolation': [
-        { src: 'bitria-profiler-before.jpg', alt: '개선 전 · 시세 갱신 한 번에 레이아웃·주문 폼까지 리렌더', screen: true },
-        { src: 'bitria-profiler-after.jpg', alt: '개선 후 · 같은 갱신에 값 표시 컴포넌트만 리렌더', screen: true }
+        { src: 'bitria-profiler-before.jpg', alt: '개선 전: 시세 갱신 한 번에 레이아웃·주문 폼까지 다시 렌더링', screen: true },
+        { src: 'bitria-profiler-after.jpg', alt: '개선 후: 같은 갱신에 값 표시 컴포넌트만 다시 렌더링', screen: true }
       ],
       'build-optimization': [
-        { src: 'bitria-devtools-before.jpg', alt: '개선 전 · 거래 화면 콜드 로드 전송 4.6MB · 요청 194건', screen: true },
-        { src: 'bitria-devtools-after.jpg', alt: '개선 후 · 같은 조건에서 전송 2.5MB · 요청 187건', screen: true }
+        { src: 'bitria-devtools-before.jpg', alt: '개선 전: 거래 화면 콜드 로드 전송 4.6MB, 요청 194건', screen: true },
+        { src: 'bitria-devtools-after.jpg', alt: '개선 후: 같은 조건에서 전송 2.5MB, 요청 187건', screen: true }
       ]
     },
     // 대표 사례의 변경 전후 코드
     codeExamples: {
       'render-isolation': {
         examples: [
-          { label: '변경 전 · 화면 최상위에서 시세 구독', code: `const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+          { label: '변경 전: 화면 최상위에서 시세 구독', code: `const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
 useSnapshotSocket({
   symbols: symbolInfo ? [symbolInfo] : [],
   onUpdate: handleSnapshotUpdate,
 });` },
-          { label: '변경 후 · 표시 컴포넌트가 직접 구독', code: `// 실시간 값은 LiveSymbolStats 안에서 구독한다
+          { label: '변경 후: 표시 컴포넌트가 직접 구독', code: `// 실시간 값은 LiveSymbolStats 안에서 구독한다
 <LiveSymbolStats
   fallbackPrice={symbolInfo?.snapshot?.price}
   fallbackChange={symbolInfo?.snapshot?.change24h}
@@ -47,18 +47,18 @@ useSnapshotSocket({
       }
     },
     featured: [
-      { id: 'render-isolation', title: '비활성 화면의 불필요한 리렌더 개선', paragraphs: [
+      { id: 'render-isolation', title: '비활성 화면의 불필요한 렌더링 개선', paragraphs: [
         '차트 사전 로딩을 위해 숨겨둔 차트 화면과 닫힌 오더북 드로어가 시세 갱신마다 렌더링되며 전체 렌더 시간의 64%를 차지하는 문제를 발견했습니다. 실시간 데이터 구독을 화면 최상위에서 실제 값을 쓰는 컴포넌트로 옮기고, 비활성 화면의 구독을 멈췄습니다.'
       ], result: '컴포넌트 렌더 횟수 5,192회 → 1,534회(70.5% 감소)', evidence: 'images',
         method: '측정 방법: 공개 시세 메시지 73개를 녹화해 개선 전후 버전에서 같은 12초 구간을 재생하고, React DevTools 훅(onCommitFiberRoot)으로 커밋마다 실제로 렌더된 컴포넌트를 집계했습니다. 개발 빌드, 모바일 앱 화면(390×844), 회차마다 새 브라우저로 전후 각 5회 실행한 중앙값입니다.',
-        measure: { src: 'bitria-render-measure.jpg', alt: '측정 스크립트 실행 결과 · 렌더된 컴포넌트 합계와 컴포넌트별 렌더 횟수(5회 중앙값)' } },
+        measure: { src: 'bitria-render-measure.jpg', alt: '측정 스크립트 실행 결과: 렌더된 컴포넌트 합계와 컴포넌트별 렌더 횟수(5회 중앙값)' } },
       { id: 'chart-lifecycle', title: 'TradingView 차트 로딩 안정화', paragraphs: [
         '운영 로그로 실패를 추적해 캐시 버그와 심볼 전환 시 경쟁 상태를 원인으로 특정했습니다. 버그와 무관한 로딩 방식으로 전환하고 위젯을 유지한 채 심볼만 교체하도록 바꿨으며, 실패해도 재시도로 복구되도록 했습니다.'
       ], evidence: 'diagram' }
     ],
     // 사례 옆에 붙이는 구조도
     caseDiagrams: [
-      { id: 'chart-lifecycle', diagram: 'bitria-chart-lifecycle', caption: '수정 전 심볼 전환 경쟁 상태 · 이전 위젯에 남아 있던 콜백이 제거된 iframe에 접근해 새 위젯이 준비 완료에 도달하지 못하는 흐름' },
+      { id: 'chart-lifecycle', diagram: 'bitria-chart-lifecycle', caption: '수정 전 심볼 전환 경쟁 상태: 이전 위젯에 남아 있던 콜백이 제거된 iframe에 접근해 새 위젯이 준비 완료에 도달하지 못하는 흐름' },
       { id: 'app-resume', diagram: 'bitria-app-resume', caption: '앱 복귀 이벤트에서 현재 상태 재조회와 실시간 연결 복구를 함께 실행하는 흐름' }
     ],
     sections: [
@@ -94,9 +94,9 @@ useSnapshotSocket({
       'size(small·medium·large)별 글자 크기·여백 규칙을 스타일 모듈 한 곳에 정의해 여러 컴포넌트가 같은 값을 쓰도록 했습니다. Props 타입에 적은 설명 주석을 Storybook이 읽어 Props 표를 자동으로 만들고, Playground에서 값을 바꿔 가며 확인할 수 있습니다.'
     ] }],
     images: [
-      { src: 'uikit-button.png', alt: 'Button 컴포넌트의 Storybook 예시' },
-      { src: 'uikit-input.png', alt: 'Input 컴포넌트의 상태·Props 문서' },
-      { src: 'uikit-file-input.png', alt: 'Input·Button·Label을 조합한 FileInput 컴포넌트' }
+      { src: 'uikit-button.png', alt: 'Button 컴포넌트 문서 화면' },
+      { src: 'uikit-input.png', alt: 'Input 컴포넌트 문서 화면' },
+      { src: 'uikit-file-input.png', alt: 'FileInput 컴포넌트 문서 화면' }
     ]
   },
   dax: {
@@ -113,7 +113,7 @@ useSnapshotSocket({
       '컴포넌트를 atom → molecules → organisms → templates → pages 순으로 나누고, 공통 UI는 Doit UI Kit을 50개 파일에서 가져다 썼습니다. API 호출은 도메인별 서비스 모듈 7개에 두고, 그 위에 TanStack Query 훅을 도메인별로 만들어 컴포넌트는 훅만 사용합니다.',
       '축소된 화면에서 그린 좌표는 원본 이미지 좌표로 변환해 저장하고, 다시 표시할 때 역변환했습니다. 양방향 변환은 useCoordinateTransform 훅으로 분리해 그리기·저장·재표시에 같은 규칙을 적용했습니다.',
       'React 프론트엔드는 웹 서버 API를 통해 프로젝트·라벨·모델 데이터를 조회하고 변경합니다. 백엔드와 AI 서버가 연결된 전체 구성에서 프론트엔드 화면과 API 연동을 구현했습니다.'
-    ], diagram: 'dax-architecture', caption: 'D.A.X 전체 서비스 구성 · 개발 범위는 React 프론트엔드와 API 연동' }]
+    ], diagram: 'dax-architecture', caption: 'D.A.X 전체 서비스 구성 (개발 범위는 React 프론트엔드와 API 연동)' }]
   },
   xrgis: {
     overview: 'XR·GIS 원격 협업 서비스의 사용자·팀·파일 관리 백오피스입니다.',
@@ -125,9 +125,9 @@ useSnapshotSocket({
       '다운로드는 파일이 하나면 GridFS 스트림을 그대로 응답으로 보내고, 여러 개면 archiver가 각 스트림을 ZIP으로 묶어 응답에 바로 흘려보냅니다. 서버에 임시 파일을 만들지 않습니다.'
     ] }],
     images: [
-      { src: 'xrgis-users.png', alt: 'XR·GIS 사용자 관리 화면' },
-      { src: 'xrgis-teams.png', alt: 'XR·GIS 팀 관리 화면' },
-      { src: 'xrgis-data.png', alt: 'XR·GIS 팀별 파일 관리 화면 · 대용량 파일 관리와 ZIP 다운로드 기능' }
+      { src: 'xrgis-users.png', alt: '사용자 관리 화면' },
+      { src: 'xrgis-teams.png', alt: '팀 관리 화면' },
+      { src: 'xrgis-data.png', alt: '파일 관리 화면' }
     ]
   },
 
@@ -138,8 +138,8 @@ useSnapshotSocket({
       { src: 'gobit-home.jpg', alt: '홈 화면', screen: true },
       { src: 'gobit-market.jpg', alt: '마켓 화면', screen: true },
       { src: 'gobit-coin-btc.jpg', alt: '코인 상세 화면', screen: true },
-      { src: 'gobit-news.jpg', alt: '뉴스 화면', screen: true },
-      { src: 'gobit-community.jpg', alt: '커뮤니티 화면', screen: true }
+      { src: 'gobit-news.jpg', alt: '뉴스 화면', screen: true, webOnly: true },
+      { src: 'gobit-community.jpg', alt: '커뮤니티 화면', screen: true, webOnly: true }
     ],
     sections: [{ id: 'data-flow', title: '실시간 시세와 일반 조회 데이터의 분리', detailParagraphs: [
       '서버가 Redis에 캐시한 시세를 Socket.IO로 받아 표시하고, 연결이 끊기면 재연결·헬스체크로 복구하도록 개선했습니다. 시세 이외의 조회 데이터는 SWR로 관리해 실시간 스트림과 API 조회의 역할을 구분했습니다.'
@@ -170,7 +170,7 @@ useSnapshotSocket({
 
 // 포트폴리오(하나로 합친 문서) 전용 내용. 경력기술서가 문제 해결 과정을 글로 설명하므로,
 // 여기서는 맡은 범위, 실제 화면, 구조와 기술을 고른 이유, 측정 결과·코드 같은 근거를 보여준다 (같은 문장을 되풀이하지 않는다).
-// facts: 서비스·팀·맡은 범위 표 / design: 구조와 기술 선택 (불릿 + 구조도·코드) / evidence: 성능·문제 해결 근거 (제목 + 불릿 + 측정 화면·코드·흐름도)
+// facts: 서비스·팀·맡은 범위 표 / design: 구조와 기술 선택 (불릿 + 구조도·코드) / evidence: 성능 개선·트러블슈팅 사례 (kind로 구역을 나눈다. 제목 + 불릿 + 측정 화면·코드·흐름도)
 // 코드는 각 저장소의 실제 코드를 옮겼다 (요약한 것은 이름표에 적는다)
 export const portfolioDoc = {
   bitria: {
@@ -208,58 +208,66 @@ export const portfolioDoc = {
     ],
     evidence: [
       {
-        id: 'render-isolation', title: '숨겨진 화면의 구독 중지: 컴포넌트 렌더 횟수 5,192 → 1,534회 (70.5% 감소)',
+        id: 'render-isolation', kind: '성능 개선', title: '숨겨진 화면까지 시세마다 다시 그리던 거래 화면: 컴포넌트 렌더 횟수 70.5% 감소',
         points: [
-          '같은 시세 메시지 73개를 12초간 재생하는 측정 스크립트로 개선 전후를 각 5회 비교',
-          '프로파일러에서 개선 전에는 시세 한 번에 레이아웃·주문 폼까지, 개선 후에는 값을 표시하는 컴포넌트만 다시 렌더링',
-          '코드는 화면 최상위의 시세 구독을 값을 표시하는 컴포넌트 안으로 옮긴 것'
+          '문제: 차트를 미리 준비하려고 숨겨 둔 차트 화면까지 시세가 바뀔 때마다 다시 렌더링',
+          '원인: React DevTools 훅으로 컴포넌트별 렌더 시간을 수집해 숨겨진 차트 화면과 닫힌 오더북이 렌더 시간의 64%를 차지하는 것 확인, 구독을 끄는 옵션을 넘겨도 시세 핸들러가 전역 목록으로 호출돼 갱신이 멈추지 않는 구조였음',
+          '해결: 화면 최상위의 시세 구독을 값을 표시하는 컴포넌트 안으로 옮기고, 닫힌 드로어와 탭 뒤 오더북은 구독 중지 (차트 미리 준비는 유지)',
+          '결과: 렌더 횟수 5,192 → 1,534회, 개선 후에는 값 표시 컴포넌트만 다시 렌더링'
         ],
         measure: true, caseImages: 'render-isolation', code: 'render-isolation',
-        note: '개발 빌드, 모바일 화면(390×844), 전후 각 5회 중앙값입니다. 렌더 시간은 기기 부하에 따라 흔들려 렌더 횟수를 대표 지표로 썼습니다.'
+        note: '측정 조건: 같은 시세 메시지 73개를 12초간 재생, 개발 빌드, 모바일 화면(390×844), 전후 각 5회 중앙값, 렌더 시간은 기기 부하에 따라 흔들려 렌더 횟수를 대표 지표로 사용'
       },
       {
-        id: 'barrel', title: '배럴 import 정리: 모바일 홈 TBT 417 → 292.5ms (30% 감소)',
+        id: 'barrel', kind: '성능 개선', title: '모바일에서만 느리던 홈 화면: 배럴 import가 묶은 청크 제거로 TBT 30% 감소',
         points: [
-          '공통 UI 배럴이 하위 배럴 10개를 다시 내보내, 버튼 하나만 가져와도 three.js 컴포넌트까지 163개 모듈이 한 청크로 묶이던 구조',
-          '배럴 import 136곳을 정의 파일 직접 참조로 변경'
+          '문제: 데스크톱과 달리 모바일에서만 홈 화면이 느림',
+          '원인: Lighthouse와 번들 분석기로 한 청크의 스크립트 실행 시간이 원인임을 확인, 공통 UI 배럴이 하위 배럴 10개를 다시 내보내 버튼 하나만 가져와도 three.js 컴포넌트까지 163개 모듈이 한 청크로 묶이던 구조',
+          '해결: optimizePackageImports는 청크 수와 전체 번들이 늘어 채택하지 않고, 심볼과 정의 파일의 매핑으로 136곳이 모두 대응되는 것을 확인한 뒤 정의 파일 직접 참조로 일괄 변경',
+          '결과: 모바일 홈 TBT 417 → 292.5ms'
         ],
         examples: [
-          { label: '변경 전 · 공통 UI 배럴 (src/shared/ui/index.ts)', code: `export * from './primitives';
+          { label: '변경 전: 공통 UI 배럴 (src/shared/ui/index.ts)', code: `export * from './primitives';
 export * from './media';   // three.js 기반 컴포넌트까지 함께 평가
 // … 하위 배럴 10개
 
 import { Button } from '@/shared/ui';` },
-          { label: '변경 후 · 정의 파일 직접 참조 (136곳)', code: `import { Button } from '@/shared/ui/primitives/button';` }
+          { label: '변경 후: 정의 파일 직접 참조 (136곳)', code: `import { Button } from '@/shared/ui/primitives/button';` }
         ],
-        note: '측정 조건: 로컬 프로덕션 빌드 · 모바일 CPU 4배 감속 · 전후 각 5회 중앙값 / three.js 지연 로딩은 전후 동일'
+        note: '측정 조건: 로컬 프로덕션 빌드, 모바일 CPU 4배 감속, 전후 각 5회 중앙값, three.js 지연 로딩은 전후 동일'
       },
       {
-        id: 'build-optimization', title: 'Turbopack 통일과 번들·폰트 정리: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소',
+        id: 'build-optimization', kind: '성능 개선', title: '개발·배포로 나뉜 빌드와 과한 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소',
         points: [
-          '빌드 74.2 → 32.8초, 홈 JS 752 → 550KB(gzip), 초기 폰트 2,048 → 111KB',
-          '거래 화면 콜드 로드 기준 네트워크 전송 4.6MB → 2.5MB, 요청 194 → 187건 (아래 DevTools 합계 줄)'
+          '문제: 개발은 Turbopack, 배포는 webpack으로 빌드가 나뉘어 개발 서버에서만 일부 SVG 아이콘(`?url`)이 안 보이고, 쓰지 않는 모듈과 한글 전체 폰트까지 받고 있었음',
+          '원인: 당시 Turbopack 규칙이 import 쿼리 분기를 지원하지 않았고, sideEffects 선언이 없어 쓰지 않는 모듈까지 평가됐으며, 한국어 화면이 없는데 한글 11,172자 전체 폰트를 받고 있었음',
+          '해결: 쿼리 분기가 추가된 Next.js 16.4로 올려 빌드를 Turbopack으로 통일, sideEffects 선언(불러오는 순간 동작하는 모듈 4개와 CSS만 예외), 폰트는 필요한 글자 구간만 받는 서브셋으로 교체',
+          '결과: 빌드 74.2 → 32.8초, 홈 JS 752 → 550KB(gzip), 초기 폰트 2,048 → 111KB, 거래 화면 콜드 로드 전송 4.6MB → 2.5MB (아래 DevTools 합계 줄)'
         ],
         strips: 'build-optimization',
-        note: '측정 조건: 빌드 시간 · 캐시 없는 프로덕션 빌드 3회 중앙값 / JS · 빌드 결과물 gzip / 폰트 · 홈 화면 기준'
+        note: '측정 조건: 빌드 시간은 캐시 없는 프로덕션 빌드 3회 중앙값, JS 크기는 빌드 결과물 gzip, 폰트 전송량은 홈 화면 기준'
       },
       {
-        id: 'chart-lifecycle', title: '차트 로딩 실패: 심볼 전환 경쟁 상태',
+        id: 'chart-lifecycle', kind: '트러블슈팅', title: '차트 로딩 실패: 운영 로그로 캐시 버그와 심볼 전환 경쟁 상태를 찾아 해결',
         points: [
-          '수정 전에는 이전 위젯에 남은 콜백이 제거된 iframe에 접근해, 새 위젯이 준비 완료에 도달하지 못함 (아래 흐름도)',
-          '수정 후에는 위젯은 그대로 두고 심볼만 교체하고, 준비 전에 들어온 심볼 전환은 보관했다가 반영'
+          '문제: 차트가 로딩 화면에서 멈춰도 실패 기록이 남지 않아 원인을 알 수 없음',
+          '원인: 실패 단계를 서버 로그로 보내 13일간 50건을 분석, 대부분은 캐시된 번들과 호환 로딩 모드가 겹치면 준비 신호가 누락되는 TradingView 버그(릴리스 노트에서 확인)였고, 남은 실패는 빠른 심볼 전환 때 이전 위젯의 콜백이 제거된 iframe에 접근하는 경쟁 상태였음 (WebKit에서 재현, 아래 흐름도)',
+          '해결: 라이선스 제약으로 수정 버전 대신 버그와 무관한 blob 로딩으로 전환(막히는 인앱 브라우저는 same_origin으로 자동 전환), 거래 화면을 layout으로 옮겨 위젯은 그대로 두고 심볼만 교체, 스크립트 로드 재시도와 요청 타임아웃 추가',
+          '결과: 빠르게 심볼을 바꿔도 마지막 심볼로 정상 로딩되고, 실패해도 재시도로 복구되며 단계별 원인이 운영 로그에 남음'
         ],
         diagram: 'chart-lifecycle'
       },
       {
-        id: 'app-resume', title: '앱 복귀 시 재조회와 실시간 연결 복구',
+        id: 'app-resume', kind: '트러블슈팅', title: '앱 복귀 후 포지션·자산 정보 불일치 해결',
         points: [
-          '수정 전에는 복귀해도 쿼리를 다시 요청하지 않아, 다음 정기 조회(최대 2분)까지 이전 캐시가 화면에 남음',
-          'WKWebView는 복귀 이벤트(visibilitychange)를 보내지 않아, Capacitor 앱 상태 이벤트를 기준으로 쿼리 재조회와 소켓 재연결을 함께 실행',
-          '수정 후에는 복귀할 때마다 사용 중인 포지션·자산·주문 쿼리만 다시 요청 (페이지 새로고침 없음)'
+          '문제: iOS 앱을 백그라운드에 두었다 돌아오면 이미 종료된 포지션이 다음 정기 조회(최대 2분)까지 화면에 남음',
+          '원인: WKWebView가 복귀 시 visibilitychange를 보내지 않아 TanStack Query가 복귀를 감지하지 못했고, 알림 소켓은 백그라운드에서 재연결 5회 제한을 다 써 재연결을 포기한 상태였음',
+          '해결: Capacitor 앱 상태 이벤트를 기준으로 쿼리 재조회와 소켓 재연결을 함께 실행',
+          '결과: 복귀하면 사용 중인 포지션·자산·주문 쿼리만 다시 요청해 바로 최신 상태로 표시 (페이지 새로고침 없음)'
         ],
         diagram: 'app-resume',
         examples: [
-          { label: 'app/[locale]/m/layout.tsx · 앱 복귀 처리 (요약)', code: `App.addListener('appStateChange', async ({ isActive }) => {
+          { label: '앱 복귀 처리 (app/[locale]/m/layout.tsx, 요약)', code: `App.addListener('appStateChange', async ({ isActive }) => {
   // 네이티브 복귀를 웹 focus 신호로 승격 — visibilitychange 가 안 오는 WKWebView 보정
   focusManager.setFocused(isActive);
   if (isActive) {
@@ -270,6 +278,15 @@ import { Button } from '@/shared/ui';` },
   }
 });` }
         ]
+      },
+      {
+        id: 'app-locale-navigation', kind: '트러블슈팅', title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결',
+        points: [
+          '문제: 일본어·스페인어·베트남어·태국어·중국어 기기에서 iOS 앱을 실행하면 앱 화면 대신 Safari로 사이트가 열림',
+          '원인: Capacitor iOS 소스에서 앱 내부 이동을 server.url과의 주소 접두사로 판정하는 것을 찾음, next-intl as-needed 설정으로 영어 외 언어는 /th/m처럼 언어 코드가 붙어 server.url(/m)과 접두사가 달라지면서 외부 링크로 판정됨',
+          '해결: 앱 요청에 한해 미들웨어의 언어 코드 리다이렉트를 같은 대상의 rewrite로 바꿔 주소는 /m으로 유지하고 화면은 기기 언어로 표시 (웹 동작은 그대로)',
+          '결과: 영어 외 5개 언어 기기 모두 앱 안에서 정상 실행, 원격 URL 방식이라 앱 재빌드·스토어 재심사 없이 서버 배포만으로 적용'
+        ]
       }
     ]
   },
@@ -278,33 +295,32 @@ import { Button } from '@/shared/ui';` },
       ['서비스', '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자를 제공하는 코인 정보 플랫폼'],
       ['맡은 범위', 'React·Next.js 웹 클라이언트, Express 백엔드 API 서버, 채팅·스케줄러 서버']
     ],
-    design: [
+    evidence: [
       {
-        id: 'data-flow', title: '실시간 시세와 일반 조회 데이터의 분리',
+        id: 'nextjs', kind: '트러블슈팅', title: 'SPA 검색 노출 한계로 Next.js 재구축', period: '2025.07 – 2025.08',
         points: [
-          '시세는 서버가 Redis에 캐시한 값을 Socket.IO로 받고, 연결이 끊기면 재연결·헬스체크로 복구',
-          '시세 외 조회 데이터는 SWR로 관리해 실시간 스트림과 API 조회의 역할을 나눔'
+          '문제: React SPA가 빈 HTML을 먼저 내려보내 코인·뉴스·게시글 내용과 메타 정보가 검색 결과와 링크 미리보기에 잡히지 않음',
+          '원인: 먼저 react-helmet-async로 페이지 제목을 바꾸고 빌드 시점 prerender(Puppeteer)를 적용했지만, prerender는 고정 경로 26개만 저장해 늘어나는 게시글 상세를 담을 수 없고 시세·뉴스도 저장 시점에 고정됨',
+          '해결: Next.js 15 App Router로 재구축해 코인 상세(`/market/[symbol]`)·게시글 상세(`/community/[id]`)를 서버 렌더링하고 페이지별 메타데이터 생성, 이후 중복 요청을 React `cache()`로 합치고 구간별 스켈레톤 적용',
+          '결과: 코인별·게시글별 상세 페이지가 고유 주소와 메타데이터를 가진 서버 렌더링 페이지로 제공됨'
         ]
       },
       {
-        id: 'exchanges', title: '4개 거래소 시세를 하나의 형식으로',
+        id: 'exchanges', kind: '트러블슈팅', title: '4개 거래소 실시간 시세 연결 구조 정리', period: '2024.11 – 2024.12',
         points: [
-          '거래소마다 연결 하나를 가진 스토어를 두고, 거래소별 메시지를 공통 캔들 형식으로 변환해 TradingView 데이터 소스 하나로 처리',
-          '코인 목록은 가상화 리스트(@tanstack/react-virtual)로 화면에 보이는 행의 심볼만 구독'
+          '문제: Binance·Bybit·OKX·Gate.io 시세를 연동하면서 Binance 하나에만 시세 목록·차트·보조 차트용 WebSocket 연결이 4개 이상 열림',
+          '원인: 공통 WebSocket 훅이 호출될 때마다 새 연결을 열었고, 거래소마다 구독 메시지와 캔들 형식도 달랐음',
+          '해결: 거래소마다 연결 하나를 가진 스토어를 두고 구독 중인 스트림 목록으로 중복 구독 방지·재연결 시 재구독, 거래소별 메시지는 공통 캔들 형식으로 변환해 TradingView 데이터 소스 하나로 처리, 코인 목록은 가상화 리스트(@tanstack/react-virtual)로 화면에 보이는 행의 심볼만 구독',
+          '결과: 거래소마다 연결 하나로 시세 목록과 차트를 함께 처리하고, 목록은 화면에 보이는 코인만 구독'
         ]
       },
       {
-        id: 'nextjs', title: 'Next.js로 다시 만든 이유',
+        id: 'deployment', kind: '트러블슈팅', title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08',
         points: [
-          'React SPA의 prerender는 빌드 설정에 적은 고정 경로 26개만 처리해, 계속 늘어나는 게시글 상세를 담을 수 없었음',
-          'Next.js 15 App Router로 코인 상세(/market/[symbol])·게시글 상세(/community/[id])를 서버 렌더링하고 페이지별 메타데이터 생성'
-        ]
-      },
-      {
-        id: 'deployment', title: '레거시 서비스 통합·배포 구성 (2026.07 – 2026.08, 유지보수 기간)',
-        points: [
-          '수집기 → Redis → 서버로 데이터 경로를 정리하고 서비스별 Dockerfile·Kubernetes 매니페스트 구성',
-          'GitHub Actions로 빌드·배포 자동화, 설정값은 Kubernetes Secret, DB 백업·캔들 보관은 CronJob으로 분리'
+          '문제: Gobit과 별도 모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 흩어져 있어 유지보수와 배포를 이어가기 어려움',
+          '원인: 레거시 서비스의 소스 코드가 유실돼 핵심 시세 수집기는 .NET 바이너리만 남아 있었음',
+          '해결: 바이너리의 동작과 데이터 형식을 분석해 수집기를 Node.js로 재작성, 데이터 경로를 수집기 → Redis → 서버로 정리, 서비스별 Dockerfile·Kubernetes 매니페스트와 GitHub Actions 배포 자동화 구성',
+          '결과: 14개 서비스를 하나의 K3s 환경에서 배포·운영하고, 바이너리만 남아 있던 수집기도 코드로 관리'
         ]
       }
     ]
@@ -323,7 +339,7 @@ import { Button } from '@/shared/ui';` },
           'Atom과 이를 조합한 Molecule 두 단계(예: Input·Button·Label → FileInput), size별 글자·여백 규칙은 스타일 모듈 한 곳에서 정의'
         ],
         examples: [
-          { label: 'vite.config.ts · 라이브러리 빌드 설정 (요약)', code: `plugins: [react(), svgr(), tsconfigPaths(), dts({ include: 'src/lib/**/*' })],
+          { label: '라이브러리 빌드 설정 (vite.config.ts, 요약)', code: `plugins: [react(), svgr(), tsconfigPaths(), dts({ include: 'src/lib/**/*' })],
 build: {
   lib: { entry: path.resolve(__dirname, 'src/lib/index.ts'), name: 'doit-uikit', fileName: 'index' },
   rollupOptions: { external: ['react', 'react-dom'] },
@@ -343,17 +359,22 @@ build: {
         id: 'architecture', title: '화면·API 계층과 서비스 구성',
         points: [
           '컴포넌트를 atom → molecules → organisms → templates → pages로 나누고, 공통 UI는 Doit UI Kit을 50개 파일에서 사용',
-          'API 호출은 도메인별 서비스 모듈 7개에 두고 그 위에 TanStack Query 훅을 만들어 컴포넌트는 훅만 사용, 화면 상태는 Zustand 스토어 13개로 분리'
+          'API 호출은 도메인별 서비스 모듈 7개에 두고 TanStack Query 훅으로 감싸 컴포넌트는 훅만 사용, 화면 상태는 Zustand 스토어 13개로 분리'
         ],
-        diagram: 'dax-architecture', caption: 'D.A.X 전체 서비스 구성 · 개발 범위는 React 프론트엔드와 API 연동'
-      },
+        diagram: 'dax-architecture', caption: 'D.A.X 전체 서비스 구성 (개발 범위는 React 프론트엔드와 API 연동)'
+      }
+    ],
+    evidence: [
       {
-        id: 'coordinates', title: '캔버스 라벨링의 화면 ↔ 원본 좌표 변환',
+        id: 'coordinates', kind: '트러블슈팅', title: '캔버스 라벨링 도구: 축소 화면에서 그린 박스를 원본 해상도 좌표로 저장',
         points: [
-          '저장할 때는 화면 좌표를 원본 좌표로, 저장된 라벨과 모델 예측 결과를 다시 그릴 때는 원본 좌표를 화면 좌표로 같은 훅에서 변환'
+          '문제: 라벨링 화면에서 그린 박스의 좌표가 원본 이미지에서는 다른 위치를 가리켜, 학습 데이터로 쓸 좌표가 맞지 않음',
+          '원인: 이미지를 800×600 영역에 맞춰 줄여 보여줘 보이는 크기와 원본 크기가 다른데, 캔버스에서 얻는 좌표는 보이는 크기 기준이었음',
+          '해결: 보이는 크기와 원본 크기의 비율로 좌표를 바꾸는 훅을 만들어, 저장할 때는 원본 좌표로, 다시 그릴 때는 화면 좌표로 변환',
+          '결과: 화면에서 그린 라벨이 원본 좌표로 저장돼 학습에 바로 쓰이고, 저장된 라벨·모델 예측 결과도 같은 훅으로 화면에 표시'
         ],
         examples: [
-          { label: 'hooks/useCoordinateTransform.ts · 화면 ↔ 원본 좌표 변환 (요약)', code: `const calcToNaturalCoor = (coor: number, type: CoorType) =>
+          { label: '화면 ↔ 원본 좌표 변환 (hooks/useCoordinateTransform.ts, 요약)', code: `const calcToNaturalCoor = (coor: number, type: CoorType) =>
     Math.round(coor * (naturalImgSize[type] / renderImgSize[type]));
 const calcToRenderCoor = (coor: number, type: CoorType) =>
     Math.round(coor * (renderImgSize[type] / naturalImgSize[type]));` }
@@ -381,15 +402,17 @@ const calcToRenderCoor = (coor: number, type: CoorType) =>
       ['서비스', 'XR·GIS 원격 협업 서비스의 사용자·팀·파일 관리 백오피스'],
       ['맡은 범위', 'React 화면과 Express 기반 API 서버']
     ],
-    design: [
+    evidence: [
       {
-        id: 'files', title: '파일 저장과 다운로드 흐름',
+        id: 'files', kind: '트러블슈팅', title: '대용량 OBJ·영상 파일 저장과 일괄 다운로드',
         points: [
-          '업로드 파일은 multer-gridfs-storage로 받아 바로 GridFS에 저장, 영상·OBJ는 버킷을 나누고 청크는 15MB, 파일마다 팀 ID·폴더 정보를 메타데이터로 붙여 팀 단위로 조회',
-          '다운로드는 파일이 하나면 GridFS 스트림을 그대로, 여러 개면 archiver로 ZIP 스트림에 이어 응답해 서버에 임시 파일을 만들지 않음'
+          '문제: 파일을 MongoDB에 저장해야 하는데 OBJ·영상 파일은 일반 문서로 저장할 수 없었고, 한글 이름 파일은 다운로드가 실패',
+          '원인: OBJ·영상 파일이 MongoDB 문서 크기 제한(16MB)을 넘었고, 한글 파일명이 HTTP 헤더에 그대로 들어감',
+          '해결: multer-gridfs-storage로 받아 GridFS에 15MB 청크로 나눠 저장하고 팀 ID·폴더 정보를 메타데이터로 붙여 팀 단위로 조회, 여러 파일은 GridFS 스트림을 archiver ZIP 스트림에 바로 이어 임시 파일 없이 응답, 파일명은 서버에서 인코딩하고 클라이언트에서 복원',
+          '결과: 파일이 팀 단위로 관리되고, OBJ·영상 대용량 파일을 폴더 구조 그대로 ZIP으로 일괄 다운로드'
         ],
         examples: [
-          { label: 'server/src/controllers/file.ts · 폴더별 ZIP 다운로드 (요약)', code: `const archive = archiver("zip", { zlib: { level: 9 } });
+          { label: '폴더별 ZIP 다운로드 (server/src/controllers/file.ts, 요약)', code: `const archive = archiver("zip", { zlib: { level: 9 } });
 res.attachment(\`\${+new Date()}.zip\`);
 archive.pipe(res);
 

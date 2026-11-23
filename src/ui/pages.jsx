@@ -133,8 +133,9 @@ const ProfileHead = () => {
             ))}
           </dl>
         </div>
-        {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기 */}
-        <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile.jpg" alt="김수환 증명사진" loading="lazy" />
+        {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기
+            사진은 네이비 카디건(profile-navy.jpg)을 쓴다. 옷 색만 다른 원본(profile.jpg, 빨간 카디건)도 남겨 둔다 */}
+        <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile-navy.jpg" alt="김수환 증명사진" loading="lazy" />
       </div>
       <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
       <Paragraphs items={introDetails} muted={false} />

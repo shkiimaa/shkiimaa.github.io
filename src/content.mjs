@@ -1,7 +1,7 @@
 export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Engineer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
-  introduction: '하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한 프론트엔드 개발자입니다.\n\n암호화폐 거래 플랫폼 Bitria의 프론트엔드를 초기 구축부터 전담해 App Store와 Google Play에 출시했습니다. 성능 문제는 계측으로 원인부터 찾아, 거래 화면의 컴포넌트 렌더 횟수를 70.5%, 모바일 홈 TBT를 30% 줄였습니다. 이 밖에 코인 정보 플랫폼, AI 모델 학습 플랫폼, 사내 UI 라이브러리를 개발했습니다.',
+  introduction: '하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한 프론트엔드 개발자입니다.\n\n암호화폐 거래 플랫폼 Bitria의 프론트엔드를 초기 구축부터 전담해 모바일 앱을 App Store와 Google Play에 출시했습니다. 성능 문제는 계측으로 원인부터 찾아, 거래 화면의 컴포넌트 렌더 횟수를 70.5%, 모바일 홈 TBT를 30% 줄였습니다. 이 밖에 코인 정보 플랫폼, AI 모델 학습 플랫폼, 사내 UI 라이브러리를 개발했습니다.',
   education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열) · 재직자 전형', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
@@ -34,7 +34,7 @@ export const projects = [
       '실시간 구독 구조 개선으로 거래 화면 컴포넌트 렌더 횟수 70.5% 감소',
       '배럴 import를 직접 참조로 바꿔 모바일 홈 TBT 30% 감소',
       'Turbopack 전환과 번들·폰트 최적화로 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소',
-      '운영 중 발생한 차트 로딩 실패, 앱 복귀 시 데이터 불일치 등의 원인을 찾아 해결'
+      '운영 중 발생한 차트 로딩 실패, 앱 복귀 시 포지션·자산 정보 불일치 등의 원인을 찾아 해결'
     ],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
@@ -124,7 +124,7 @@ export const projects = [
     id: 'doit-uikit', name: 'Doit UI Kit', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2024.02 – 2024.07', role: '프론트엔드 전담', kind: '사내 공통 UI 라이브러리',
     links: [{ label: 'npm', icon: 'npm', url: 'https://www.npmjs.com/package/doit-uikit' }],
     description: '프로젝트마다 반복 구현하던 UI를 공통 라이브러리로 만들고, React 개발 규칙을 팀에 공유했습니다.',
-    summary: ['Atomic Design 기반 UI 컴포넌트 24종 개발 및 npm 배포', '타입 선언 자동 생성·React 외부화 등 패키징 구성', 'Storybook·Chromatic 문서화 및 사내 프로젝트 2곳에 도입'],
+    summary: ['Atomic Design 기반 UI 컴포넌트 24종 개발 및 npm 배포', 'React를 번들에서 빼고 타입 선언을 자동 생성하도록 패키징', 'Storybook·Chromatic 문서화 및 사내 프로젝트 2곳에 도입'],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
       ['', 'Atomic Design 기반 UI 컴포넌트 24종 개발'],
@@ -171,7 +171,7 @@ export const projects = [
   {
     id: 'xrgis', name: 'XR·GIS 백오피스', category: 'work', company: '(주)두잇', companyId: 'doit', period: '2023.08 – 2023.12', role: '프론트엔드 · 백엔드 전담', kind: 'XR·GIS 원격 협업 서비스 백오피스',
     description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다. React 화면과 Express 기반 API 서버를 구현하고 GridFS 기반 파일 저장 및 MariaDB 기반 세션 인증을 연동했습니다.',
-    summary: ['사용자·팀·파일 관리 화면 및 API 서버 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '사내 공통 계정 세션 인증 및 팀 단위 파일 저장·조회'],
+    summary: ['사용자·팀·파일 관리 화면 및 API 서버 개발', 'GridFS 대용량 파일 업로드와 ZIP 일괄 다운로드 구현', '다른 사내 서비스와 같은 관리자 계정을 쓰는 세션 인증 및 팀 단위 파일 저장·조회'],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
       ['', '사용자·팀·파일 관리 화면 개발 (React)'],
@@ -212,15 +212,15 @@ export const careerDetails = {
       {
         title: '숨겨진 화면까지 시세마다 다시 그리던 거래 화면: 컴포넌트 렌더 횟수 70.5% 감소', ref: ['bitria-render-isolation', 3],
         bullets: [
-          'React DevTools 훅으로 렌더를 계측해, 차트를 미리 준비하려고 숨겨 둔 화면과 닫힌 오더북이 렌더 시간의 64%를 쓰는 것 확인',
+          'React DevTools 훅으로 렌더를 계측해, 차트를 미리 준비하기 위해 숨겨 둔 화면과 닫힌 오더북이 렌더 시간의 64%를 쓰는 것 확인',
           '시세 구독을 화면 최상위에서 값을 표시하는 컴포넌트 안으로 옮기고, 보이지 않는 오더북은 구독 중지 (차트 미리 준비는 유지)',
-          '같은 시세 재생 조건에서 렌더 횟수 5,192 → 1,534회'
+          '녹화한 시세를 똑같이 재생해 비교한 렌더 횟수 5,192 → 1,534회'
         ]
       },
       {
         title: '모바일에서만 느리던 홈 화면: 배럴 import가 묶은 청크 제거로 TBT 30% 감소', ref: ['bitria-barrel', 4],
         bullets: [
-          'Lighthouse와 번들 분석으로, 공통 UI 배럴이 버튼 하나에도 three.js까지 163개 모듈을 한 청크로 묶어 실행 시간을 늘린 것 확인',
+          'Lighthouse와 번들 분석으로, 공통 UI 배럴이 버튼 하나만 가져와도 three.js까지 163개 모듈을 한 청크로 묶어 실행 시간을 늘린 것 확인',
           'optimizePackageImports는 번들이 늘어 채택하지 않고, 배럴 import 136곳을 정의 파일 직접 참조로 변경',
           '모바일 홈 TBT 417 → 292.5ms'
         ]
@@ -228,24 +228,24 @@ export const careerDetails = {
       {
         title: '개발·배포로 나뉜 빌드와 과한 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소', ref: ['bitria-build-optimization', 5],
         bullets: [
-          '개발은 Turbopack, 배포는 webpack으로 나뉘어 있던 빌드를, import 쿼리 분기를 지원하는 Next.js 16.4로 올려 Turbopack으로 통일',
-          'sideEffects 선언(불러오는 순간 동작하는 모듈 4개만 예외)과 쓰지 않는 한글 전체 폰트의 서브셋 교체',
+          '개발은 Turbopack, 배포는 webpack으로 나뉘어 있던 빌드를, import 주소의 쿼리(?url)로 SVG 처리를 나누는 기능이 들어간 Next.js 16.4로 올려 Turbopack으로 통일',
+          '쓰지 않는 모듈이 번들에서 빠지게 sideEffects 선언(모듈 4개와 CSS만 예외), 한국어 화면이 없는데 받던 한글 전체 폰트는 서브셋으로 교체',
           '빌드 시간 74.2 → 32.8초, 홈 JS 크기 752 → 550KB, 초기 폰트 전송 2,048 → 111KB'
         ]
       },
       {
-        title: '차트 로딩 실패: 운영 로그로 캐시 버그와 심볼 전환 경쟁 상태를 찾아 해결', ref: ['bitria-chart-lifecycle', 5],
+        title: '차트 로딩 실패: 운영 로그로 TradingView 캐시 번들 버그와 심볼 전환 경쟁 상태를 찾아 해결', ref: ['bitria-chart-lifecycle', 5],
         bullets: [
-          '실패 기록이 남지 않던 차트에 단계별 실패 로그와 재시도를 넣고, 13일간 50건을 분석',
-          'TradingView 캐시 버그는 버그와 무관한 로딩 방식으로 전환(막히는 인앱 브라우저는 자동 대체)하고, 빠른 심볼 전환 경쟁 상태는 위젯을 유지한 채 심볼만 교체해 해결'
+          '실패 기록이 남지 않던 차트에 단계별 실패 로그와 재시도를 넣고, 13일간 기록된 실패 50건을 분석',
+          'TradingView 캐시 번들 버그는 버그 조건(document.write)을 쓰지 않는 blob 로딩으로 피하고(blob이 막히는 인앱 브라우저는 same_origin으로 자동 전환), 빠른 심볼 전환 경쟁 상태는 위젯을 유지한 채 심볼만 교체해 해결'
         ]
       },
       {
         title: '웹뷰 앱에서 네이티브에 가까운 사용성 구현',
         bullets: [
           '차트 화면에 들어갈 때마다 로딩을 기다리지 않도록, 주문 화면과 차트 화면을 함께 띄워 두고 전환',
-          'display:none으로 숨기면 차트가 초기화되지 않아, visibility로 숨겨 크기 유지',
-          '키보드가 올라오면 화면 전체가 밀려 상단이 가려져, 웹뷰 크기를 키보드 높이만큼 줄이고 떠오르는 하단 탭은 숨김',
+          'display:none으로 숨기면 크기가 0이라 차트가 미리 만들어지지 않아, visibility로 숨겨 크기 유지',
+          '키보드가 올라오면 화면 전체가 밀려 상단이 가려져, 웹뷰를 키보드 높이만큼 줄이고 키보드 위로 뜨던 하단 탭은 숨김',
           '시세 연결이 끊기면 배너로 알리고 당겨서 새로고침으로 복구, 시트를 끌어내려 닫을 때는 새로고침이 걸리지 않게 처리',
           '누르면 바로 종료되던 Android 뒤로가기는 두 번 눌러야 종료되게 변경, 하단 탭에는 눌림 표시와 햅틱 적용'
         ]
@@ -253,15 +253,15 @@ export const careerDetails = {
       {
         title: '앱 복귀 후 포지션·자산 정보 불일치 해결', ref: ['bitria-app-resume', 6],
         bullets: [
-          'iOS 앱 복귀 후 종료된 포지션이 최대 2분간 남던 원인을, WKWebView가 복귀 시 visibilitychange를 보내지 않는 것과 알림 소켓의 재연결 포기에서 확인',
+          'iOS 앱 복귀 후 종료된 포지션이 최대 2분간 남던 원인이 WKWebView가 복귀 시 visibilitychange를 보내지 않는 것과 알림 소켓이 재연결을 포기한 것임을 확인',
           'Capacitor 앱 상태 이벤트로 쿼리 재조회와 소켓 재연결을 함께 실행해, 복귀하면 바로 최신 포지션·자산 표시'
         ]
       },
       {
         title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결', ref: ['bitria-app-locale-navigation', 6],
         bullets: [
-          'Capacitor iOS 소스에서 앱 내부 이동을 주소 접두사로 판정하는 것을 찾아, 언어 코드가 붙은 주소(/th/m)가 외부로 판정되는 원인 확인',
-          '앱 요청만 리다이렉트 대신 rewrite로 처리해, 앱 재빌드·스토어 재심사 없이 서버 배포로 영어 외 5개 언어 기기 모두 해결'
+          'Capacitor iOS 소스에서 /m으로 시작하는 주소만 앱 내부로 판정하는 것을 찾아, 언어 코드가 붙은 주소(/th/m)가 외부로 판정되는 원인 확인',
+          '앱 요청은 주소를 /m 그대로 두는 rewrite로 처리해, 앱 재빌드·스토어 재심사 없이 서버 배포로 영어 외 5개 언어 기기 모두 해결'
         ]
       }
     ]
@@ -278,14 +278,14 @@ export const careerDetails = {
       {
         title: 'SPA 검색 노출 한계로 Next.js 재구축', period: '2025.07 – 2025.08', ref: ['gobit-nextjs', 7],
         bullets: [
-          'React SPA가 빈 HTML을 내려 코인·게시글이 검색에 잡히지 않았고, prerender는 고정 경로 26개만 처리해 늘어나는 게시글을 담을 수 없음을 확인',
-          'Next.js 15 App Router로 재구축해 코인·게시글 상세를 서버 렌더링하고 페이지별 메타데이터 생성, 이후 중복 요청 제거와 구간별 스켈레톤 적용'
+          'React SPA가 빈 HTML을 내려보내 코인·게시글이 검색에 잡히지 않았고, 먼저 적용한 prerender는 고정 경로 26개만 처리해 늘어나는 게시글을 담을 수 없음을 확인',
+          'Next.js 15 App Router로 재구축해 코인·게시글 상세를 서버 렌더링하고 페이지별 메타데이터 생성, 이후 중복 요청 제거와 영역별 스켈레톤 적용'
         ]
       },
       {
         title: '4개 거래소 실시간 시세 연결 구조 정리', period: '2024.11 – 2024.12', ref: ['gobit-exchanges', 7],
         bullets: [
-          '호출마다 새 연결을 열어 Binance 하나에만 4개 이상 열리던 WebSocket을, 거래소별 단일 연결 스토어(중복 구독 방지·재연결 시 재구독)로 정리',
+          '공통 WebSocket 훅이 호출될 때마다 새 연결을 열어 Binance 하나에만 4개 이상 열리던 연결을, 거래소별 단일 연결 스토어(중복 구독 방지·재연결 시 재구독)로 정리',
           '코인 목록은 가상화 리스트로 화면에 보이는 심볼만 구독'
         ]
       },
@@ -302,7 +302,7 @@ export const careerDetails = {
   'doit-uikit': {
     tasks: [
       ['', 'Atomic Design 기반 UI 컴포넌트 24종 개발'],
-      ['', 'npm 패키지 배포: React를 번들에서 빼 쓰는 앱의 React와 중복되지 않게 하고, 타입 선언 자동 생성'],
+      ['', 'npm 패키지 배포: React를 번들에서 빼서 라이브러리를 쓰는 앱의 React와 중복되지 않게 하고, 타입 선언 자동 생성'],
       ['', 'Storybook·Chromatic 문서화'],
       ['', '팀 개발 규칙 정립 및 온보딩 교육'],
       ['', 'D.A.X와 두잇 홈페이지에 도입하고, 두 프로젝트의 요구사항에 맞춰 테이블·입력 컴포넌트 개선과 반응형 대응 추가'],
@@ -313,7 +313,7 @@ export const careerDetails = {
       {
         title: '캔버스 라벨링 도구: 축소 화면에서 그린 박스를 원본 해상도 좌표로 저장', ref: ['dax-coordinates', 9],
         bullets: [
-          '이미지를 800×600 영역에 맞춰 줄여 보여줘, 화면에서 그린 박스 좌표가 원본 이미지와 맞지 않던 문제',
+          '이미지를 800×600 영역에 맞춰 줄여서 표시해, 화면에서 그린 박스 좌표가 원본 이미지와 맞지 않던 문제',
           '이미지 위에 같은 크기의 캔버스를 겹쳐 드래그로 박스를 그리고, 어느 방향으로 끌어도 같은 박스가 되도록 좌표 정리',
           '보이는 크기와 원본 크기의 비율로 좌표를 바꾸는 훅을 만들어, 저장할 때와 저장된 라벨·모델 예측 결과를 다시 그릴 때 적용'
         ]
@@ -351,7 +351,7 @@ export const careerDetails = {
       ['', '사용자·팀·파일 관리 화면 개발 (React)'],
       ['', '회원·팀·팀원·파일·로그 API 서버 개발 (Express)'],
       ['', '멤버·팀·데이터 페이지에서 따로 만들던 테이블을 공용 컴포넌트로 합치고, API 호출은 훅으로 분리'],
-      ['', '같은 관리자 계정을 쓰는 사내 서비스와 MariaDB 기반 세션 저장소로 인증 체계 통일'],
+      ['', 'MariaDB 기반 세션 저장소로, 같은 관리자 계정을 쓰는 다른 사내 서비스와 인증 체계 통일'],
     ]
   }
 };

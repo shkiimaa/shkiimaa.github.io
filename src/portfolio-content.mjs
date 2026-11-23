@@ -25,7 +25,7 @@ export const portfolioMaterial = {
         { src: 'bitria-profiler-after.jpg', alt: '개선 후: 같은 갱신에 값 표시 컴포넌트만 다시 렌더링', screen: true }
       ],
       'build-optimization': [
-        { src: 'bitria-devtools-before.jpg', alt: '개선 전: 거래 화면 콜드 로드 전송 4.6MB, 요청 194건', screen: true },
+        { src: 'bitria-devtools-before.jpg', alt: '개선 전: 캐시 없이 처음 연 거래 화면 전송 4.6MB, 요청 194건', screen: true },
         { src: 'bitria-devtools-after.jpg', alt: '개선 후: 같은 조건에서 전송 2.5MB, 요청 187건', screen: true }
       ]
     },
@@ -201,7 +201,7 @@ export const portfolioDoc = {
         id: 'platforms', title: '하나의 코드베이스로 4개 플랫폼',
         points: [
           '개발자 2명이 웹·iOS·Android·데스크톱을 함께 내기 위해, 플랫폼별로 따로 만들지 않고 Next.js 코드베이스를 그대로 쓰는 Capacitor·Electron 선택',
-          '모바일 앱은 스토어에 출시하고 푸시(APNs·FCM)·소셜 로그인·기기 식별 연결, 앱 강제 업데이트 정책과 Electron 요청 식별 헤더 추가'
+          '모바일 앱은 스토어에 출시하고 푸시(APNs·FCM)·소셜 로그인·기기 식별을 네이티브 플러그인으로 연결, 앱 강제 업데이트 정책과 Electron 앱의 요청을 구분하는 헤더 추가'
         ],
         diagram: 'bitria-platforms', caption: '웹·모바일·데스크톱 빌드와 네이티브 기능 연결 구조'
       }
@@ -210,9 +210,9 @@ export const portfolioDoc = {
       {
         id: 'render-isolation', kind: '성능 개선', title: '숨겨진 화면까지 시세마다 다시 그리던 거래 화면: 컴포넌트 렌더 횟수 70.5% 감소',
         points: [
-          '문제: 차트를 미리 준비하려고 숨겨 둔 차트 화면까지 시세가 바뀔 때마다 다시 렌더링',
-          '원인: React DevTools 훅으로 컴포넌트별 렌더 시간을 수집해 숨겨진 차트 화면과 닫힌 오더북이 렌더 시간의 64%를 차지하는 것 확인, 구독을 끄는 옵션을 넘겨도 시세 핸들러가 전역 목록으로 호출돼 갱신이 멈추지 않는 구조였음',
-          '해결: 화면 최상위의 시세 구독을 값을 표시하는 컴포넌트 안으로 옮기고, 닫힌 드로어와 탭 뒤 오더북은 구독 중지 (차트 미리 준비는 유지)',
+          '문제: 차트를 미리 준비하기 위해 숨겨 둔 차트 화면까지 시세가 바뀔 때마다 다시 렌더링',
+          '원인: React DevTools 훅으로 컴포넌트별 렌더 시간을 수집해 숨겨진 차트 화면과 닫힌 오더북이 렌더 시간의 64%를 차지하는 것 확인, 구독을 끄는 옵션을 넘겨도 시세 핸들러가 전역 목록에 등록돼 계속 호출되는 구조였음',
+          '해결: 화면 최상위의 시세 구독을 값을 표시하는 컴포넌트 안으로 옮기고, 닫힌 드로어·가려진 탭의 오더북은 구독 중지 (차트 미리 준비는 유지)',
           '결과: 렌더 횟수 5,192 → 1,534회, 개선 후에는 값 표시 컴포넌트만 다시 렌더링'
         ],
         measure: true, caseImages: 'render-isolation', code: 'render-isolation',
@@ -223,12 +223,12 @@ export const portfolioDoc = {
         points: [
           '문제: 데스크톱과 달리 모바일에서만 홈 화면이 느림',
           '원인: Lighthouse와 번들 분석기로 한 청크의 스크립트 실행 시간이 원인임을 확인, 공통 UI 배럴이 하위 배럴 10개를 다시 내보내 버튼 하나만 가져와도 three.js 컴포넌트까지 163개 모듈이 한 청크로 묶이던 구조',
-          '해결: optimizePackageImports는 청크 수와 전체 번들이 늘어 채택하지 않고, 심볼과 정의 파일의 매핑으로 136곳이 모두 대응되는 것을 확인한 뒤 정의 파일 직접 참조로 일괄 변경',
+          '해결: optimizePackageImports는 청크 수와 전체 번들이 늘어 채택하지 않고, export 이름별 정의 파일 매핑으로 136곳 모두 옮길 경로를 확인한 뒤 정의 파일 직접 참조로 일괄 변경',
           '결과: 모바일 홈 TBT 417 → 292.5ms'
         ],
         examples: [
           { label: '변경 전: 공통 UI 배럴 (src/shared/ui/index.ts)', code: `export * from './primitives';
-export * from './media';   // three.js 기반 컴포넌트까지 함께 평가
+export * from './media';   // three.js 기반 컴포넌트까지 같은 청크로 묶여 실행
 // … 하위 배럴 10개
 
 import { Button } from '@/shared/ui';` },
@@ -239,20 +239,20 @@ import { Button } from '@/shared/ui';` },
       {
         id: 'build-optimization', kind: '성능 개선', title: '개발·배포로 나뉜 빌드와 과한 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소',
         points: [
-          '문제: 개발은 Turbopack, 배포는 webpack으로 빌드가 나뉘어 개발 서버에서만 일부 SVG 아이콘(`?url`)이 안 보이고, 쓰지 않는 모듈과 한글 전체 폰트까지 받고 있었음',
-          '원인: 당시 Turbopack 규칙이 import 쿼리 분기를 지원하지 않았고, sideEffects 선언이 없어 쓰지 않는 모듈까지 평가됐으며, 한국어 화면이 없는데 한글 11,172자 전체 폰트를 받고 있었음',
-          '해결: 쿼리 분기가 추가된 Next.js 16.4로 올려 빌드를 Turbopack으로 통일, sideEffects 선언(불러오는 순간 동작하는 모듈 4개와 CSS만 예외), 폰트는 필요한 글자 구간만 받는 서브셋으로 교체',
-          '결과: 빌드 74.2 → 32.8초, 홈 JS 752 → 550KB(gzip), 초기 폰트 2,048 → 111KB, 거래 화면 콜드 로드 전송 4.6MB → 2.5MB (아래 DevTools 합계 줄)'
+          '문제: 개발은 Turbopack, 배포는 webpack으로 빌드가 나뉘어 개발 서버에서만 일부 SVG 아이콘(`?url`)이 보이지 않고, 쓰지 않는 모듈과 한글 전체 폰트까지 받고 있었음',
+          '원인: 당시 Turbopack이 import 주소의 쿼리(?url)로 SVG 처리를 나누지 못했고, sideEffects 선언이 없어 쓰지 않는 모듈까지 번들에 남아 실행됐으며, 한국어 화면이 없는데 한글 11,172자 전체 폰트를 받고 있었음',
+          '해결: 쿼리(?url)별 SVG 처리를 지원하는 Next.js 16.4로 올려 빌드를 Turbopack으로 통일, sideEffects 선언(불러오는 순간 동작하는 모듈 4개와 CSS만 예외), 폰트는 필요한 글자 구간만 받는 서브셋으로 교체',
+          '결과: 빌드 74.2 → 32.8초, 홈 JS 752 → 550KB(gzip), 초기 폰트 2,048 → 111KB, 캐시 없이 처음 연 거래 화면 전송 4.6MB → 2.5MB (아래 DevTools 합계 줄)'
         ],
         strips: 'build-optimization',
         note: '측정 조건: 빌드 시간은 캐시 없는 프로덕션 빌드 3회 중앙값, JS 크기는 빌드 결과물 gzip, 폰트 전송량은 홈 화면 기준'
       },
       {
-        id: 'chart-lifecycle', kind: '트러블슈팅', title: '차트 로딩 실패: 운영 로그로 캐시 버그와 심볼 전환 경쟁 상태를 찾아 해결',
+        id: 'chart-lifecycle', kind: '트러블슈팅', title: '차트 로딩 실패: 운영 로그로 TradingView 캐시 번들 버그와 심볼 전환 경쟁 상태를 찾아 해결',
         points: [
           '문제: 차트가 로딩 화면에서 멈춰도 실패 기록이 남지 않아 원인을 알 수 없음',
-          '원인: 실패 단계를 서버 로그로 보내 13일간 50건을 분석, 대부분은 캐시된 번들과 호환 로딩 모드가 겹치면 준비 신호가 누락되는 TradingView 버그(릴리스 노트에서 확인)였고, 남은 실패는 빠른 심볼 전환 때 이전 위젯의 콜백이 제거된 iframe에 접근하는 경쟁 상태였음 (WebKit에서 재현, 아래 흐름도)',
-          '해결: 라이선스 제약으로 수정 버전 대신 버그와 무관한 blob 로딩으로 전환(막히는 인앱 브라우저는 same_origin으로 자동 전환), 거래 화면을 layout으로 옮겨 위젯은 그대로 두고 심볼만 교체, 스크립트 로드 재시도와 요청 타임아웃 추가',
+          '원인: 실패 단계를 서버 로그로 보내 13일간 기록된 실패 50건을 분석, 대부분은 캐시된 번들을 호환 로딩 모드로 불러오면 준비 완료 콜백(onChartReady)이 가끔 호출되지 않는 TradingView 버그(릴리스 노트에서 확인)였고, 남은 실패는 빠른 심볼 전환 때 이전 위젯의 콜백이 제거된 iframe에 접근하는 경쟁 상태였음 (WebKit에서 재현, 아래 흐름도)',
+          '해결: 라이선스 제약으로 수정 버전 대신 버그 조건(document.write)을 쓰지 않는 blob 로딩으로 전환(blob이 막히는 인앱 브라우저는 same_origin으로 자동 전환), 거래 화면을 layout으로 옮겨 위젯은 그대로 두고 심볼만 교체, 스크립트 로드 재시도와 요청 타임아웃 추가',
           '결과: 빠르게 심볼을 바꿔도 마지막 심볼로 정상 로딩되고, 실패해도 재시도로 복구되며 단계별 원인이 운영 로그에 남음'
         ],
         diagram: 'chart-lifecycle'
@@ -261,7 +261,7 @@ import { Button } from '@/shared/ui';` },
         id: 'app-resume', kind: '트러블슈팅', title: '앱 복귀 후 포지션·자산 정보 불일치 해결',
         points: [
           '문제: iOS 앱을 백그라운드에 두었다 돌아오면 이미 종료된 포지션이 다음 정기 조회(최대 2분)까지 화면에 남음',
-          '원인: WKWebView가 복귀 시 visibilitychange를 보내지 않아 TanStack Query가 복귀를 감지하지 못했고, 알림 소켓은 백그라운드에서 재연결 5회 제한을 다 써 재연결을 포기한 상태였음',
+          '원인: WKWebView가 복귀 시 visibilitychange를 보내지 않아 TanStack Query가 복귀를 감지하지 못했고, 알림 소켓은 백그라운드에서 재연결 5회 제한을 모두 소진해 재연결을 포기한 상태였음',
           '해결: Capacitor 앱 상태 이벤트를 기준으로 쿼리 재조회와 소켓 재연결을 함께 실행',
           '결과: 복귀하면 사용 중인 포지션·자산·주문 쿼리만 다시 요청해 바로 최신 상태로 표시 (페이지 새로고침 없음)'
         ],
@@ -283,7 +283,7 @@ import { Button } from '@/shared/ui';` },
         id: 'app-locale-navigation', kind: '트러블슈팅', title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결',
         points: [
           '문제: 일본어·스페인어·베트남어·태국어·중국어 기기에서 iOS 앱을 실행하면 앱 화면 대신 Safari로 사이트가 열림',
-          '원인: Capacitor iOS 소스에서 앱 내부 이동을 server.url과의 주소 접두사로 판정하는 것을 찾음, next-intl as-needed 설정으로 영어 외 언어는 /th/m처럼 언어 코드가 붙어 server.url(/m)과 접두사가 달라지면서 외부 링크로 판정됨',
+          '원인: Capacitor iOS 소스에서 이동할 주소가 server.url(/m)로 시작할 때만 앱 내부로 판정하는 것을 찾음, next-intl as-needed 설정으로 영어 외 언어는 /th/m처럼 앞에 언어 코드가 붙어 외부 링크로 판정됨',
           '해결: 앱 요청에 한해 미들웨어의 언어 코드 리다이렉트를 같은 대상의 rewrite로 바꿔 주소는 /m으로 유지하고 화면은 기기 언어로 표시 (웹 동작은 그대로)',
           '결과: 영어 외 5개 언어 기기 모두 앱 안에서 정상 실행, 원격 URL 방식이라 앱 재빌드·스토어 재심사 없이 서버 배포만으로 적용'
         ]
@@ -293,15 +293,15 @@ import { Button } from '@/shared/ui';` },
   gobit: {
     facts: [
       ['서비스', '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자를 제공하는 코인 정보 플랫폼'],
-      ['맡은 범위', 'React·Next.js 웹 클라이언트, Express 백엔드 API 서버, 채팅·스케줄러 서버']
+      ['맡은 범위', 'React·Next.js 웹 클라이언트, Express 기반 백엔드 API 서버, 채팅·스케줄러 서버']
     ],
     evidence: [
       {
         id: 'nextjs', kind: '트러블슈팅', title: 'SPA 검색 노출 한계로 Next.js 재구축', period: '2025.07 – 2025.08',
         points: [
-          '문제: React SPA가 빈 HTML을 먼저 내려보내 코인·뉴스·게시글 내용과 메타 정보가 검색 결과와 링크 미리보기에 잡히지 않음',
-          '원인: 먼저 react-helmet-async로 페이지 제목을 바꾸고 빌드 시점 prerender(Puppeteer)를 적용했지만, prerender는 고정 경로 26개만 저장해 늘어나는 게시글 상세를 담을 수 없고 시세·뉴스도 저장 시점에 고정됨',
-          '해결: Next.js 15 App Router로 재구축해 코인 상세(`/market/[symbol]`)·게시글 상세(`/community/[id]`)를 서버 렌더링하고 페이지별 메타데이터 생성, 이후 중복 요청을 React `cache()`로 합치고 구간별 스켈레톤 적용',
+          '문제: 코인·뉴스·게시글 내용과 메타 정보가 검색 결과와 링크 미리보기에 잡히지 않음',
+          '원인: React SPA가 빈 HTML을 먼저 내려보냄, 처음에는 react-helmet-async로 페이지 제목을 바꾸고 빌드 시점 prerender(Puppeteer)를 적용했지만 prerender는 고정 경로 26개만 저장해 늘어나는 게시글 상세를 담을 수 없고 시세·뉴스도 저장 시점에 고정됨',
+          '해결: Next.js 15 App Router로 재구축해 코인 상세(`/market/[symbol]`)·게시글 상세(`/community/[id]`)를 서버 렌더링하고 페이지별 메타데이터 생성, 이후 중복 요청을 React `cache()`로 합치고 영역별 스켈레톤 적용',
           '결과: 코인별·게시글별 상세 페이지가 고유 주소와 메타데이터를 가진 서버 렌더링 페이지로 제공됨'
         ]
       },
@@ -317,7 +317,7 @@ import { Button } from '@/shared/ui';` },
       {
         id: 'deployment', kind: '트러블슈팅', title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08',
         points: [
-          '문제: Gobit과 별도 모의투자 시스템·코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 흩어져 있어 유지보수와 배포를 이어가기 어려움',
+          '문제: Gobit, 별도 모의투자 시스템, 코인 매매 시그널 서비스가 Windows·Linux 서버 5대에 흩어져 있어 유지보수와 배포를 이어가기 어려움',
           '원인: 레거시 서비스의 소스 코드가 유실돼 핵심 시세 수집기는 .NET 바이너리만 남아 있었음',
           '해결: 바이너리의 동작과 데이터 형식을 분석해 수집기를 Node.js로 재작성, 데이터 경로를 수집기 → Redis → 서버로 정리, 서비스별 Dockerfile·Kubernetes 매니페스트와 GitHub Actions 배포 자동화 구성',
           '결과: 14개 서비스를 하나의 K3s 환경에서 배포·운영하고, 바이너리만 남아 있던 수집기도 코드로 관리'
@@ -335,7 +335,7 @@ import { Button } from '@/shared/ui';` },
         id: 'packaging', title: '라이브러리 구조와 패키징',
         points: [
           '배포할 라이브러리 코드(src/lib)와 Storybook 문서(src/storybook)를 한 저장소에서 폴더로 분리',
-          'Vite 라이브러리 모드로 ESM·UMD를 빌드하고, React는 번들에서 빼 peerDependencies로 둬 쓰는 앱의 React와 중복되지 않게 함',
+          'Vite 라이브러리 모드로 ESM·UMD를 빌드하고, React는 번들에서 빼 peerDependencies로 두어 라이브러리를 쓰는 앱의 React와 중복되지 않게 함',
           'Atom과 이를 조합한 Molecule 두 단계(예: Input·Button·Label → FileInput), size별 글자·여백 규칙은 스타일 모듈 한 곳에서 정의'
         ],
         examples: [
@@ -369,7 +369,7 @@ build: {
         id: 'coordinates', kind: '트러블슈팅', title: '캔버스 라벨링 도구: 축소 화면에서 그린 박스를 원본 해상도 좌표로 저장',
         points: [
           '문제: 라벨링 화면에서 그린 박스의 좌표가 원본 이미지에서는 다른 위치를 가리켜, 학습 데이터로 쓸 좌표가 맞지 않음',
-          '원인: 이미지를 800×600 영역에 맞춰 줄여 보여줘 보이는 크기와 원본 크기가 다른데, 캔버스에서 얻는 좌표는 보이는 크기 기준이었음',
+          '원인: 이미지를 800×600 영역에 맞춰 줄여서 표시해 보이는 크기와 원본 크기가 다른데, 캔버스에서 얻는 좌표는 보이는 크기 기준이었음',
           '해결: 보이는 크기와 원본 크기의 비율로 좌표를 바꾸는 훅을 만들어, 저장할 때는 원본 좌표로, 다시 그릴 때는 화면 좌표로 변환',
           '결과: 화면에서 그린 라벨이 원본 좌표로 저장돼 학습에 바로 쓰이고, 저장된 라벨·모델 예측 결과도 같은 훅으로 화면에 표시'
         ],

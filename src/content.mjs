@@ -30,10 +30,10 @@ export const projects = [
     summary: [
       '하나의 Next.js 코드베이스로 웹·iOS·Android·데스크톱 앱 구축, App Store·Google Play 출시',
       'TradingView 차트, 실시간 시세·호가, 현물·선물·마진 주문 등 거래 화면 개발',
-      '회원·인증(2단계 인증·패스키), 자산, 시세, KYC 등 백엔드 API 서버 개발 및 K3s 배포·운영',
+      '회원·인증(2단계 인증·패스키), 주문, 자산, 시세, KYC 등 백엔드 API 서버 개발 및 K3s 배포·운영',
       '실시간 구독 구조 개선으로 거래 화면 컴포넌트 렌더 횟수 70.5% 감소',
       '배럴 import를 직접 참조로 바꿔 모바일 홈 TBT 30% 감소',
-      'Turbopack 전환과 번들·폰트 최적화로 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소',
+      'Turbopack 전환과 번들·폰트 최적화로 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송량 95% 감소',
       '운영 중 발생한 차트 로딩 실패, 앱 복귀 시 포지션·자산 정보 불일치 등의 원인을 찾아 해결'
     ],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
@@ -100,8 +100,8 @@ export const projects = [
       ['', '회원 인증·모의투자·결제 등 백엔드 API 개발'],
       ['', '채팅 서버와 스케줄러 서버 개발'],
     ],
-    tech: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Express', 'MariaDB', 'Redis', 'Socket.IO', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions'],
-    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS']], ['백엔드', ['Express', 'MariaDB', 'Redis', 'Socket.IO', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions']]],
+    tech: ['TypeScript', 'Next.js', 'SWR', 'Tailwind CSS', 'Express', 'MariaDB', 'Redis', 'Socket.IO', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions'],
+    techGroups: [['프론트엔드', ['TypeScript', 'Next.js', 'Tailwind CSS', 'SWR']], ['백엔드', ['Express', 'MariaDB', 'Redis', 'Socket.IO', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions']]],
     cases: [{ id: 'nextjs-seo', title: 'SPA 검색 노출 한계로 Next.js 재구축', highlight: 'SPA 사전 렌더링의 한계를 확인하고 Next.js로 재구축해 코인·게시글 상세를 서버 렌더링', period: '2025.07 – 2025.08, 이후 성능 개선', paragraphs: [
       'React SPA는 빈 HTML을 먼저 내려보내, 코인·뉴스·게시글 내용과 메타 정보가 검색 결과와 링크 미리보기에 잡히지 않았습니다. react-helmet-async로 페이지 제목을 바꾸고, 빌드할 때 Puppeteer로 페이지를 미리 렌더링하는 prerender를 적용했습니다.',
       '하지만 prerender는 빌드 설정에 적어 둔 고정 경로 26개를 0.5초 기다린 뒤 저장하는 방식이라, 계속 늘어나는 게시글 상세나 페이지 번호가 붙는 뉴스 목록은 대상에 넣을 수 없었습니다. 저장한 시점의 시세와 뉴스가 그대로 고정되는 문제도 있었습니다.',
@@ -201,6 +201,7 @@ export const careerDetails = {
       ['#', '백엔드 API'],
       ['', '회원가입·로그인, 소셜 로그인(Google·Apple·Telegram) API 개발'],
       ['', '2단계 인증·패스키·신뢰 기기 등 계정 보안 API 개발'],
+      ['', '현물·선물·마진 주문 접수·정정·취소·조회 API 개발'],
       ['', '자산·입출금·포지션·시세 조회 API 개발'],
       ['', 'Sumsub 고객확인(KYC) 연동'],
       ['', '가격 알림·푸시·고객 문의 API 개발'],
@@ -226,18 +227,18 @@ export const careerDetails = {
         ]
       },
       {
-        title: '개발·배포로 나뉜 빌드와 과한 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송 95% 감소', ref: ['bitria-build-optimization', 5],
+        title: '개발·배포로 나뉜 빌드와 무거운 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송량 95% 감소', ref: ['bitria-build-optimization', 5],
         bullets: [
           '개발은 Turbopack, 배포는 webpack으로 나뉘어 있던 빌드를, import 주소의 쿼리(?url)로 SVG 처리를 나누는 기능이 들어간 Next.js 16.4로 올려 Turbopack으로 통일',
-          '쓰지 않는 모듈이 번들에서 빠지게 sideEffects 선언(모듈 4개와 CSS만 예외), 한국어 화면이 없는데 받던 한글 전체 폰트는 서브셋으로 교체',
-          '빌드 시간 74.2 → 32.8초, 홈 JS 크기 752 → 550KB, 초기 폰트 전송 2,048 → 111KB'
+          '쓰지 않는 모듈이 번들에서 빠지게 sideEffects 선언(모듈 4개와 CSS만 예외), 한글 전체 폰트는 서브셋으로 교체',
+          '빌드 시간 74.2 → 32.8초, 홈 JS 크기 752 → 550KB, 초기 폰트 전송량 2,048 → 111KB'
         ]
       },
       {
         title: '차트 로딩 실패: 운영 로그로 TradingView 캐시 번들 버그와 심볼 전환 경쟁 상태를 찾아 해결', ref: ['bitria-chart-lifecycle', 5],
         bullets: [
           '실패 기록이 남지 않던 차트에 단계별 실패 로그와 재시도를 넣고, 13일간 기록된 실패 50건을 분석',
-          'TradingView 캐시 번들 버그는 버그 조건(document.write)을 쓰지 않는 blob 로딩으로 피하고(blob이 막히는 인앱 브라우저는 same_origin으로 자동 전환), 빠른 심볼 전환 경쟁 상태는 위젯을 유지한 채 심볼만 교체해 해결'
+          'TradingView 캐시 번들 버그는 차트를 blob 방식으로 불러오게 바꿔 피하고(blob이 막히는 인앱 브라우저는 same_origin으로 자동 전환), 빠른 심볼 전환 경쟁 상태는 위젯을 유지한 채 심볼만 교체해 해결'
         ]
       },
       {
@@ -261,7 +262,7 @@ export const careerDetails = {
         title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결', ref: ['bitria-app-locale-navigation', 6],
         bullets: [
           'Capacitor iOS 소스에서 /m으로 시작하는 주소만 앱 내부로 판정하는 것을 찾아, 언어 코드가 붙은 주소(/th/m)가 외부로 판정되는 원인 확인',
-          '앱 요청은 주소를 /m 그대로 두는 rewrite로 처리해, 앱 재빌드·스토어 재심사 없이 서버 배포로 영어 외 5개 언어 기기 모두 해결'
+          '앱 요청은 주소를 /m 그대로 두는 rewrite로 처리해, 앱 재빌드·재심사 없이 서버 배포로 영어 외 5개 언어 기기 모두 해결'
         ]
       }
     ]

@@ -4,7 +4,7 @@ import { portfolioMaterial, portfolioDoc } from '../portfolio-content.mjs';
 import { Document } from './layout.jsx';
 import {
   Bar, Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, IconLinks, MeasurementNote, Meta, PageIntro, PageTitle,
-  Paragraphs, ProjectHeader, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, cx, text
+  Paragraphs, ProjectHeader, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, Icon, cx, text
 } from './components.jsx';
 
 export const projectHref = project => `/projects/${project.id}/`;
@@ -27,21 +27,22 @@ const ResumeSection = ({ id, title, note, className, children }) => (
     {children}
   </section>
 );
-// 회사·학교 표시: 로고가 있으면 로고, 없으면 이름 첫 글자 ((주) 같은 법인 표기는 뺀다)
+// 회사·학교 표시: 로고가 있으면 로고, 없으면 종류 아이콘 (회사는 건물, 학교는 학사모)
 // 크기는 이름 줄 글자 윗선부터 기간 줄 글자 아랫선까지의 높이에 맞춘다
-const Mark = ({ name, logo }) => (
+// 아이콘은 링크 버튼의 것보다 크게 쓰므로, 선이 이름 글자보다 굵어 보이지 않게 두께를 1.5로 줄인다
+const Mark = ({ logo, icon }) => (
   <span className={cx('mt-1 flex aspect-square w-10 shrink-0 items-center justify-center self-start overflow-hidden rounded-sm border border-line', logo ? 'bg-paper' : 'bg-wash')} aria-hidden="true">
     {logo
       ? <img className="w-full object-contain p-1" src={`/assets/${logo}`} alt="" />
-      : <span className={cx(text.body, 'font-semibold text-secondary')}>{name.replace(/\(주\)/, '').trim()[0]}</span>}
+      : <Icon name={icon} className="size-6.5 text-secondary [&_svg]:stroke-[1.5]" />}
   </span>
 );
 // 표시 + 이름·보조 줄. 머리줄은 PDF에서 쪼개지지 않는다.
 // rule(아래에 프로젝트가 이어지는 회사 줄)일 때만 바로 뒤 내용과 같은 쪽에 묶는다 —
 // 뒤 내용이 없는 줄까지 묶으면 다음 구역 제목과 떨어지지 못해, 다음 구역이 쪽 사이에서 쪼개진다
-const MarkedHead = ({ name, logo, rule, children }) => (
+const MarkedHead = ({ name, logo, icon = 'buildings', rule, children }) => (
   <header className={cx('flex gap-x-4 mobile:gap-x-3 print:break-inside-avoid', rule && 'print:break-after-avoid')}>
-    <Mark name={name} logo={logo} />
+    <Mark logo={logo} icon={icon} />
     <div className={cx('min-w-0 flex-1', rule && 'border-b border-line pb-3.5 print:pb-2.5')}>
       <h3 className={text.item}>{name}</h3>
       <p className={cx(text.lead, 'flex flex-wrap items-center leading-6 tabular-nums')}>{children}</p>
@@ -101,7 +102,7 @@ const SkillsAndEducation = () => (
     </ResumeSection>
     <ResumeSection id="education" title="학력" className="print:break-inside-avoid">
       <div className="pt-7 mobile:pt-6 print:pt-5">
-        <MarkedHead name={profile.education.school}>
+        <MarkedHead name={profile.education.school} icon="school">
           <span className="whitespace-nowrap">{profile.education.period}</span><Bar /><span>{profile.education.status}</span><Bar /><span>{profile.education.department}</span>
         </MarkedHead>
       </div>

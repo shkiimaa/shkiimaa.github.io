@@ -2,7 +2,7 @@ export const profile = {
   name: '김수환', englishName: 'Suhwan Kim', role: 'Frontend Engineer',
   email: 'shkiimaa@gmail.com', phone: '010-9931-3175', github: 'https://github.com/shkiimaa', site: 'https://shkiimaa.github.io',
   introduction: '하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한 프론트엔드 개발자입니다.\n\n암호화폐 거래 플랫폼 Bitria의 프론트엔드를 초기 구축부터 전담해 모바일 앱을 App Store와 Google Play에 출시했습니다. 성능 문제는 계측으로 원인부터 찾아, 거래 화면의 컴포넌트 렌더 횟수를 70.5%, 모바일 홈 TBT를 30% 줄였습니다. 이 밖에 코인 정보 플랫폼, AI 모델 학습 플랫폼, 사내 UI 라이브러리를 개발했습니다.',
-  education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열) · 재직자 전형', period: '2022.03 – 2027.02', status: '졸업 예정' }
+  education: { school: '청운대학교 인천캠퍼스', department: '멀티미디어과(공과계열)', period: '2022.03 – 2027.02', status: '졸업 예정' }
 };
 
 export const experiences = [

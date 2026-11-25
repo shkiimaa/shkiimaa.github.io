@@ -229,19 +229,27 @@ export const PageIntro = ({ title, links, children }) => (
   <div className="pb-11 mobile:pb-8 print:pb-4">
     <PageTitle>{title}</PageTitle>
     <p className={cx(text.lead, 'mt-4 text-secondary')}>{children}</p>
-    {/* 링크 아이콘 + 밑줄 글자, 항목 사이는 구분선 */}
-    {links && (
-      <div className={cx(text.body, 'mt-4 hidden flex-wrap items-center text-secondary print:flex')}>
-        {links.map(([href, label], i) => (
-          <span key={href} className="inline-flex items-center">
-            {i > 0 && <Bar className="mx-3.5" />}
-            <a className="inline-flex items-center gap-1.5" href={href} target="_blank" rel="noopener noreferrer">
-              <Icon name="link" className="size-3.5 flex-none" /><span className="underline decoration-strong-line underline-offset-3">{label}</span>
-            </a>
-          </span>
-        ))}
-      </div>
-    )}
+    {links && <IconLine items={links.map(([href, label]) => ['link', href, label])} className="mt-4" />}
+  </div>
+);
+
+// PDF 머리의 한 줄: 아이콘 + 글자, 항목 사이는 구분선 (이력서·경력기술서의 연락처, 포트폴리오의 문서 링크). PDF에만 보인다
+// items: [아이콘, 주소, 보이는 글, 읽어 주는 이름] 목록
+// 웹 주소로 가는 항목은 보이는 글이 링크 이름이라 밑줄을 긋는다. 전화·이메일은 값 그대로 두고, 무엇인지는 읽어 주는 이름으로 알린다
+// 링크 이름(한글)은 0.4px 내린다: 한글은 글자 아래 끝이 숫자·영문의 기준선보다 조금 위에 있어, 같은 줄에 놓으면 떠 보인다
+export const IconLine = ({ items, className }) => (
+  <div className={cx(text.body, 'hidden flex-wrap items-center text-secondary print:flex', className)}>
+    {items.map(([icon, href, label, name], i) => {
+      const web = href.startsWith('http');
+      return (
+        <span key={href} className="inline-flex items-center">
+          {i > 0 && <Bar className="mx-3.5" />}
+          <a className="inline-flex items-center gap-1.5" href={href} aria-label={name && `${name} ${label}`} {...(web && { target: '_blank', rel: 'noopener noreferrer' })}>
+            <Icon name={icon} className="size-3.5 flex-none" />{web ? <span className="translate-y-[0.4px] underline decoration-strong-line underline-offset-3">{label}</span> : label}
+          </a>
+        </span>
+      );
+    })}
   </div>
 );
 

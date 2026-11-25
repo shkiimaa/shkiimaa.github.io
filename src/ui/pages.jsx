@@ -3,7 +3,7 @@ import { profile, experiences, projects, skills, careerDetails } from '../conten
 import { portfolioMaterial, portfolioDoc } from '../portfolio-content.mjs';
 import { Document } from './layout.jsx';
 import {
-  Bar, Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, IconLinks, MeasurementNote, Meta, PageIntro, PageTitle,
+  Bar, Bullets, CaseStudy, CodeExample, Diagram, DocumentNext, Gallery, IconLine, IconLinks, MeasurementNote, Meta, PageIntro, PageTitle,
   Paragraphs, ProjectHeader, Prose, ResultBox, SectionBlock, SubTitle, TaskList, TechLine, TechStack, TechTokens, TextLink, Toolbar, ArrowIcon, Icon, cx, text
 } from './components.jsx';
 
@@ -72,10 +72,11 @@ const jobMonths = job => {
 const formatMonths = months => [months >= 12 && `${Math.floor(months / 12)}년`, months % 12 && `${months % 12}개월`].filter(Boolean).join(' ');
 const careerTotal = jobs => formatMonths(jobs.reduce((sum, job) => sum + jobMonths(job), 0));
 
+// PDF 머리의 연락처: 아이콘, 주소, 보이는 글, 읽어 주는 이름 (포트폴리오는 보이는 글이 곧 링크 이름이다)
 const pdfContacts = [
-  ['전화번호', 'tel:+821099313175', profile.phone],
-  ['이메일', `mailto:${profile.email}`, profile.email],
-  ['포트폴리오', `${profile.site}/portfolio/`, `${profile.site.replace('https://', '')}/portfolio`]
+  ['device-mobile', 'tel:+821099313175', profile.phone, '전화번호'],
+  ['at', `mailto:${profile.email}`, profile.email, '이메일'],
+  ['link', `${profile.site}/portfolio/`, '포트폴리오']
 ];
 
 // 개발 이전 경력: 회사 줄과 같은 모양으로 이름·기간·직함만 (프로젝트 없음, 총 경력에는 넣지 않는다)
@@ -110,33 +111,24 @@ const SkillsAndEducation = () => (
   </>
 );
 
-// 이름·연락처·사진·소개 글: 이력서와 경력기술서가 같은 머리를 쓴다
-// 경력기술서는 이력서와 함께 내는 문서라 소개 글 없이 이름·연락처·사진만 둔다 (intro={false})
+// 이름·연락처·소개 글: 이력서와 경력기술서가 같은 머리를 쓴다
+// 경력기술서는 이력서와 함께 내는 문서라 소개 글 없이 이름·연락처만 둔다 (intro={false})
+// 증명사진은 넣지 않는다 (사진 파일은 public/assets에 남겨 둔다: profile-navy.jpg, profile.jpg)
 const ProfileHead = ({ intro = true }) => {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
     <>
-      {/* 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈)
-          PDF는 연락처를 이름 아래로 내리고, 그 옆에만 증명사진을 둬서 소개 문단 폭은 그대로 쓴다 (웹 화면에는 사진 없음) */}
-      <div className="mb-5 mobile:mb-4 print:mb-8 print:flex print:items-start print:justify-between print:gap-6">
-        <div>
-          <div className="flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:gap-x-4">
-            <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Engineer</span>
-            <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
-              <a href={`mailto:${profile.email}`}>{profile.email}</a>
-              <a href="tel:+821099313175">{profile.phone}</a>
-            </div>
+      <div className="mb-5 mobile:mb-4 print:mb-8">
+        {/* 화면: 연락처는 이름 줄 오른쪽에 둔다 (모바일은 이름 아래로 줄바꿈) */}
+        <div className="flex flex-wrap items-baseline gap-x-5.5 gap-y-2 mobile:gap-x-4">
+          <PageTitle>김수환</PageTitle><span className={cx(text.lead, 'font-semibold text-secondary')}>Frontend Engineer</span>
+          <div className={cx(text.meta, 'ml-auto flex flex-wrap gap-x-5.5 gap-y-1.5 text-secondary mobile:ml-0 mobile:basis-full print:hidden')}>
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a href="tel:+821099313175">{profile.phone}</a>
           </div>
-          {/* PDF 연락처: 이름 아래에 항목 이름을 붙여 세로로 나열하고, 출력해도 읽히게 주소를 보여준다 */}
-          <dl className={cx(text.body, 'mt-3 hidden grid-cols-[auto_minmax(0,1fr)] gap-x-5 print:grid')}>
-            {pdfContacts.map(([label, href, value]) => (
-              <div key={label} className="contents"><dt className="text-muted">{label}</dt><dd><a href={href}>{value}</a></dd></div>
-            ))}
-          </dl>
         </div>
-        {/* 정사각형 사진의 높이를 이름 줄부터 마지막 연락처 줄까지의 높이에 맞춘 크기
-            사진은 네이비 카디건(profile-navy.jpg)을 쓴다. 옷 색만 다른 원본(profile.jpg, 빨간 카디건)도 남겨 둔다 */}
-        <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile-navy.jpg" alt="김수환 증명사진" loading="lazy" />
+        {/* PDF: 연락처를 이름 아래 한 줄에 아이콘과 함께 둔다 (포트폴리오 머리의 문서 링크 줄과 같은 모양) */}
+        <IconLine items={pdfContacts} className="mt-3" />
       </div>
       {intro && (
         <>
@@ -455,7 +447,7 @@ const PortfolioEvidence = ({ project }) => {
 
 // 이력서·경력기술서와 같은 순서(회사별, 비중 순)로 둔다
 const portfolioProjects = projects.filter(project => project.category === 'work');
-const portfolioLinks = [[`${profile.site}/`, '웹 이력서'], [`${profile.site}/career/`, '웹 경력기술서'], [`${profile.site}/portfolio/`, '웹 포트폴리오']];
+const portfolioLinks = [[`${profile.site}/`, '이력서'], [`${profile.site}/career/`, '경력기술서'], [`${profile.site}/portfolio/`, '포트폴리오']];
 // 대표 주소는 /portfolio/다. 예전 주소(/portfolio-detail/)와 portfolio-detail.pdf는 이미 보낸 이력서의 링크가 끊기지 않게 같은 문서로 남긴다
 function PortfolioDoc({ route, pdf }) {
   return (

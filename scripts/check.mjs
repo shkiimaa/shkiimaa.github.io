@@ -1,6 +1,4 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { root } from './build.mjs';
 import { projects, careerDetails } from '../src/content.mjs';
@@ -26,19 +24,15 @@ for(const file of pages){
   for(const match of html.matchAll(/href="#([^"]+)"/g))if(!ids.includes(match[1]))failures.push(`${file}: missing #${match[1]}`);
 }
 for(const name of ['resume','career','portfolio','portfolio-detail']){const pdf=await readFile(path.join(dist,`${name}.pdf`));if(pdf.subarray(0,4).toString()!=='%PDF')failures.push(`Invalid ${name}.pdf`);}
-// 경력기술서 사례가 가리키는 포트폴리오 항목: 있어야 하고, 제목·기간이 같아야 하며, 적힌 쪽에 실제로 있어야 한다
+// 경력기술서 사례와 같은 내용을 다루는 포트폴리오 항목: 있어야 하고, 제목·기간이 같아야 한다 (두 문서를 함께 내므로 같은 사례의 이름이 달라지면 안 된다)
 // 경력기술서가 가리킬 수 있는 것은 사례(evidence)뿐이다: '구조와 기술 선택' 항목은 4줄 형식이 아니다
 const portfolioItems=new Map(Object.entries(portfolioDoc).flatMap(([pid,doc])=>(doc.evidence||[]).map(item=>[`${pid}-${item.id}`,item])));
-const pdftotext=['/opt/homebrew/bin/pdftotext','/usr/local/bin/pdftotext','/usr/bin/pdftotext'].find(p=>existsSync(p));
-const pageText=page=>pdftotext?execFileSync(pdftotext,['-f',String(page),'-l',String(page),path.join(dist,'portfolio.pdf'),'-']).toString().replace(/\s+/g,''):null;
 for(const [pid,detail] of Object.entries(careerDetails))for(const study of detail.cases||[]){
   if(!study.ref)continue;
-  const [anchor,page]=study.ref;const item=portfolioItems.get(anchor);
+  const anchor=study.ref;const item=portfolioItems.get(anchor);
   if(!item){failures.push(`career ${pid}: ref ${anchor} has no portfolio case (성능 개선·트러블슈팅)`);continue;}
   if(item.title!==study.title)failures.push(`career ${pid}: title differs from portfolio ${anchor}\n  career:    ${study.title}\n  portfolio: ${item.title}`);
   if((item.period||'')!==(study.period||''))failures.push(`career ${pid}: period differs from portfolio ${anchor}`);
-  const textOnPage=pageText(page);
-  if(textOnPage!==null&&!textOnPage.includes(study.title.replace(/\s+/g,'')))failures.push(`career ${pid}: "${study.title}" is not on portfolio p.${page}`);
 }
 // 포트폴리오 문제 해결 사례: 불릿은 문제 → 원인 → 해결 → 결과 네 줄
 for(const [pid,doc] of Object.entries(portfolioDoc))for(const item of doc.evidence||[]){

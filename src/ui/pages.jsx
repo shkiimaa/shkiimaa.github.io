@@ -86,7 +86,7 @@ const EarlierCareer = () => experiences.filter(job => job.id === 'founder').map(
     </MarkedHead>
   </section>
 ));
-// 스킬·학력: 이력서와 경력기술서가 같은 구역을 쓴다
+// 스킬·학력: 이력서에만 둔다. 경력기술서는 이력서와 함께 내는 문서라 넣지 않는다
 const SkillsAndEducation = () => (
   <>
     {/* 기술 표는 PDF에서 페이지 사이에 나뉘지 않게 한 덩어리로 둔다 */}
@@ -111,7 +111,8 @@ const SkillsAndEducation = () => (
 );
 
 // 이름·연락처·사진·소개 글: 이력서와 경력기술서가 같은 머리를 쓴다
-const ProfileHead = () => {
+// 경력기술서는 이력서와 함께 내는 문서라 소개 글 없이 이름·연락처·사진만 둔다 (intro={false})
+const ProfileHead = ({ intro = true }) => {
   const [, ...introDetails] = profile.introduction.split('\n\n');
   return (
     <>
@@ -137,8 +138,12 @@ const ProfileHead = () => {
             사진은 네이비 카디건(profile-navy.jpg)을 쓴다. 옷 색만 다른 원본(profile.jpg, 빨간 카디건)도 남겨 둔다 */}
         <img className="hidden aspect-square w-38 shrink-0 rounded-sm object-cover print:block" src="/assets/profile-navy.jpg" alt="김수환 증명사진" loading="lazy" />
       </div>
-      <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
-      <Paragraphs items={introDetails} muted={false} />
+      {intro && (
+        <>
+          <p className="mb-4 text-2xl leading-snug font-semibold tracking-tight mobile:text-xl print:mb-3 print:text-lg">하나의 코드베이스로 웹·iOS·Android·데스크톱 앱을 출시한<br className="mobile:hidden print:hidden" /> 프론트엔드 개발자입니다.</p>
+          <Paragraphs items={introDetails} muted={false} />
+        </>
+      )}
     </>
   );
 };
@@ -249,16 +254,10 @@ const FlowBullets = ({ items, glueEnd }) => (
   </ul>
 );
 // 사례: 제목은 첫 줄과 같은 쪽에 둔다. glueEnd: 바로 뒤 기술 줄을 마지막 줄과 같은 쪽에 묶는다 (마지막 사례)
-// ref: 같은 사례의 근거(측정 화면·코드·흐름도)가 있는 포트폴리오 위치. PDF에는 쪽 번호를, 웹에는 링크 이름을 보인다
 const CareerCase = ({ study, glueEnd }) => (
   <section className="mt-6 print:mt-4">
     <h4 className={cx(text.body, 'mb-1 font-bold text-ink print:break-after-avoid')}>
       {study.title}{study.period && <span className={cx(text.meta, 'ml-2.5 font-medium text-muted tabular-nums')}>{study.period}</span>}
-      {study.ref && (
-        <a className={cx(text.meta, 'ml-2.5 font-medium whitespace-nowrap text-muted underline underline-offset-2')} href={`${profile.site}/portfolio/#case-${study.ref[0]}`}>
-          <span className="print:hidden">포트폴리오에서 근거 보기</span><span className="hidden print:inline">→ 포트폴리오 p.{study.ref[1]}</span>
-        </a>
-      )}
     </h4>
     <FlowBullets items={study.bullets} glueEnd={Boolean(study.note) || glueEnd} />
     {study.note && <Meta className={cx('mt-1.5 print:break-inside-avoid', glueEnd && 'print:break-after-avoid')}>{study.note}</Meta>}
@@ -319,8 +318,8 @@ const CareerEntry = ({ project, first }) => {
 
 function Career() {
   return (
-    <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결·개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" htmlClass="resume-doc" toc={[['about', '소개'], ['experience', '경력'], ['skills', '스킬'], ['education', '학력']]}>
-      <section id="about"><ProfileHead /></section>
+    <Document title="경력기술서" description="김수환의 프론트엔드·백엔드 개발 경험과 문제 해결·개선 사례입니다." route="/career/" active="career" pageLabel="경력기술서" pdf="career" htmlClass="resume-doc" toc={[['experience', '경력']]}>
+      <section id="about"><ProfileHead intro={false} /></section>
       <ResumeSection id="experience" title="경력" note={careerTotal(devJobs)}>
         {devJobs.map((job, i) => (
           <section key={job.id} className={cx('experience-group', i > 0 ? 'pt-16 mobile:pt-13 print:mt-12 print:pt-0' : 'pt-7 mobile:pt-6 print:pt-5')}>
@@ -334,7 +333,6 @@ function Career() {
         ))}
         <EarlierCareer />
       </ResumeSection>
-      <SkillsAndEducation />
     </Document>
   );
 }

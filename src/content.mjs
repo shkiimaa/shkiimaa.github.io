@@ -91,13 +91,13 @@ export const projects = [
     id: 'gobit', name: 'Gobit', category: 'work', company: '(주)다온소프트랩', companyId: 'daon', period: '2024.10 – 2025.12 (이후 유지보수)', role: '프론트엔드 전담 · 백엔드 개발 주도', kind: '코인 정보·커뮤니티 플랫폼',
     links: [{ label: 'Website', icon: 'world', url: 'https://gobit.kr' }],
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. React로 직접 구축해 운영하다가, 검색 노출을 위해 Next.js로 재구축했습니다. 웹 클라이언트와 백엔드 API 서버, 채팅·스케줄러 서버를 개발했습니다.',
-    summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리하고, 가상화 리스트로 화면에 보이는 코인만 구독', '서버 5대에 흩어진 14개 서비스를 K3s로 통합하고, 소스가 유실된 .NET 시세 수집기를 Node.js로 재작성'],
+    summary: ['React로 구축 후 검색 노출을 위해 Next.js로 재구축(서버 렌더링·페이지별 메타데이터)', '4개 거래소 실시간 시세를 거래소별 단일 연결로 정리하고, 가상화 리스트로 화면에 보이는 코인만 구독', '회원 인증·모의투자·상품 구매·구독 등 백엔드 API와 실시간 채팅 서버, 코인 데이터 수집 스케줄러 서버 개발', '서버 5대에 흩어진 14개 서비스를 K3s로 통합하고, 소스가 유실된 .NET 시세 수집기를 Node.js로 재작성'],
     // 한 줄에 한 가지만 쓴다. '#' 줄은 묶음 제목, 나머지는 불릿 한 줄
     tasks: [
       ['', 'React로 구축 후 Next.js 15로 재구축'],
       ['', '마켓·코인 상세·뉴스·모의투자·랭킹·채팅 화면 구현'],
       ['', 'Binance·Bybit·OKX·Gate.io 실시간 시세 연동'],
-      ['', '회원 인증·모의투자·결제 등 백엔드 API 개발'],
+      ['', '회원 인증·모의투자·상품 구매·구독 등 백엔드 API 개발'],
       ['', '채팅 서버와 스케줄러 서버 개발'],
     ],
     tech: ['TypeScript', 'Next.js', 'SWR', 'Tailwind CSS', 'Express', 'MariaDB', 'Redis', 'Socket.IO', 'Docker', 'Kubernetes(K3s)', 'GitHub Actions'],
@@ -207,11 +207,11 @@ export const careerDetails = {
       ['', '가격 알림·푸시·고객 문의 API 개발'],
     ],
     // 사례는 요약형으로 쓴다: 원인을 찾은 방법 → 해결 → 결과를 2~3줄로. 자세한 원인 추적·측정 조건·코드는 포트폴리오에 있다
-    // ref: [포트폴리오 안의 위치(id), 포트폴리오 PDF 쪽 번호] — 포트폴리오 쪽이 바뀌면 번호도 같이 고친다
+    // ref: 같은 사례를 다루는 포트폴리오 항목(id). 문서에는 나오지 않고, check.mjs가 두 문서의 제목·기간이 같은지 대조할 때 쓴다
     // 근거: Bitria 프론트엔드 저장소 docs/perf-improvement-result-20260929.md, docs/rerender-audit-20260930.md, docs/performance/, 커밋 기록
     cases: [
       {
-        title: '숨겨진 화면까지 시세마다 다시 그리던 거래 화면: 컴포넌트 렌더 횟수 70.5% 감소', ref: ['bitria-render-isolation', 3],
+        title: '숨겨진 화면까지 시세마다 다시 그리던 거래 화면: 컴포넌트 렌더 횟수 70.5% 감소', ref: 'bitria-render-isolation',
         bullets: [
           'React DevTools 훅으로 렌더를 계측해, 차트를 미리 준비하기 위해 숨겨 둔 화면과 닫힌 오더북이 렌더 시간의 64%를 쓰는 것 확인',
           '시세 구독을 화면 최상위에서 값을 표시하는 컴포넌트 안으로 옮기고, 보이지 않는 오더북은 구독 중지 (차트 미리 준비는 유지)',
@@ -219,7 +219,7 @@ export const careerDetails = {
         ]
       },
       {
-        title: '모바일에서만 느리던 홈 화면: 배럴 import가 묶은 청크 제거로 TBT 30% 감소', ref: ['bitria-barrel', 4],
+        title: '모바일에서만 느리던 홈 화면: 배럴 import가 묶은 청크 제거로 TBT 30% 감소', ref: 'bitria-barrel',
         bullets: [
           'Lighthouse와 번들 분석으로, 공통 UI 배럴이 버튼 하나만 가져와도 three.js까지 163개 모듈을 한 청크로 묶어 실행 시간을 늘린 것 확인',
           'optimizePackageImports는 번들이 늘어 채택하지 않고, 배럴 import 136곳을 정의 파일 직접 참조로 변경',
@@ -227,7 +227,7 @@ export const careerDetails = {
         ]
       },
       {
-        title: '개발·배포로 나뉜 빌드와 무거운 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송량 95% 감소', ref: ['bitria-build-optimization', 5],
+        title: '개발·배포로 나뉜 빌드와 무거운 번들·폰트: 빌드 시간 56%, 홈 JS 크기 27%, 초기 폰트 전송량 95% 감소', ref: 'bitria-build-optimization',
         bullets: [
           '개발은 Turbopack, 배포는 webpack으로 나뉘어 있던 빌드를, import 주소의 쿼리(?url)로 SVG 처리를 나누는 기능이 들어간 Next.js 16.4로 올려 Turbopack으로 통일',
           '쓰지 않는 모듈이 번들에서 빠지게 sideEffects 선언(모듈 4개와 CSS만 예외), 한글 전체 폰트는 서브셋으로 교체',
@@ -235,7 +235,7 @@ export const careerDetails = {
         ]
       },
       {
-        title: '차트 로딩 실패: 운영 로그로 TradingView 캐시 번들 버그와 심볼 전환 경쟁 상태를 찾아 해결', ref: ['bitria-chart-lifecycle', 5],
+        title: '차트 로딩 실패: 운영 로그로 TradingView 캐시 번들 버그와 심볼 전환 경쟁 상태를 찾아 해결', ref: 'bitria-chart-lifecycle',
         bullets: [
           '실패 기록이 남지 않던 차트에 단계별 실패 로그와 재시도를 넣고, 13일간 기록된 실패 50건을 분석',
           'TradingView 캐시 번들 버그는 차트를 blob 방식으로 불러오게 바꿔 피하고(blob이 막히는 인앱 브라우저는 same_origin으로 자동 전환), 빠른 심볼 전환 경쟁 상태는 위젯을 유지한 채 심볼만 교체해 해결'
@@ -252,14 +252,14 @@ export const careerDetails = {
         ]
       },
       {
-        title: '앱 복귀 후 포지션·자산 정보 불일치 해결', ref: ['bitria-app-resume', 6],
+        title: '앱 복귀 후 포지션·자산 정보 불일치 해결', ref: 'bitria-app-resume',
         bullets: [
           'iOS 앱 복귀 후 종료된 포지션이 최대 2분간 남던 원인이 WKWebView가 복귀 시 visibilitychange를 보내지 않는 것과 알림 소켓이 재연결을 포기한 것임을 확인',
           'Capacitor 앱 상태 이벤트로 쿼리 재조회와 소켓 재연결을 함께 실행해, 복귀하면 바로 최신 포지션·자산 표시'
         ]
       },
       {
-        title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결', ref: ['bitria-app-locale-navigation', 6],
+        title: '비영어 기기에서 앱 대신 Safari가 열리던 문제 해결', ref: 'bitria-app-locale-navigation',
         bullets: [
           'Capacitor iOS 소스에서 /m으로 시작하는 주소만 앱 내부로 판정하는 것을 찾아, 언어 코드가 붙은 주소(/th/m)가 외부로 판정되는 원인 확인',
           '앱 요청은 주소를 /m 그대로 두는 rewrite로 처리해, 앱 재빌드·재심사 없이 서버 배포로 영어 외 5개 언어 기기 모두 해결'
@@ -270,28 +270,29 @@ export const careerDetails = {
   gobit: {
     // 소개에서 'React로 구축해 운영하다가 Next.js로 재구축' 문장은 바로 아래 첫 사례와 같은 내용이라 뺀다
     description: '암호화폐 시세·차트·뉴스·커뮤니티와 모의투자 기능을 제공하는 코인 정보 플랫폼입니다. 웹 클라이언트와 백엔드 API 서버, 채팅·스케줄러 서버를 개발했습니다.',
-    // 주요 업무 중 Next.js 재구축·거래소 시세는 사례에, 채팅·스케줄러 서버는 소개에 있어 뺀다
+    // 주요 업무 중 Next.js 재구축·거래소 시세는 사례에 있어 뺀다
     tasks: [
       ['', '마켓·코인 상세·뉴스·모의투자·랭킹·채팅 화면 구현'],
-      ['', '회원 인증·모의투자·결제 등 백엔드 API 개발'],
+      ['', '회원 인증·모의투자·상품 구매·구독 등 백엔드 API 개발'],
+      ['', '실시간 채팅 서버와 코인 데이터 수집 스케줄러 서버 개발'],
     ],
     cases: [
       {
-        title: 'SPA 검색 노출 한계로 Next.js 재구축', period: '2025.07 – 2025.08', ref: ['gobit-nextjs', 7],
+        title: 'SPA 검색 노출 한계로 Next.js 재구축', period: '2025.07 – 2025.08', ref: 'gobit-nextjs',
         bullets: [
           'React SPA가 빈 HTML을 내려보내 코인·게시글이 검색에 잡히지 않았고, 먼저 적용한 prerender는 고정 경로 26개만 처리해 늘어나는 게시글을 담을 수 없음을 확인',
           'Next.js 15 App Router로 재구축해 코인·게시글 상세를 서버 렌더링하고 페이지별 메타데이터 생성, 이후 중복 요청 제거와 영역별 스켈레톤 적용'
         ]
       },
       {
-        title: '4개 거래소 실시간 시세 연결 구조 정리', period: '2024.11 – 2024.12', ref: ['gobit-exchanges', 7],
+        title: '4개 거래소 실시간 시세 연결 구조 정리', period: '2024.11 – 2024.12', ref: 'gobit-exchanges',
         bullets: [
           '공통 WebSocket 훅이 호출될 때마다 새 연결을 열어 Binance 하나에만 4개 이상 열리던 연결을, 거래소별 단일 연결 스토어(중복 구독 방지·재연결 시 재구독)로 정리',
           '코인 목록은 가상화 리스트로 화면에 보이는 심볼만 구독'
         ]
       },
       {
-        title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08', ref: ['gobit-deployment', 7],
+        title: '레거시 플랫폼 통합과 Kubernetes 이전', period: '2026.07 – 2026.08', ref: 'gobit-deployment',
         bullets: [
           '서버 5대에 흩어진 서비스 중 소스 없이 .NET 바이너리만 남은 시세 수집기를, 동작과 데이터 형식을 분석해 Node.js로 재작성',
           'Dockerfile·Kubernetes 매니페스트·GitHub Actions로 모노레포에 통합해, 14개 서비스를 하나의 K3s 환경에서 배포·운영'
@@ -312,7 +313,7 @@ export const careerDetails = {
   dax: {
     cases: [
       {
-        title: '캔버스 라벨링 도구: 축소 화면에서 그린 박스를 원본 해상도 좌표로 저장', ref: ['dax-coordinates', 9],
+        title: '캔버스 라벨링 도구: 축소 화면에서 그린 박스를 원본 해상도 좌표로 저장', ref: 'dax-coordinates',
         bullets: [
           '이미지를 800×600 영역에 맞춰 줄여서 표시해, 화면에서 그린 박스 좌표가 원본 이미지와 맞지 않던 문제',
           '이미지 위에 같은 크기의 캔버스를 겹쳐 드래그로 박스를 그리고, 어느 방향으로 끌어도 같은 박스가 되도록 좌표 정리',
@@ -340,7 +341,7 @@ export const careerDetails = {
     description: '가상·증강·혼합현실(XR)과 지도·공간정보(GIS)를 결합한 원격 협업 서비스입니다. 사용자·팀 관리와 OBJ 모델·영상 파일 처리를 위한 백오피스를 개발했습니다.',
     cases: [
       {
-        title: '대용량 OBJ·영상 파일 저장과 일괄 다운로드', ref: ['xrgis-files', 11],
+        title: '대용량 OBJ·영상 파일 저장과 일괄 다운로드', ref: 'xrgis-files',
         bullets: [
           'MongoDB 문서 크기 제한(16MB)에 걸리는 OBJ·영상 파일은 GridFS 청크 분할 저장으로 처리',
           '여러 파일은 GridFS 스트림을 ZIP 스트림(archiver)에 바로 이어 응답, 임시 파일 없이 폴더 구조 그대로 다운로드',
